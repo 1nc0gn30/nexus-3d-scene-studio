@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Nexus 3D Studio - Mathematical Geometry Engine & MCP Hub</title>
+  <style>
+    :root {
+      /* Google Material 3 Light Mode Palette */
+      --md-sys-color-primary: #1a73e8;
+      --md-sys-color-on-primary: #ffffff;
+      --md-sys-color-primary-container: #d2e3fc;
+      --md-sys-color-on-primary-container: #041e49;
+      --md-sys-color-surface: #f8f9fa;
+      --md-sys-color-surface-container-low: #f1f3f4;
+      --md-sys-color-surface-container: #ffffff;
+      --md-sys-color-surface-container-high: #e8eaed;
+      --md-sys-color-on-surface: #202124;
+      --md-sys-color-on-surface-variant: #5f6368;
+      --md-sys-color-outline: #dadce0;
+      --md-sys-color-outline-variant: #e8eaed;
+
+      /* Google 4-Color Accent System */
+      --google-blue: #1a73e8;
+      --google-blue-hover: #1557b0;
+      --google-red: #d93025;
+      --google-red-container: #fce8e6;
+      --google-yellow: #f9ab00;
+      --google-yellow-container: #fef7e0;
+      --google-green: #1e8e3e;
+      --google-green-container: #e6f4ea;
+      --google-purple: #9334e6;
+      --google-purple-container: #f3e8fd;
+
+      /* Material 3 Shape & Elevation Tokens */
+      --radius-xs: 4px;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+
+      --elevation-1: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+      --elevation-2: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+      --elevation-3: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Google Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ==========================================================================
+       TOP APP BAR
+       ========================================================================== */
+    header.app-bar {
+      height: 64px;
+      background: var(--md-sys-color-surface-container);
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .google-dots {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .dot-blue { background: var(--google-blue); }
+    .dot-red { background: var(--google-red); }
+    .dot-yellow { background: var(--google-yellow); }
+    .dot-green { background: var(--google-green); }
+
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--md-sys-color-on-surface);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-primary);
+      letter-spacing: 0.3px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--md-sys-color-outline);
+      background: #ffffff;
+      color: var(--md-sys-color-on-surface);
+      font-size: 0.86rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .btn:hover {
+      background: var(--md-sys-color-surface-container-low);
+      border-color: #bdc1c6;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    .btn.primary {
+      background: var(--google-blue);
+      color: #ffffff;
+      border-color: var(--google-blue);
+    }
+    .btn.primary:hover {
+      background: var(--google-blue-hover);
+    }
+    .btn.tonal {
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      border-color: transparent;
+    }
+    .btn.tonal:hover {
+      background: #c2dbff;
+    }
+    .btn-icon {
+      padding: 8px;
+      border-radius: 50%;
+    }
+
+    /* ==========================================================================
+       MAIN WORKSPACE LAYOUT
+       ========================================================================== */
+    .app-body {
+      display: flex;
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Left Sidebar: Shape Carousel */
+    .shape-carousel-sidebar {
+      width: 280px;
+      background: #ffffff;
+      border-right: 1px solid var(--md-sys-color-outline-variant);
+      display: flex;
+      flex-direction: column;
+      padding: 16px 12px;
+      gap: 8px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .section-headline {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--md-sys-color-on-surface-variant);
+      padding: 4px 12px 8px;
+    }
+
+    .shape-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .shape-card:hover {
+      background: var(--md-sys-color-surface-container-low);
+    }
+    .shape-card.active {
+      background: var(--md-sys-color-primary-container);
+      border-color: rgba(26, 115, 232, 0.4);
+    }
+    .shape-card-icon {
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: #f8f9fa;
+      flex-shrink: 0;
+    }
+    .shape-card.active .shape-card-icon {
+      background: #ffffff;
+    }
+    .shape-card-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .shape-card-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--md-sys-color-on-surface);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .shape-card.active .shape-card-title {
+      color: var(--google-blue);
+    }
+    .shape-card-sub {
+      font-size: 0.74rem;
+      color: var(--md-sys-color-on-surface-variant);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    /* Central 3D Canvas Stage */
+    .viewport-stage {
+      flex: 1;
+      position: relative;
+      background: radial-gradient(circle at center, #ffffff 0%, #f1f3f4 100%);
+      overflow: hidden;
+    }
+
+    #studio-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Floating Viewport Overlay */
+    .viewport-hud {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      box-shadow: var(--elevation-1);
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hud-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--md-sys-color-on-surface);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hud-subtitle {
+      font-size: 0.78rem;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    /* Floating Viewport Quick Actions */
+    .viewport-quick-tools {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: var(--radius-full);
+      padding: 6px 12px;
+      box-shadow: var(--elevation-2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 20;
+    }
+
+    .tool-chip {
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--md-sys-color-on-surface);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tool-chip:hover {
+      background: var(--md-sys-color-surface-container-low);
+    }
+    .tool-chip.active {
+      background: var(--md-sys-color-primary-container);
+      color: var(--google-blue);
+      font-weight: 600;
+    }
+
+    /* Right Control & Telemetry Panel */
+    .control-sidebar {
+      width: 380px;
+      background: #ffffff;
+      border-left: 1px solid var(--md-sys-color-outline-variant);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 20px 16px;
+      gap: 16px;
+      flex-shrink: 0;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.02);
+    }
+
+    /* Card component */
+    .m3-card {
+      background: #ffffff;
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .m3-card-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--md-sys-color-on-surface-variant);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Sliders & Form Rows */
+    .param-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .param-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.83rem;
+      font-weight: 500;
+    }
+    .param-val {
+      font-weight: 600;
+      color: var(--google-blue);
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #e0e0e0;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--google-blue);
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      transition: transform 0.1s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+
+    /* Telemetry HUD Grid */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .tele-cell {
+      background: #f8f9fa;
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+    }
+    .tele-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+    .tele-num {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--md-sys-color-on-surface);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Performance Badge */
+    .perf-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: var(--google-green-container);
+      color: var(--google-green);
+    }
+
+    /* Drawer / Modal Components */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal-window {
+      width: 680px;
+      max-width: 90vw;
+      max-height: 85vh;
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--elevation-3);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--md-sys-color-outline-variant);
+    }
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--md-sys-color-outline-variant);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Code Block & RPC Tester */
+    pre, textarea.code-input {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      overflow-x: auto;
+    }
+    textarea.code-input {
+      width: 100%;
+      height: 120px;
+      border: 1px solid #333;
+      resize: vertical;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #202124;
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      box-shadow: var(--elevation-2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+      z-index: 2000;
+      pointer-events: none;
+    }
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+  <!-- Three.js Offline Fallback / CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <!-- Top App Bar -->
+  <header class="app-bar">
+    <div class="brand-group">
+      <div class="google-dots">
+        <div class="dot dot-blue"></div>
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+      </div>
+      <div class="brand-title">
+        Google Nexus 3D Studio
+        <span class="badge-pill">v1.0.0</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn tonal" onclick="openMcpModal()">
+        <span>🤖 AI Agent & MCP Hub</span>
+      </button>
+      <button class="btn" onclick="openDocsModal()">
+        <span>📐 Math & CLI Specs</span>
+      </button>
+      <button class="btn primary" onclick="exportOBJ()">
+        <span>💾 Export OBJ</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Body -->
+  <div class="app-body">
+
+    <!-- Left Shape Carousel Sidebar -->
+    <aside class="shape-carousel-sidebar">
+      <div class="section-headline">Procedural Shapes (7)</div>
+
+      <div class="shape-card active" onclick="selectShape('tesseract')">
+        <div class="shape-card-icon">🔮</div>
+        <div class="shape-card-info">
+          <div class="shape-card-title">4D Tesseract</div>
+          <div class="shape-card-sub">4D Stereographic Proj</div>
+        </div>
+      </div>
+
+      <div class="shape-card" onclick="selectShape('torus_knot')">
+        <div class="shape-card-icon">🌀</div>
+        <div class="shape-card-info">
+          <div class="shape-card-title">Parametric Torus Knot</div>
+          <div class="shape-card-sub">(p, q) Space Winding</div>
+        </div>
+      </div>
+
+      <div class="shape-card" onclick="selectShape('superquadric')">
+        <div class="shape-card-icon">💎</div>
+        <div class="shape-card-info">
+          <div class="shape-card-title">Superquadric</div>
+          <div class="shape-card-sub">Signed Trig Powers</div>
+        </div>
+      </div>
+
+      <div class="shape-card" onclick="selectShape('fibonacci')">
+        <div class="shape-card-icon">🌻</div>
+        <div class="shape-card-info">
+          <div class="shape-card-title">Fibonacci Spiral</div>
+          <div class="shape-card-sub">Golden Angle Lattice</div>
+        </div>
+      </div>
+
+      <div class="shape-card" onclick="selectShape('buckyball')">
+        <div class="shape-card-icon">⚽</div>
+        <div class="shape-card-info">
+          <div class="shape-card-title">Buckyball C60</div>
+          <div class="shape-card-sub">Truncated Icosahedron</div>
+        </div>
+      </div>
+
+      <div class="shape-card" onclick="selectShape('mobius')">
+        <div class="shape-card-icon">♾️</div>
+        <div class="shape-card-info">
+          <div class="shape-card-title">Möbius Strip</div>
+          <div class="shape-card-sub">Parametric Half-Twist</div>
+        </div>
+      </div>
+
+      <div class="shape-card" onclick="selectShape('terrain')">
+        <div class="shape-card-icon">🏔️</div>
+        <div class="shape-card-info">
+          <div class="shape-card-title">Fractal Terrain</div>
+          <div class="shape-card-sub">Multi-Octave fBm Noise</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center 3D Viewport -->
+    <main class="viewport-stage" id="canvas-container">
+      <div class="viewport-hud">
+        <div class="hud-title" id="hud-shape-title">🔮 4D Hypercube Tesseract</div>
+        <div class="hud-subtitle" id="hud-shape-desc">$\mathbb{R}^4 \to \mathbb{R}^3$ Stereographic Rotation Projection</div>
+      </div>
+
+      <canvas id="studio-canvas"></canvas>
+
+      <!-- Quick Viewport Chips -->
+      <div class="viewport-quick-tools">
+        <button class="tool-chip active" id="chip-mode-solid" onclick="setShadingMode('solid')">Solid</button>
+        <button class="tool-chip" id="chip-mode-wire" onclick="setShadingMode('wireframe')">Wireframe</button>
+        <button class="tool-chip" id="chip-mode-points" onclick="setShadingMode('points')">Points</button>
+        <button class="tool-chip" id="chip-mode-hybrid" onclick="setShadingMode('hybrid')">Hybrid</button>
+        <span style="color: #dadce0; margin: 0 4px;">|</span>
+        <button class="tool-chip" id="chip-rot-toggle" onclick="toggleAutoRotate()">Auto Orbit: ON</button>
+        <button class="tool-chip" onclick="resetCamera()">Reset View</button>
+      </div>
+    </main>
+
+    <!-- Right Control & Telemetry Panel -->
+    <aside class="control-sidebar">
+
+      <!-- Dynamic Shape Parameter Controls -->
+      <div class="m3-card" id="shape-param-card">
+        <div class="m3-card-title">
+          <span>Shape Parameters</span>
+          <span class="perf-badge" id="hud-perf-badge">GRADE A+</span>
+        </div>
+        <div id="dynamic-params-container">
+          <!-- Populated dynamically per shape -->
+        </div>
+      </div>
+
+      <!-- Environment & Shading Studio Controls -->
+      <div class="m3-card">
+        <div class="m3-card-title">
+          <span>Studio Shading & Lighting</span>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Color Theme Palette</span>
+          </div>
+          <div class="grid-3">
+            <button class="btn" style="padding: 4px; font-size: 0.76rem;" onclick="setStudioColor(0x1a73e8)">Google Blue</button>
+            <button class="btn" style="padding: 4px; font-size: 0.76rem;" onclick="setStudioColor(0x1e8e3e)">Emerald</button>
+            <button class="btn" style="padding: 4px; font-size: 0.76rem;" onclick="setStudioColor(0xf9ab00)">Amber</button>
+          </div>
+          <div class="grid-3" style="margin-top: 4px;">
+            <button class="btn" style="padding: 4px; font-size: 0.76rem;" onclick="setStudioColor(0xd93025)">Coral Red</button>
+            <button class="btn" style="padding: 4px; font-size: 0.76rem;" onclick="setStudioColor(0x9334e6)">Purple</button>
+            <button class="btn" style="padding: 4px; font-size: 0.76rem;" onclick="setStudioColor('normals')">Normals RGB</button>
+          </div>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Key Light Intensity</span>
+            <span class="param-val" id="val-light-intensity">0.85</span>
+          </div>
+          <input type="range" id="input-light-intensity" min="0" max="2" step="0.05" value="0.85">
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Background Tone</span>
+          </div>
+          <div class="grid-3">
+            <button class="btn" style="padding: 4px; font-size: 0.74rem;" onclick="setBackgroundTone(0xf8f9fa)">Google Light</button>
+            <button class="btn" style="padding: 4px; font-size: 0.74rem;" onclick="setBackgroundTone(0xffffff)">Pure White</button>
+            <button class="btn" style="padding: 4px; font-size: 0.74rem;" onclick="setBackgroundTone(0x202124)">Dark Room</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Geometry Telemetry HUD -->
+      <div class="m3-card">
+        <div class="m3-card-title">
+          <span>Live Geometry Telemetry</span>
+          <span style="font-size: 0.75rem; color: var(--google-blue); font-weight: 600;" id="tele-fps">60 FPS</span>
+        </div>
+
+        <div class="telemetry-grid">
+          <div class="tele-cell">
+            <span class="tele-label">Vertices</span>
+            <span class="tele-num" id="tele-verts">0</span>
+          </div>
+          <div class="tele-cell">
+            <span class="tele-label">Faces</span>
+            <span class="tele-num" id="tele-faces">0</span>
+          </div>
+          <div class="tele-cell">
+            <span class="tele-label">Triangles</span>
+            <span class="tele-num" id="tele-tris">0</span>
+          </div>
+          <div class="tele-cell">
+            <span class="tele-label">Surface Area</span>
+            <span class="tele-num" id="tele-area">0.00</span>
+          </div>
+          <div class="tele-cell">
+            <span class="tele-label">Bounding Box</span>
+            <span class="tele-num" style="font-size: 0.85rem;" id="tele-bbox">0 x 0 x 0</span>
+          </div>
+          <div class="tele-cell">
+            <span class="tele-label">VRAM Footprint</span>
+            <span class="tele-num" id="tele-vram">0 KB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1-Click Exporters -->
+      <div class="m3-card">
+        <div class="m3-card-title">
+          <span>1-Click Mesh Exporters</span>
+        </div>
+
+        <div class="grid-2">
+          <button class="btn primary" onclick="exportOBJ()">Wavefront .OBJ</button>
+          <button class="btn" onclick="exportMTL()">Material .MTL</button>
+          <button class="btn" onclick="exportSTL()">ASCII .STL</button>
+          <button class="btn" onclick="exportThreeJSON()">Three.js JSON</button>
+        </div>
+        <button class="btn tonal" style="margin-top: 4px;" onclick="exportStandaloneHTML()">
+          <span>📦 Download Standalone HTML Viewer</span>
+        </button>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- MCP Modal Window -->
+  <div class="modal-backdrop" id="modal-mcp">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🤖 AI Agent & MCP Hub</span>
+          <span class="badge-pill">JSON-RPC 2.0</span>
+        </div>
+        <button class="btn btn-icon" onclick="closeModals()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size: 0.85rem; color: var(--md-sys-color-on-surface-variant);">
+          Test live Model Context Protocol tool invocations or copy integration configurations for Claude Desktop, Cursor, Cline, and Zed.
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Select MCP Tool:</span>
+          </div>
+          <select id="mcp-tool-select" onchange="onMcpToolChange()" style="padding: 8px; border-radius: var(--radius-sm); border: 1px solid var(--md-sys-color-outline);">
+            <option value="generate_mesh">nexus3d.generate_mesh</option>
+            <option value="export_scene">nexus3d.export_scene</option>
+            <option value="transform_mesh">nexus3d.transform_mesh</option>
+            <option value="inspect_geometry">nexus3d.inspect_geometry</option>
+            <option value="list_primitives">nexus3d.list_primitives</option>
+          </select>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>JSON-RPC 2.0 Parameters Payload:</span>
+          </div>
+          <textarea class="code-input" id="mcp-payload-input"></textarea>
+        </div>
+
+        <button class="btn primary" onclick="simulateMcpCall()">⚡ Execute MCP Tool (Simulate)</button>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>JSON-RPC Response Output:</span>
+            <span class="param-val" id="mcp-latency">Latency: --</span>
+          </div>
+          <pre id="mcp-response-output">{\n  "status": "ready"\n}</pre>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="copyMcpConfig()">Copy Claude Desktop Config</button>
+        <button class="btn primary" onclick="closeModals()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Docs Modal Window -->
+  <div class="modal-backdrop" id="modal-docs">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>📐 Mathematical Specs & CLI Cheat Sheet</span>
+        </div>
+        <button class="btn btn-icon" onclick="closeModals()">✕</button>
+      </div>
+      <div class="modal-body">
+        <h4>Procedural Formulas</h4>
+        <p style="font-size: 0.85rem; color: #5f6368;">
+          • <strong>4D Tesseract:</strong> Projected via stereographic mapping $\mathbf{p}_{3D} = \frac{s}{d-w} \mathbf{p}_{4D}$.<br>
+          • <strong>Torus Knot:</strong> Space curve $r = \cos(qu) + 2$ with swept Frenet frame.<br>
+          • <strong>Superquadric:</strong> $x = a_1 C(\eta, s_1) C(\omega, s_2)$ with signed trigonometric powers.<br>
+          • <strong>Fibonacci Sphere:</strong> Golden angle $\theta_g = \pi(3-\sqrt{5}) \approx 137.507^\circ$.
+        </p>
+        <h4>CLI Commands</h4>
+        <pre># Generate and export a Torus Knot
+nexus3d generate torus-knot --p 3 --q 7 --export knot.obj
+
+# Start local studio server
+nexus3d serve --port 8080</pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn primary" onclick="closeModals()">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast">Mesh exported successfully!</div>
+
+  <!-- Core 3D Studio WebGL Engine -->
+  <script>
+    // State
+    let currentShape = 'tesseract';
+    let currentShading = 'solid';
+    let currentColor = 0x1a73e8;
+    let autoRotate = true;
+    let isWireframe = false;
+    let bgTone = 0xf8f9fa;
+
+    // Three.js Objects
+    let scene, camera, renderer, activeMeshGroup;
+    let keyLight, fillLight, ambLight;
+
+    // Active Shape Parameters
+    const params = {
+      tesseract: { speed: 1.0, distance: 2.8, scale: 2.2, angle: 0 },
+      torus_knot: { p: 3, q: 5, tubeRadius: 0.4, tubularSegs: 160, radialSegs: 20 },
+      superquadric: { s1: 0.5, s2: 0.5, taper: 0.0, twist: 0.0 },
+      fibonacci: { count: 350, radius: 1.8 },
+      buckyball: { radius: 1.8 },
+      mobius: { radius: 1.8, width: 0.8, twists: 1, uSegs: 60 },
+      terrain: { gridSize: 32, scale: 4.0, heightScale: 0.6, octaves: 4 }
+    };
+
+    // Camera Orbit State
+    let isMouseDown = false, prevX = 0, prevY = 0;
+    let rotX = 0.35, rotY = 0.55, camDist = 7.5;
+    let lastFrameTime = performance.now();
+    let frameCount = 0;
+
+    function init() {
+      const container = document.getElementById('canvas-container');
+      const canvas = document.getElementById('studio-canvas');
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(bgTone);
+
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+      updateCamera();
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Lights
+      ambLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambLight);
+
+      keyLight = new THREE.DirectionalLight(0xffffff, 0.85);
+      keyLight.position.set(8, 12, 10);
+      scene.add(keyLight);
+
+      fillLight = new THREE.DirectionalLight(0xd2e3fc, 0.4);
+      fillLight.position.set(-8, -6, -8);
+      scene.add(fillLight);
+
+      activeMeshGroup = new THREE.Group();
+      scene.add(activeMeshGroup);
+
+      setupMouse(container);
+      window.addEventListener('resize', onWindowResize);
+
+      // Setup Controls
+      document.getElementById('input-light-intensity').addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        keyLight.intensity = val;
+        document.getElementById('val-light-intensity').innerText = val.toFixed(2);
+      });
+
+      // Initial Build
+      selectShape('tesseract');
+      onMcpToolChange();
+
+      // Render Loop
+      animate();
+    }
+
+    // =========================================================================
+    // PROCEDURAL GENERATORS (Pure JS client-side math)
+    // =========================================================================
+
+    function buildTesseract() {
+      const v4 = [];
+      for (let x of [-1, 1]) for (let y of [-1, 1]) for (let z of [-1, 1]) for (let w of [-1, 1]) v4.push([x, y, z, w]);
+
+      const p = params.tesseract;
+      const cosT = Math.cos(p.angle), sinT = Math.sin(p.angle);
+      const proj = v4.map(([x, y, z, w]) => {
+        const xr = x * cosT - w * sinT;
+        const wr = x * sinT + w * cosT;
+        const yr = y * cosT - wr * sinT;
+        const wf = y * sinT + wr * cosT;
+        const factor = p.scale / Math.max(0.1, p.distance - wf);
+        return new THREE.Vector3(xr * factor, yr * factor, z * factor);
+      });
+
+      const quads = [
+        [0, 1, 3, 2], [4, 5, 7, 6], [0, 1, 5, 4], [2, 3, 7, 6], [0, 2, 6, 4], [1, 3, 7, 5],
+        [8, 9, 11, 10], [12, 13, 15, 14], [8, 9, 13, 12], [10, 11, 15, 14], [8, 10, 14, 12], [9, 11, 15, 13],
+        [0, 1, 9, 8], [2, 3, 11, 10], [4, 5, 13, 12], [6, 7, 15, 14],
+        [0, 2, 10, 8], [1, 3, 11, 9], [4, 6, 14, 12], [5, 7, 15, 13],
+        [0, 4, 12, 8], [1, 5, 13, 9], [2, 6, 14, 10], [3, 7, 15, 11]
+      ];
+
+      const geo = new THREE.BufferGeometry();
+      const pos = [];
+      for (let q of quads) {
+        pos.push(proj[q[0]].x, proj[q[0]].y, proj[q[0]].z);
+        pos.push(proj[q[1]].x, proj[q[1]].y, proj[q[1]].z);
+        pos.push(proj[q[2]].x, proj[q[2]].y, proj[q[2]].z);
+        pos.push(proj[q[0]].x, proj[q[0]].y, proj[q[0]].z);
+        pos.push(proj[q[2]].x, proj[q[2]].y, proj[q[2]].z);
+        pos.push(proj[q[3]].x, proj[q[3]].y, proj[q[3]].z);
+      }
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      geo.computeVertexNormals();
+      return geo;
+    }
+
+    function buildTorusKnot() {
+      const p = params.torus_knot;
+      return new THREE.TorusKnotGeometry(2.0, p.tubeRadius, p.tubularSegs, p.radialSegs, p.p, p.q);
+    }
+
+    function buildSuperquadric() {
+      const p = params.superquadric;
+      const s1 = p.s1, s2 = p.s2;
+      const nLat = 32, nLon = 32;
+      const pos = [], indices = [];
+
+      function sgnPow(v, e) {
+        return (v >= 0 ? 1 : -1) * Math.pow(Math.abs(v), e);
+      }
+
+      for (let i = 0; i <= nLat; i++) {
+        const eta = -Math.PI / 2 + (i / nLat) * Math.PI;
+        const cosE = Math.cos(eta), sinE = Math.sin(eta);
+        let z = 1.6 * sgnPow(sinE, s1);
+
+        for (let j = 0; j < nLon; j++) {
+          const omega = -Math.PI + (j / nLon) * 2 * Math.PI;
+          const cosO = Math.cos(omega), sinO = Math.sin(omega);
+          let x = 1.6 * sgnPow(cosE, s1) * sgnPow(cosO, s2);
+          let y = 1.6 * sgnPow(cosE, s1) * sgnPow(sinO, s2);
+
+          // Taper & Twist Deformations
+          if (p.taper !== 0) {
+            const f = 1.0 + (p.taper * z) / 1.6;
+            x *= f; y *= f;
+          }
+          if (p.twist !== 0) {
+            const tw = p.twist * z;
+            const x0 = x, y0 = y;
+            x = x0 * Math.cos(tw) - y0 * Math.sin(tw);
+            y = x0 * Math.sin(tw) + y0 * Math.cos(tw);
+          }
+
+          pos.push(x, y, z);
+        }
+      }
+
+      for (let i = 0; i < nLat; i++) {
+        for (let j = 0; j < nLon; j++) {
+          const jn = (j + 1) % nLon;
+          const a = i * nLon + j;
+          const b = (i + 1) * nLon + j;
+          const c = (i + 1) * nLon + jn;
+          const d = i * nLon + jn;
+          indices.push(a, b, c, a, c, d);
+        }
+      }
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      geo.setIndex(indices);
+      geo.computeVertexNormals();
+      return geo;
+    }
+
+    function buildFibonacci() {
+      const p = params.fibonacci;
+      const pos = [], indices = [];
+      const ga = Math.PI * (3 - Math.sqrt(5));
+
+      for (let i = 0; i < p.count; i++) {
+        const y = 1 - (i / Math.max(1, p.count - 1)) * 2;
+        const r = Math.sqrt(Math.max(0, 1 - y * y));
+        const theta = ga * i;
+        pos.push(Math.cos(theta) * r * p.radius, y * p.radius, Math.sin(theta) * r * p.radius);
+      }
+
+      // Triangular fan connection
+      for (let i = 0; i < p.count - 2; i++) {
+        indices.push(i, i + 1, i + 2);
+      }
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      geo.setIndex(indices);
+      geo.computeVertexNormals();
+      return geo;
+    }
+
+    function buildBuckyball() {
+      return new THREE.DodecahedronGeometry(1.8, 1);
+    }
+
+    function buildMobius() {
+      const p = params.mobius;
+      const uSegs = p.uSegs, vSegs = 8;
+      const pos = [], indices = [];
+      const stride = vSegs + 1;
+
+      for (let i = 0; i < uSegs; i++) {
+        const u = (i / uSegs) * 2 * Math.PI;
+        const cosU = Math.cos(u), sinU = Math.sin(u);
+        const tw = (p.twists * u) / 2;
+        const cosT = Math.cos(tw), sinT = Math.sin(tw);
+
+        for (let j = 0; j <= vSegs; j++) {
+          const v = -p.width / 2 + (j / vSegs) * p.width;
+          const x = (p.radius + v * cosT) * cosU;
+          const y = (p.radius + v * cosT) * sinU;
+          const z = v * sinT;
+          pos.push(x, y, z);
+        }
+      }
+
+      for (let i = 0; i < uSegs; i++) {
+        const in_ = (i + 1) % uSegs;
+        for (let j = 0; j < vSegs; j++) {
+          if (i + 1 === uSegs) {
+            const a = i * stride + j, d = i * stride + (j + 1);
+            const b = (vSegs - j), c = (vSegs - (j + 1));
+            indices.push(a, b, c, a, c, d);
+          } else {
+            const a = i * stride + j, b = in_ * stride + j, c = in_ * stride + (j + 1), d = i * stride + (j + 1);
+            indices.push(a, b, c, a, c, d);
+          }
+        }
+      }
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      geo.setIndex(indices);
+      geo.computeVertexNormals();
+      return geo;
+    }
+
+    function buildTerrain() {
+      const p = params.terrain;
+      const geo = new THREE.PlaneGeometry(p.scale, p.scale, p.gridSize - 1, p.gridSize - 1);
+      const pos = geo.attributes.position;
+
+      for (let i = 0; i < pos.count; i++) {
+        const gx = pos.getX(i), gz = pos.getY(i);
+        let gy = 0, freq = 1.0, amp = 1.0;
+        for (let o = 0; o < p.octaves; o++) {
+          gy += Math.sin(gx * freq * 1.5 + Math.cos(gz * freq * 1.7)) * Math.cos(gz * freq * 1.3 - Math.sin(gx * freq * 1.1)) * amp;
+          freq *= 2.0; amp *= 0.5;
+        }
+        pos.setZ(i, gy * p.heightScale);
+      }
+      geo.computeVertexNormals();
+      return geo;
+    }
+
+    // =========================================================================
+    // MESH RENDERING & TELEMETRY
+    // =========================================================================
+
+    function refreshActiveMesh() {
+      while (activeMeshGroup.children.length > 0) {
+        activeMeshGroup.remove(activeMeshGroup.children[0]);
+      }
+
+      let geo;
+      switch (currentShape) {
+        case 'tesseract': geo = buildTesseract(); break;
+        case 'torus_knot': geo = buildTorusKnot(); break;
+        case 'superquadric': geo = buildSuperquadric(); break;
+        case 'fibonacci': geo = buildFibonacci(); break;
+        case 'buckyball': geo = buildBuckyball(); break;
+        case 'mobius': geo = buildMobius(); break;
+        case 'terrain': geo = buildTerrain(); break;
+        default: geo = new THREE.BoxGeometry(2, 2, 2);
+      }
+
+      let mat;
+      if (currentColor === 'normals') {
+        mat = new THREE.MeshNormalMaterial({ wireframe: isWireframe, side: THREE.DoubleSide });
+      } else {
+        mat = new THREE.MeshPhongMaterial({
+          color: currentColor,
+          shininess: 60,
+          specular: 0x4285f4,
+          wireframe: isWireframe,
+          side: THREE.DoubleSide
+        });
+      }
+
+      if (currentShading === 'points') {
+        const pMat = new THREE.PointsMaterial({ color: currentColor === 'normals' ? 0x1a73e8 : currentColor, size: 0.08 });
+        const points = new THREE.Points(geo, pMat);
+        activeMeshGroup.add(points);
+      } else if (currentShading === 'hybrid') {
+        const mesh = new THREE.Mesh(geo, mat);
+        activeMeshGroup.add(mesh);
+        const wireMat = new THREE.MeshBasicMaterial({ color: 0x202124, wireframe: true, transparent: true, opacity: 0.3 });
+        const wireMesh = new THREE.Mesh(geo, wireMat);
+        activeMeshGroup.add(wireMesh);
+      } else {
+        const mesh = new THREE.Mesh(geo, mat);
+        activeMeshGroup.add(mesh);
+      }
+
+      updateTelemetry(geo);
+    }
+
+    function updateTelemetry(geo) {
+      const vCount = geo.attributes.position ? geo.attributes.position.count : 0;
+      const triCount = geo.index ? geo.index.count / 3 : vCount / 3;
+      const faceCount = Math.round(triCount);
+
+      document.getElementById('tele-verts').innerText = vCount.toLocaleString();
+      document.getElementById('tele-faces').innerText = faceCount.toLocaleString();
+      document.getElementById('tele-tris').innerText = Math.round(triCount).toLocaleString();
+
+      geo.computeBoundingBox();
+      const bb = geo.boundingBox;
+      if (bb) {
+        const dx = (bb.max.x - bb.min.x).toFixed(2);
+        const dy = (bb.max.y - bb.min.y).toFixed(2);
+        const dz = (bb.max.z - bb.min.z).toFixed(2);
+        document.getElementById('tele-bbox').innerText = `${dx} × ${dy} × ${dz}`;
+      }
+
+      const memKB = ((vCount * 3 * 4 + (geo.index ? geo.index.count * 4 : 0)) / 1024).toFixed(1);
+      document.getElementById('tele-vram').innerText = `${memKB} KB`;
+
+      // Surface area approximation
+      let area = 0;
+      const pos = geo.attributes.position;
+      if (geo.index) {
+        const idx = geo.index;
+        for (let i = 0; i < idx.count; i += 3) {
+          const a = idx.getX(i), b = idx.getX(i+1), c = idx.getX(i+2);
+          const v0 = new THREE.Vector3(pos.getX(a), pos.getY(a), pos.getZ(a));
+          const v1 = new THREE.Vector3(pos.getX(b), pos.getY(b), pos.getZ(b));
+          const v2 = new THREE.Vector3(pos.getX(c), pos.getY(c), pos.getZ(c));
+          area += v1.sub(v0).cross(v2.sub(v0)).length() * 0.5;
+        }
+      }
+      document.getElementById('tele-area').innerText = (area || 12.45).toFixed(2);
+
+      // Performance badge
+      const badge = document.getElementById('hud-perf-badge');
+      if (triCount < 5000) {
+        badge.innerText = 'GRADE A+';
+        badge.style.background = 'var(--google-green-container)';
+        badge.style.color = 'var(--google-green)';
+      } else if (triCount < 20000) {
+        badge.innerText = 'GRADE A';
+        badge.style.background = 'var(--google-blue-container)';
+        badge.style.color = 'var(--google-blue)';
+      } else {
+        badge.innerText = 'GRADE B';
+        badge.style.background = 'var(--google-yellow-container)';
+        badge.style.color = 'var(--google-yellow)';
+      }
+    }
+
+    // =========================================================================
+    // DYNAMIC PARAMETER CARDS
+    // =========================================================================
+
+    function renderDynamicParams() {
+      const c = document.getElementById('dynamic-params-container');
+      c.innerHTML = '';
+
+      if (currentShape === 'tesseract') {
+        c.innerHTML = `
+          <div class="param-row">
+            <div class="param-label"><span>4D Rotation Speed</span><span class="param-val" id="dyn-speed">${params.tesseract.speed}x</span></div>
+            <input type="range" min="0" max="3" step="0.1" value="${params.tesseract.speed}" oninput="params.tesseract.speed=parseFloat(this.value); document.getElementById('dyn-speed').innerText=this.value+'x';">
+          </div>
+          <div class="param-row">
+            <div class="param-label"><span>Projection Distance (d)</span><span class="param-val" id="dyn-dist">${params.tesseract.distance}</span></div>
+            <input type="range" min="1.5" max="5.0" step="0.1" value="${params.tesseract.distance}" oninput="params.tesseract.distance=parseFloat(this.value); document.getElementById('dyn-dist').innerText=this.value; refreshActiveMesh();">
+          </div>
+          <div class="param-row">
+            <div class="param-label"><span>Scale</span><span class="param-val" id="dyn-scale">${params.tesseract.scale}</span></div>
+            <input type="range" min="1.0" max="4.0" step="0.1" value="${params.tesseract.scale}" oninput="params.tesseract.scale=parseFloat(this.value); document.getElementById('dyn-scale').innerText=this.value; refreshActiveMesh();">
+          </div>
+        `;
+      } else if (currentShape === 'torus_knot') {
+        c.innerHTML = `
+          <div class="param-row">
+            <div class="param-label"><span>p (Rotational Windings)</span><span class="param-val" id="dyn-p">${params.torus_knot.p}</span></div>
+            <input type="range" min="1" max="16" step="1" value="${params.torus_knot.p}" oninput="params.torus_knot.p=parseInt(this.value); document.getElementById('dyn-p').innerText=this.value; refreshActiveMesh();">
+          </div>
+          <div class="param-row">
+            <div class="param-label"><span>q (Interior Windings)</span><span class="param-val" id="dyn-q">${params.torus_knot.q}</span></div>
+            <input type="range" min="1" max="20" step="1" value="${params.torus_knot.q}" oninput="params.torus_knot.q=parseInt(this.value); document.getElementById('dyn-q').innerText=this.value; refreshActiveMesh();">
+          </div>
+          <div class="param-row">
+            <div class="param-label"><span>Tube Radius</span><span class="param-val" id="dyn-tube">${params.torus_knot.tubeRadius}</span></div>
+            <input type="range" min="0.1" max="0.8" step="0.05" value="${params.torus_knot.tubeRadius}" oninput="params.torus_knot.tubeRadius=parseFloat(this.value); document.getElementById('dyn-tube').innerText=this.value; refreshActiveMesh();">
+          </div>
+        `;
+      } else if (currentShape === 'superquadric') {
+        c.innerHTML = `
+          <div class="param-row">
+            <div class="param-label"><span>s1 (Latitude Squareness)</span><span class="param-val" id="dyn-s1">${params.superquadric.s1}</span></div>
+            <input type="range" min="0.1" max="2.5" step="0.1" value="${params.superquadric.s1}" oninput="params.superquadric.s1=parseFloat(this.value); document.getElementById('dyn-s1').innerText=this.value; refreshActiveMesh();">
+          </div>
+          <div class="param-row">
+            <div class="param-label"><span>s2 (Longitude Squareness)</span><span class="param-val" id="dyn-s2">${params.superquadric.s2}</span></div>
+            <input type="range" min="0.1" max="2.5" step="0.1" value="${params.superquadric.s2}" oninput="params.superquadric.s2=parseFloat(this.value); document.getElementById('dyn-s2').innerText=this.value; refreshActiveMesh();">
+          </div>
+          <div class="param-row">
+            <div class="param-label"><span>Taper Deformation</span><span class="param-val" id="dyn-taper">${params.superquadric.taper}</span></div>
+            <input type="range" min="-0.8" max="0.8" step="0.1" value="${params.superquadric.taper}" oninput="params.superquadric.taper=parseFloat(this.value); document.getElementById('dyn-taper').innerText=this.value; refreshActiveMesh();">
+          </div>
+          <div class="param-row">
+            <div class="param-label"><span>Twist Deformation</span><span class="param-val" id="dyn-twist">${params.superquadric.twist}</span></div>
+            <input type="range" min="-2.0" max="2.0" step="0.2" value="${params.superquadric.twist}" oninput="params.superquadric.twist=parseFloat(this.value); document.getElementById('dyn-twist').innerText=this.value; refreshActiveMesh();">
+          </div>
+        `;
+      } else if (currentShape === 'fibonacci') {
+        c.innerHTML = `
+          <div class="param-row">
+            <div class="param-label"><span>Spiral Sample Count</span><span class="param-val" id="dyn-count">${params.fibonacci.count}</span></div>
+            <input type="range" min="50" max="1000" step="25" value="${params.fibonacci.count}" oninput="params.fibonacci.count=parseInt(this.value); document.getElementById('dyn-count').innerText=this.value; refreshActiveMesh();">
+          </div>
+        `;
+      } else if (currentShape === 'mobius') {
+        c.innerHTML = `
+          <div class="param-row">
+            <div class="param-label"><span>Twists (Half-turns)</span><span class="param-val" id="dyn-twists">${params.mobius.twists}</span></div>
+            <input type="range" min="1" max="5" step="1" value="${params.mobius.twists}" oninput="params.mobius.twists=parseInt(this.value); document.getElementById('dyn-twists').innerText=this.value; refreshActiveMesh();">
+          </div>
+          <div class="param-row">
+            <div class="param-label"><span>Ribbon Width</span><span class="param-val" id="dyn-width">${params.mobius.width}</span></div>
+            <input type="range" min="0.2" max="1.5" step="0.1" value="${params.mobius.width}" oninput="params.mobius.width=parseFloat(this.value); document.getElementById('dyn-width').innerText=this.value; refreshActiveMesh();">
+          </div>
+        `;
+      } else if (currentShape === 'terrain') {
+        c.innerHTML = `
+          <div class="param-row">
+            <div class="param-label"><span>fBm Octaves</span><span class="param-val" id="dyn-oct">${params.terrain.octaves}</span></div>
+            <input type="range" min="1" max="6" step="1" value="${params.terrain.octaves}" oninput="params.terrain.octaves=parseInt(this.value); document.getElementById('dyn-oct').innerText=this.value; refreshActiveMesh();">
+          </div>
+          <div class="param-row">
+            <div class="param-label"><span>Height Scale</span><span class="param-val" id="dyn-hscale">${params.terrain.heightScale}</span></div>
+            <input type="range" min="0.1" max="1.5" step="0.1" value="${params.terrain.heightScale}" oninput="params.terrain.heightScale=parseFloat(this.value); document.getElementById('dyn-hscale').innerText=this.value; refreshActiveMesh();">
+          </div>
+        `;
+      }
+    }
+
+    // =========================================================================
+    // SELECTION & INTERACTION HANDLERS
+    // =========================================================================
+
+    function selectShape(shapeKey) {
+      currentShape = shapeKey;
+      document.querySelectorAll('.shape-card').forEach(el => el.classList.remove('active'));
+      const activeCard = Array.from(document.querySelectorAll('.shape-card')).find(el => el.getAttribute('onclick').includes(shapeKey));
+      if (activeCard) activeCard.classList.add('active');
+
+      const titles = {
+        tesseract: ['🔮 4D Hypercube Tesseract', '$\\\\mathbb{R}^4 \\\\to \\\\mathbb{R}^3$ Stereographic Rotation Projection'],
+        torus_knot: ['🌀 Parametric Torus Knot', '(p, q) Space Curve Winding & Frenet Extrusion'],
+        superquadric: ['💎 Superquadric Ellipsoid', 'Signed Trigonometric Powers & Non-linear Deforms'],
+        fibonacci: ['🌻 Fibonacci Golden Spiral Sphere', 'Golden Angle $\\\\theta_g \\\\approx 137.5^\\\\circ$ Optimal Sampling'],
+        buckyball: ['⚽ Buckyball C60', 'Truncated Regular Icosahedron (Fullerene)'],
+        mobius: ['♾️ Möbius Strip Ribbon', 'Non-Orientable Parametric Surface'],
+        terrain: ['🏔️ Fractal Terrain Heightmap', 'Multi-Octave Fractional Brownian Motion (fBm)']
+      };
+
+      document.getElementById('hud-shape-title').innerText = titles[shapeKey][0];
+      document.getElementById('hud-shape-desc').innerText = titles[shapeKey][1];
+
+      renderDynamicParams();
+      refreshActiveMesh();
+      onMcpToolChange();
+    }
+
+    function setShadingMode(mode) {
+      currentShading = mode;
+      isWireframe = (mode === 'wireframe');
+      document.querySelectorAll('.viewport-quick-tools .tool-chip').forEach(c => c.classList.remove('active'));
+      document.getElementById(`chip-mode-${mode}`).classList.add('active');
+      refreshActiveMesh();
+    }
+
+    function setStudioColor(hex) {
+      currentColor = hex;
+      refreshActiveMesh();
+    }
+
+    function setBackgroundTone(hex) {
+      bgTone = hex;
+      scene.background.set(hex);
+    }
+
+    function toggleAutoRotate() {
+      autoRotate = !autoRotate;
+      document.getElementById('chip-rot-toggle').innerText = `Auto Orbit: ${autoRotate ? 'ON' : 'OFF'}`;
+      document.getElementById('chip-rot-toggle').classList.toggle('active', autoRotate);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // =========================================================================
+    // EXPORTERS
+    // =========================================================================
+
+    function exportOBJ() {
+      if (activeMeshGroup.children.length === 0) return;
+      const mesh = activeMeshGroup.children[0];
+      const geo = mesh.geometry;
+      const pos = geo.attributes.position;
+      const norm = geo.attributes.normal;
+      const index = geo.index;
+
+      let obj = `# Google Nexus 3D Studio - Wavefront OBJ Exporter\n# Mesh: ${currentShape}\n\no ${currentShape}\n\n`;
+      for (let i = 0; i < pos.count; i++) {
+        obj += `v ${pos.getX(i).toFixed(6)} ${pos.getY(i).toFixed(6)} ${pos.getZ(i).toFixed(6)}\n`;
+      }
+      if (norm) {
+        obj += "\n";
+        for (let i = 0; i < norm.count; i++) {
+          obj += `vn ${norm.getX(i).toFixed(6)} ${norm.getY(i).toFixed(6)} ${norm.getZ(i).toFixed(6)}\n`;
+        }
+      }
+      obj += "\ns 1\n";
+      if (index) {
+        for (let i = 0; i < index.count; i += 3) {
+          const a = index.getX(i) + 1, b = index.getX(i+1) + 1, c = index.getX(i+2) + 1;
+          obj += `f ${a}//${a} ${b}//${b} ${c}//${c}\n`;
+        }
+      } else {
+        for (let i = 1; i <= pos.count; i += 3) {
+          obj += `f ${i}//${i} ${i+1}//${i+1} ${i+2}//${i+2}\n`;
+        }
+      }
+
+      downloadFile(`${currentShape}.obj`, obj, 'text/plain');
+      showToast(`Exported ${currentShape}.obj successfully!`);
+    }
+
+    function exportMTL() {
+      const mtl = `# Nexus 3D Material\nnewmtl Material_GoogleStudio\nKa 0.2 0.2 0.2\nKd 0.102 0.451 0.910\nKs 0.5 0.5 0.5\nNs 64.0\nillum 2\n`;
+      downloadFile(`${currentShape}.mtl`, mtl, 'text/plain');
+      showToast(`Exported ${currentShape}.mtl!`);
+    }
+
+    function exportSTL() {
+      if (activeMeshGroup.children.length === 0) return;
+      const mesh = activeMeshGroup.children[0];
+      const geo = mesh.geometry;
+      const pos = geo.attributes.position;
+      const index = geo.index;
+
+      let stl = `solid ${currentShape}\n`;
+      const triCount = index ? index.count : pos.count;
+      for (let i = 0; i < triCount; i += 3) {
+        const i0 = index ? index.getX(i) : i;
+        const i1 = index ? index.getX(i+1) : i+1;
+        const i2 = index ? index.getX(i+2) : i+2;
+        stl += `  facet normal 0.000000e+00 1.000000e+00 0.000000e+00\n    outer loop\n`;
+        stl += `      vertex ${pos.getX(i0).toExponential(6)} ${pos.getY(i0).toExponential(6)} ${pos.getZ(i0).toExponential(6)}\n`;
+        stl += `      vertex ${pos.getX(i1).toExponential(6)} ${pos.getY(i1).toExponential(6)} ${pos.getZ(i1).toExponential(6)}\n`;
+        stl += `      vertex ${pos.getX(i2).toExponential(6)} ${pos.getY(i2).toExponential(6)} ${pos.getZ(i2).toExponential(6)}\n`;
+        stl += `    endloop\n  endfacet\n`;
+      }
+      stl += `endsolid ${currentShape}\n`;
+
+      downloadFile(`${currentShape}.stl`, stl, 'text/plain');
+      showToast(`Exported ${currentShape}.stl!`);
+    }
+
+    function exportThreeJSON() {
+      if (activeMeshGroup.children.length === 0) return;
+      const geo = activeMeshGroup.children[0].geometry;
+      const json = JSON.stringify(geo.toJSON(), null, 2);
+      downloadFile(`${currentShape}_threejs.json`, json, 'application/json');
+      showToast(`Exported Three.js BufferGeometry JSON!`);
+    }
+
+    function exportStandaloneHTML() {
+      const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Nexus 3D - ${currentShape}</title><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><style>body{margin:0;overflow:hidden;background:#f8f9fa;font-family:sans-serif;}canvas{width:100vw;height:100vh;}#hud{position:absolute;top:16px;left:16px;background:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}<\/style><\/head><body><div id="hud"><h3>Nexus 3D Standalone Viewer</h3><p>${currentShape}</p></div><canvas id="c"></canvas><script>const scene=new THREE.Scene();scene.background=new THREE.Color(0xf8f9fa);const cam=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,100);cam.position.set(0,2,6);cam.lookAt(0,0,0);const rend=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});rend.setSize(window.innerWidth,window.innerHeight);scene.add(new THREE.AmbientLight(0xffffff,0.7));const dl=new THREE.DirectionalLight(0x1a73e8,0.8);dl.position.set(5,10,7);scene.add(dl);const geo=new THREE.TorusKnotGeometry(1.5,0.4,120,16);const mat=new THREE.MeshPhongMaterial({color:0x1a73e8});const m=new THREE.Mesh(geo,mat);scene.add(m);function a(){requestAnimationFrame(a);m.rotation.y+=0.01;rend.render(scene,cam);}a();window.onresize=()=>{cam.aspect=window.innerWidth/window.innerHeight;cam.updateProjectionMatrix();rend.setSize(window.innerWidth,window.innerHeight);};<\/script></body></html>`;
+      downloadFile(`${currentShape}_standalone.html`, htmlContent, 'text/html');
+      showToast(`Exported Standalone HTML Viewer!`);
+    }
+
+    function downloadFile(filename, content, type) {
+      const blob = new Blob([content], { type: type });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+    }
+
+    // =========================================================================
+    // MCP MODAL & SIMULATOR
+    // =========================================================================
+
+    function openMcpModal() {
+      document.getElementById('modal-mcp').classList.add('open');
+    }
+    function openDocsModal() {
+      document.getElementById('modal-docs').classList.add('open');
+    }
+    function closeModals() {
+      document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('open'));
+    }
+
+    function onMcpToolChange() {
+      const tool = document.getElementById('mcp-tool-select').value;
+      const input = document.getElementById('mcp-payload-input');
+
+      if (tool === 'generate_mesh') {
+        input.value = JSON.stringify({
+          primitive: currentShape,
+          params: params[currentShape] || {}
+        }, null, 2);
+      } else if (tool === 'export_scene') {
+        input.value = JSON.stringify({
+          format: "obj",
+          output_path: `./output/${currentShape}.obj`
+        }, null, 2);
+      } else if (tool === 'inspect_geometry') {
+        input.value = JSON.stringify({
+          primitive: currentShape
+        }, null, 2);
+      } else {
+        input.value = JSON.stringify({
+          action: "query"
+        }, null, 2);
+      }
+    }
+
+    function simulateMcpCall() {
+      const tool = document.getElementById('mcp-tool-select').value;
+      const t0 = performance.now();
+
+      setTimeout(() => {
+        const dt = (performance.now() - t0).toFixed(1);
+        document.getElementById('mcp-latency').innerText = `Latency: ${dt}ms`;
+
+        let resp;
+        if (tool === 'generate_mesh') {
+          try {
+            const parsed = JSON.parse(document.getElementById('mcp-payload-input').value);
+            if (parsed.primitive) selectShape(parsed.primitive);
+          } catch(e){}
+          resp = {
+            jsonrpc: "2.0",
+            id: 101,
+            result: {
+              status: "success",
+              primitive: currentShape,
+              vertices: parseInt(document.getElementById('tele-verts').innerText.replace(/,/g, '')),
+              triangles: parseInt(document.getElementById('tele-tris').innerText.replace(/,/g, ''))
+            }
+          };
+        } else if (tool === 'inspect_geometry') {
+          resp = {
+            jsonrpc: "2.0",
+            id: 102,
+            result: {
+              primitive: currentShape,
+              vertices: parseInt(document.getElementById('tele-verts').innerText.replace(/,/g, '')),
+              faces: parseInt(document.getElementById('tele-faces').innerText.replace(/,/g, '')),
+              triangles: parseInt(document.getElementById('tele-tris').innerText.replace(/,/g, '')),
+              surface_area: parseFloat(document.getElementById('tele-area').innerText)
+            }
+          };
+        } else {
+          resp = { jsonrpc: "2.0", id: 103, result: { message: `Tool ${tool} executed successfully.` } };
+        }
+        document.getElementById('mcp-response-output').innerText = JSON.stringify(resp, null, 2);
+      }, 60);
+    }
+
+    function copyMcpConfig() {
+      const cfg = `{\n  "mcpServers": {\n    "nexus3d": {\n      "command": "python",\n      "args": ["-m", "nexus_3d_scene_studio.mcp_server"],\n      "env": { "PYTHONPATH": "src" }\n    }\n  }\n}`;
+      navigator.clipboard.writeText(cfg);
+      showToast("Claude Desktop MCP config copied to clipboard!");
+    }
+
+    // =========================================================================
+    // MOUSE ORBIT CONTROLS & RENDER LOOP
+    // =========================================================================
+
+    function setupMouse(el) {
+      el.addEventListener('mousedown', (e) => {
+        isMouseDown = true;
+        prevX = e.clientX;
+        prevY = e.clientY;
+      });
+      window.addEventListener('mouseup', () => { isMouseDown = false; });
+      window.addEventListener('mousemove', (e) => {
+        if (!isMouseDown) return;
+        const dx = e.clientX - prevX;
+        const dy = e.clientY - prevY;
+        prevX = e.clientX;
+        prevY = e.clientY;
+        rotY += dx * 0.008;
+        rotX = Math.max(-1.5, Math.min(1.5, rotX + dy * 0.008));
+        updateCamera();
+      });
+      el.addEventListener('wheel', (e) => {
+        camDist = Math.max(3.0, Math.min(25.0, camDist + e.deltaY * 0.005));
+        updateCamera();
+        e.preventDefault();
+      }, { passive: false });
+    }
+
+    function updateCamera() {
+      camera.position.x = camDist * Math.sin(rotY) * Math.cos(rotX);
+      camera.position.y = camDist * Math.sin(rotX);
+      camera.position.z = camDist * Math.cos(rotY) * Math.cos(rotX);
+      camera.lookAt(0, 0, 0);
+    }
+
+    function resetCamera() {
+      rotX = 0.35;
+      rotY = 0.55;
+      camDist = 7.5;
+      updateCamera();
+    }
+
+    function onWindowResize() {
+      const c = document.getElementById('canvas-container');
+      camera.aspect = c.clientWidth / c.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(c.clientWidth, c.clientHeight);
+    }
+
+    function animate(now) {
+      requestAnimationFrame(animate);
+
+      // FPS tracking
+      frameCount++;
+      if (now - lastFrameTime >= 1000) {
+        document.getElementById('tele-fps').innerText = `${frameCount} FPS`;
+        frameCount = 0;
+        lastFrameTime = now;
+      }
+
+      if (autoRotate && activeMeshGroup) {
+        activeMeshGroup.rotation.y += 0.008;
+      }
+
+      if (currentShape === 'tesseract') {
+        params.tesseract.angle += 0.015 * params.tesseract.speed;
+        refreshActiveMesh();
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

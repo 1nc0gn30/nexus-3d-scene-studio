@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "nexus-3d-scene-studio": {
+      "command": "python",
+      "args": [
+        "-m",
+        "nexus_3d_scene_studio.mcp_server"
+      ],
+      "env": {
+        "PYTHONPATH": "src"
+      }
+    }
+  }
+}

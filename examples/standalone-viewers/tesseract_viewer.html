@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus 3D - 4D Hypercube Tesseract Standalone Viewer</title>
+  <style>
+    :root {
+      --md-sys-color-primary: #1a73e8;
+      --md-sys-color-on-primary: #ffffff;
+      --md-sys-color-primary-container: #d2e3fc;
+      --md-sys-color-surface: #f8f9fa;
+      --md-sys-color-surface-container: #ffffff;
+      --md-sys-color-on-surface: #202124;
+      --md-sys-color-outline: #dadce0;
+      --md-sys-color-outline-variant: #e8eaed;
+      --md-sys-color-secondary-text: #5f6368;
+      --google-blue: #1a73e8;
+      --google-red: #d93025;
+      --google-yellow: #f9ab00;
+      --google-green: #1e8e3e;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+      --shadow-1: 0 1px 3px rgba(60,64,67, 0.3), 0 4px 8px 3px rgba(60,64,67, 0.15);
+      --shadow-card: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Google Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Top App Bar */
+    header {
+      height: 64px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .google-dots {
+      display: flex;
+      gap: 4px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot-blue { background: var(--google-blue); }
+    .dot-red { background: var(--google-red); }
+    .dot-yellow { background: var(--google-yellow); }
+    .dot-green { background: var(--google-green); }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--md-sys-color-on-surface);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chip-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: var(--md-sys-color-primary-container);
+      color: var(--google-blue);
+    }
+
+    /* Main Layout */
+    .main-container {
+      display: flex;
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #canvas-container {
+      flex: 1;
+      position: relative;
+      background: radial-gradient(circle at center, #ffffff 0%, #f1f3f4 100%);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Side Control Panel */
+    .control-panel {
+      width: 360px;
+      background: #ffffff;
+      border-left: 1px solid var(--md-sys-color-outline-variant);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 20px;
+      gap: 20px;
+      box-shadow: -2px 0 6px rgba(0,0,0,0.03);
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card-header {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--md-sys-color-secondary-text);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--md-sys-color-on-surface);
+    }
+
+    .control-val {
+      color: var(--google-blue);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #e0e0e0;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--google-blue);
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      transition: transform 0.1s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .btn-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    button {
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--md-sys-color-outline);
+      background: #ffffff;
+      color: var(--md-sys-color-on-surface);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #f1f3f4;
+      border-color: #c0c0c0;
+    }
+
+    button.primary {
+      background: var(--google-blue);
+      color: #ffffff;
+      border-color: var(--google-blue);
+    }
+    button.primary:hover {
+      background: #1557b0;
+    }
+
+    /* Telemetry Table */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .telemetry-item {
+      background: #f8f9fa;
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+    }
+    .telemetry-label {
+      font-size: 0.72rem;
+      color: var(--md-sys-color-secondary-text);
+      text-transform: uppercase;
+    }
+    .telemetry-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--md-sys-color-on-surface);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Floating Overlay */
+    .viewport-overlay {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-card);
+      pointer-events: none;
+    }
+    .overlay-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--md-sys-color-on-surface);
+    }
+    .overlay-subtitle {
+      font-size: 0.78rem;
+      color: var(--md-sys-color-secondary-text);
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="google-dots">
+        <div class="dot dot-blue"></div>
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+      </div>
+      <div class="brand-title">
+        Nexus 3D Studio
+        <span class="chip-badge">4D Tesseract Viewer</span>
+      </div>
+    </div>
+    <div>
+      <button onclick="resetCamera()">Reset Camera</button>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <div id="canvas-container">
+      <div class="viewport-overlay">
+        <div class="overlay-title">🔮 4D Hypercube Tesseract</div>
+        <div class="overlay-subtitle">$\mathbb{R}^4 \to \mathbb{R}^3$ Stereographic Rotation Projection</div>
+      </div>
+      <canvas id="webgl-canvas"></canvas>
+    </div>
+
+    <aside class="control-panel">
+      <!-- 4D Rotation Controls -->
+      <div class="card">
+        <div class="card-header">
+          <span>4D Projection Controls</span>
+        </div>
+
+        <div class="control-row">
+          <div class="control-label">
+            <span>4D Rotation Speed (XW/YW)</span>
+            <span class="control-val" id="val-speed">1.0x</span>
+          </div>
+          <input type="range" id="input-speed" min="0" max="3" step="0.1" value="1.0">
+        </div>
+
+        <div class="control-row">
+          <div class="control-label">
+            <span>Projection Distance (d)</span>
+            <span class="control-val" id="val-dist">2.80</span>
+          </div>
+          <input type="range" id="input-dist" min="1.5" max="5.0" step="0.05" value="2.80">
+        </div>
+
+        <div class="control-row">
+          <div class="control-label">
+            <span>Hypercube Scale</span>
+            <span class="control-val" id="val-scale">2.20</span>
+          </div>
+          <input type="range" id="input-scale" min="1.0" max="4.0" step="0.1" value="2.20">
+        </div>
+
+        <div class="btn-group">
+          <button id="btn-pause" onclick="toggleAnimation()">Pause 4D Rot</button>
+          <button onclick="stepRotation()">Step 45°</button>
+        </div>
+      </div>
+
+      <!-- Rendering Styles -->
+      <div class="card">
+        <div class="card-header">
+          <span>Material & Appearance</span>
+        </div>
+        <div class="control-row">
+          <div class="control-label">
+            <span>Outer Cube Shading</span>
+          </div>
+          <div class="btn-group">
+            <button class="primary" id="btn-mode-hybrid" onclick="setRenderMode('hybrid')">Solid + Edges</button>
+            <button id="btn-mode-wire" onclick="setRenderMode('wireframe')">Pure Wire</button>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <div class="control-label">
+            <span>Vertex Node Spheres</span>
+          </div>
+          <div class="btn-group">
+            <button class="primary" id="btn-nodes-on" onclick="toggleNodes(true)">Visible</button>
+            <button id="btn-nodes-off" onclick="toggleNodes(false)">Hidden</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Geometry Telemetry -->
+      <div class="card">
+        <div class="card-header">
+          <span>Geometry Telemetry</span>
+          <span style="color: var(--google-green); font-size: 0.8rem; font-weight: 700;">GRADE A+</span>
+        </div>
+        <div class="telemetry-grid">
+          <div class="telemetry-item">
+            <span class="telemetry-label">4D Vertices</span>
+            <span class="telemetry-value">16</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">4D Edges</span>
+            <span class="telemetry-value">32</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Cubic Cells</span>
+            <span class="telemetry-value">8</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Triangles</span>
+            <span class="telemetry-value" id="tele-triangles">48</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Actions -->
+      <div class="card">
+        <div class="card-header">
+          <span>Export 3D Snapshot</span>
+        </div>
+        <button class="primary" onclick="exportCurrentOBJ()">Download Current OBJ</button>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // 4D Tesseract Geometry Definitions
+    const V4D = [];
+    for (let x of [-1, 1]) {
+      for (let y of [-1, 1]) {
+        for (let z of [-1, 1]) {
+          for (let w of [-1, 1]) {
+            V4D.push([x, y, z, w]);
+          }
+        }
+      }
+    }
+
+    // 32 Edges in 4D (connecting vertices that differ in exactly 1 bit)
+    const EDGES_4D = [];
+    for (let i = 0; i < 16; i++) {
+      for (let bit = 0; bit < 4; bit++) {
+        let neighbor = i ^ (1 << bit);
+        if (neighbor > i) {
+          EDGES_4D.push([i, neighbor]);
+        }
+      }
+    }
+
+    // 24 Quad Faces
+    const FACES_QUADS = [
+      // w = -1 (inner cube)
+      [0, 1, 3, 2], [4, 5, 7, 6], [0, 1, 5, 4], [2, 3, 7, 6], [0, 2, 6, 4], [1, 3, 7, 5],
+      // w = 1 (outer cube)
+      [8, 9, 11, 10], [12, 13, 15, 14], [8, 9, 13, 12], [10, 11, 15, 14], [8, 10, 14, 12], [9, 11, 15, 13],
+      // 12 connecting tunnel faces
+      [0, 1, 9, 8], [2, 3, 11, 10], [4, 5, 13, 12], [6, 7, 15, 14],
+      [0, 2, 10, 8], [1, 3, 11, 9], [4, 6, 14, 12], [5, 7, 15, 13],
+      [0, 4, 12, 8], [1, 5, 13, 9], [2, 6, 14, 10], [3, 7, 15, 11]
+    ];
+
+    // Three.js Scene Setup
+    let scene, camera, renderer;
+    let edgeLinesGroup, facesMesh, nodesGroup;
+    let angle4D = 0;
+    let isAnimating = true;
+    let rotationSpeed = 1.0;
+    let projDistance = 2.8;
+    let meshScale = 2.2;
+    let renderMode = 'hybrid';
+    let showNodes = true;
+
+    // Mouse Interaction
+    let isMouseDown = false, prevMouseX = 0, prevMouseY = 0;
+    let rotX = 0.3, rotY = 0.5, camDist = 7.0;
+
+    function init() {
+      const container = document.getElementById('canvas-container');
+      const canvas = document.getElementById('webgl-canvas');
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf8f9fa);
+
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+      updateCameraPosition();
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Lighting
+      const ambLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambLight);
+
+      const dirLight1 = new THREE.DirectionalLight(0x1a73e8, 0.8);
+      dirLight1.position.set(5, 10, 7);
+      scene.add(dirLight1);
+
+      const dirLight2 = new THREE.DirectionalLight(0xf9ab00, 0.4);
+      dirLight2.position.set(-5, -5, -5);
+      scene.add(dirLight2);
+
+      // Groups
+      edgeLinesGroup = new THREE.Group();
+      nodesGroup = new THREE.Group();
+      scene.add(edgeLinesGroup);
+      scene.add(nodesGroup);
+
+      // Node Geometry
+      const sphereGeo = new THREE.SphereGeometry(0.08, 16, 16);
+      const nodeMat = new THREE.MeshPhongMaterial({ color: 0x1a73e8, shininess: 100 });
+      for (let i = 0; i < 16; i++) {
+        const mesh = new THREE.Mesh(sphereGeo, nodeMat);
+        nodesGroup.add(mesh);
+      }
+
+      // Initial Build
+      rebuild3DMesh();
+
+      // Event Listeners
+      window.addEventListener('resize', onWindowResize);
+      setupControls();
+      setupMouseOrbit(container);
+
+      // Animation Loop
+      animate();
+    }
+
+    function project4D(v4, angle, dist, scale) {
+      const [x, y, z, w] = v4;
+      const cosT = Math.cos(angle);
+      const sinT = Math.sin(angle);
+
+      // Rotate in XW and YW planes
+      const xRot = x * cosT - w * sinT;
+      const wRot = x * sinT + w * cosT;
+      const yRot = y * cosT - wRot * sinT;
+      const wFinal = y * sinT + wRot * cosT;
+
+      const denom = Math.max(0.1, dist - wFinal);
+      const factor = scale / denom;
+
+      return new THREE.Vector3(xRot * factor, yRot * factor, z * factor);
+    }
+
+    function rebuild3DMesh() {
+      const projected = V4D.map(v => project4D(v, angle4D, projDistance, meshScale));
+
+      // Update Nodes
+      for (let i = 0; i < 16; i++) {
+        nodesGroup.children[i].position.copy(projected[i]);
+      }
+
+      // Update Edges
+      while (edgeLinesGroup.children.length > 0) {
+        edgeLinesGroup.remove(edgeLinesGroup.children[0]);
+      }
+
+      const edgePositions = [];
+      for (let [i, j] of EDGES_4D) {
+        const p1 = projected[i];
+        const p2 = projected[j];
+        edgePositions.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+      }
+
+      const lineGeo = new THREE.BufferGeometry();
+      lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(edgePositions, 3));
+      const lineMat = new THREE.LineBasicMaterial({ color: 0x1a73e8, linewidth: 2 });
+      const lines = new THREE.LineSegments(lineGeo, lineMat);
+      edgeLinesGroup.add(lines);
+
+      // Update Faces Mesh
+      if (facesMesh) scene.remove(facesMesh);
+
+      if (renderMode === 'hybrid') {
+        const facePositions = [];
+        for (let quad of FACES_QUADS) {
+          const p0 = projected[quad[0]], p1 = projected[quad[1]], p2 = projected[quad[2]], p3 = projected[quad[3]];
+          // Triangle 1
+          facePositions.push(p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+          // Triangle 2
+          facePositions.push(p0.x, p0.y, p0.z, p2.x, p2.y, p2.z, p3.x, p3.y, p3.z);
+        }
+        const faceGeo = new THREE.BufferGeometry();
+        faceGeo.setAttribute('position', new THREE.Float32BufferAttribute(facePositions, 3));
+        faceGeo.computeVertexNormals();
+
+        const faceMat = new THREE.MeshPhongMaterial({
+          color: 0xd2e3fc,
+          transparent: true,
+          opacity: 0.45,
+          side: THREE.DoubleSide,
+          shininess: 40
+        });
+        facesMesh = new THREE.Mesh(faceGeo, faceMat);
+        scene.add(facesMesh);
+      }
+    }
+
+    function setupControls() {
+      document.getElementById('input-speed').addEventListener('input', (e) => {
+        rotationSpeed = parseFloat(e.target.value);
+        document.getElementById('val-speed').innerText = rotationSpeed.toFixed(1) + 'x';
+      });
+      document.getElementById('input-dist').addEventListener('input', (e) => {
+        projDistance = parseFloat(e.target.value);
+        document.getElementById('val-dist').innerText = projDistance.toFixed(2);
+        rebuild3DMesh();
+      });
+      document.getElementById('input-scale').addEventListener('input', (e) => {
+        meshScale = parseFloat(e.target.value);
+        document.getElementById('val-scale').innerText = meshScale.toFixed(2);
+        rebuild3DMesh();
+      });
+    }
+
+    function setupMouseOrbit(el) {
+      el.addEventListener('mousedown', (e) => {
+        isMouseDown = true;
+        prevMouseX = e.clientX;
+        prevMouseY = e.clientY;
+      });
+      window.addEventListener('mouseup', () => { isMouseDown = false; });
+      window.addEventListener('mousemove', (e) => {
+        if (!isMouseDown) return;
+        const dx = e.clientX - prevMouseX;
+        const dy = e.clientY - prevMouseY;
+        prevMouseX = e.clientX;
+        prevMouseY = e.clientY;
+
+        rotY += dx * 0.008;
+        rotX = Math.max(-1.5, Math.min(1.5, rotX + dy * 0.008));
+        updateCameraPosition();
+      });
+
+      el.addEventListener('wheel', (e) => {
+        camDist = Math.max(3.0, Math.min(20.0, camDist + e.deltaY * 0.005));
+        updateCameraPosition();
+        e.preventDefault();
+      }, { passive: false });
+    }
+
+    function updateCameraPosition() {
+      camera.position.x = camDist * Math.sin(rotY) * Math.cos(rotX);
+      camera.position.y = camDist * Math.sin(rotX);
+      camera.position.z = camDist * Math.cos(rotY) * Math.cos(rotX);
+      camera.lookAt(0, 0, 0);
+    }
+
+    function resetCamera() {
+      rotX = 0.3;
+      rotY = 0.5;
+      camDist = 7.0;
+      updateCameraPosition();
+    }
+
+    function toggleAnimation() {
+      isAnimating = !isAnimating;
+      document.getElementById('btn-pause').innerText = isAnimating ? 'Pause 4D Rot' : 'Resume 4D Rot';
+    }
+
+    function stepRotation() {
+      angle4D += Math.PI / 4;
+      rebuild3DMesh();
+    }
+
+    function setRenderMode(mode) {
+      renderMode = mode;
+      document.getElementById('btn-mode-hybrid').className = mode === 'hybrid' ? 'primary' : '';
+      document.getElementById('btn-mode-wire').className = mode === 'wireframe' ? 'primary' : '';
+      rebuild3DMesh();
+    }
+
+    function toggleNodes(show) {
+      showNodes = show;
+      nodesGroup.visible = show;
+      document.getElementById('btn-nodes-on').className = show ? 'primary' : '';
+      document.getElementById('btn-nodes-off').className = !show ? 'primary' : '';
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('canvas-container');
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    function exportCurrentOBJ() {
+      const projected = V4D.map(v => project4D(v, angle4D, projDistance, meshScale));
+      let obj = "# Nexus 3D - 4D Hypercube Tesseract Projected Snapshot\n";
+      obj += "o Tesseract_4D_Snapshot\n\n";
+
+      for (let v of projected) {
+        obj += `v ${v.x.toFixed(6)} ${v.y.toFixed(6)} ${v.z.toFixed(6)}\n`;
+      }
+
+      obj += "\ns 1\n";
+      for (let quad of FACES_QUADS) {
+        obj += `f ${quad[0] + 1} ${quad[1] + 1} ${quad[2] + 1} ${quad[3] + 1}\n`;
+      }
+
+      const blob = new Blob([obj], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `tesseract_snapshot_${Date.now()}.obj`;
+      a.click();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (isAnimating) {
+        angle4D += 0.015 * rotationSpeed;
+        rebuild3DMesh();
+      }
+      renderer.render(scene, camera);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "nexus-3d-studio": {
+      "command": "python3",
+      "args": [
+        "-m",
+        "nexus_3d_scene_studio.mcp_server"
+      ],
+      "env": {
+        "PYTHONPATH": "src"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "generate_mesh",
+        "export_scene",
+        "inspect_geometry",
+        "list_primitives",
+        "transform_mesh"
+      ]
+    }
+  }
+}
