@@ -33,6 +33,13 @@ from .geometry_engine import (
     generate_tesseract_4d,
     generate_torus_knot,
 )
+from .procedural_fractals import (
+    decimate_mesh,
+    generate_klein_bottle,
+    generate_lod_pyramid,
+    generate_menger_sponge,
+    generate_strange_attractor,
+)
 from .mesh_exporter import MeshExporter
 from .scene_optimizer import SceneOptimizer
 from .mcp_server import (
@@ -75,6 +82,11 @@ __all__ = [
     "generate_platonic_solid",
     "generate_buckyball",
     "generate_procedural_terrain",
+    "generate_strange_attractor",
+    "generate_klein_bottle",
+    "generate_menger_sponge",
+    "decimate_mesh",
+    "generate_lod_pyramid",
     "MeshExporter",
     "SceneOptimizer",
     "MCPServer",

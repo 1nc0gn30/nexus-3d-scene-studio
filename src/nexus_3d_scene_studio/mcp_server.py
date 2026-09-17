@@ -318,6 +318,44 @@ class MCPServer:
             handler=self._handle_get_diagnostics,
         )
 
+        # 9. nexus_generate_fractal
+        self.register_tool(
+            name="nexus_generate_fractal",
+            description="Generate parametric fractals, strange attractors (Lorenz, Rossler, Aizawa, Chen), Klein Bottle, or Menger Sponge.",
+            input_schema={
+                "type": "object",
+                "properties": {
+                    "fractal_type": {
+                        "type": "string",
+                        "enum": ["lorenz", "rossler", "aizawa", "chen", "klein_bottle", "menger_sponge"],
+                        "default": "lorenz",
+                    },
+                    "steps": {"type": "integer", "description": "Attractor integration steps", "default": 1500},
+                    "dt": {"type": "number", "description": "Attractor time delta", "default": 0.01},
+                    "tube_radius": {"type": "number", "description": "Cross-sectional ribbon tube radius", "default": 0.06},
+                    "level": {"type": "integer", "description": "Menger sponge recursion level (0-2)", "default": 1},
+                    "format": {"type": "string", "enum": ["dict", "obj", "stl", "json", "html", "gltf", "ply"], "default": "dict"},
+                },
+            },
+            handler=self._handle_generate_fractal,
+        )
+
+        # 10. nexus_generate_lod_pyramid
+        self.register_tool(
+            name="nexus_generate_lod_pyramid",
+            description="Generate multi-tier Level-of-Detail (LOD) pyramid with edge decimation and view distance switch thresholds.",
+            input_schema={
+                "type": "object",
+                "properties": {
+                    "shape_type": {"type": "string", "description": "Shape to generate and build LOD pyramid for"},
+                    "shape_params": {"type": "object", "default": {}},
+                    "mesh_data": {"type": "object", "description": "Optional raw mesh dictionary"},
+                    "ratios": {"type": "array", "items": {"type": "number"}, "default": [1.0, 0.5, 0.25, 0.1]},
+                },
+            },
+            handler=self._handle_generate_lod_pyramid,
+        )
+
     # -----------------------------------------------------------------------
     # Built-in Tool Handlers
     # -----------------------------------------------------------------------
@@ -392,6 +430,30 @@ class MCPServer:
             return generate_fibonacci_lattice(
                 count=int(params.get("count", 200)),
                 radius=float(params.get("radius", 2.5)),
+            )
+        elif st in ("attractor", "strange_attractor", "lorenz", "rossler", "aizawa", "chen"):
+            from .procedural_fractals import generate_strange_attractor
+            atype = params.get("attractor_type", st if st not in ("attractor", "strange_attractor") else "lorenz")
+            return generate_strange_attractor(
+                attractor_type=atype,
+                steps=int(params.get("steps", 1500)),
+                dt=float(params.get("dt", 0.01)),
+                tube_radius=float(params.get("tube_radius", 0.06)),
+                tube_segments=int(params.get("tube_segments", 6)),
+                scale=float(params.get("scale", 0.1)),
+            )
+        elif st in ("klein", "klein_bottle"):
+            from .procedural_fractals import generate_klein_bottle
+            return generate_klein_bottle(
+                u_segments=int(params.get("u_segments", 32)),
+                v_segments=int(params.get("v_segments", 16)),
+                scale=float(params.get("scale", 1.0)),
+            )
+        elif st in ("menger", "menger_sponge"):
+            from .procedural_fractals import generate_menger_sponge
+            return generate_menger_sponge(
+                level=int(params.get("level", 1)),
+                size=float(params.get("size", 2.0)),
             )
         else:
             raise ValueError(f"Unsupported shape type: '{shape_type}'")
@@ -528,6 +590,49 @@ class MCPServer:
         audit_res = SceneOptimizer.audit_mesh_budget(mesh)
         audit_res["mesh_name"] = mesh.name
         return audit_res
+
+    def _handle_generate_fractal(self, args: Dict[str, Any]) -> Any:
+        ftype = args.get("fractal_type", "lorenz").lower().strip()
+        fmt = args.get("format", "dict")
+        if ftype in ("lorenz", "rossler", "aizawa", "chen"):
+            from .procedural_fractals import generate_strange_attractor
+            mesh = generate_strange_attractor(
+                attractor_type=ftype,
+                steps=int(args.get("steps", 1500)),
+                dt=float(args.get("dt", 0.01)),
+                tube_radius=float(args.get("tube_radius", 0.06)),
+            )
+        elif ftype in ("klein", "klein_bottle"):
+            from .procedural_fractals import generate_klein_bottle
+            mesh = generate_klein_bottle()
+        elif ftype in ("menger", "menger_sponge"):
+            from .procedural_fractals import generate_menger_sponge
+            mesh = generate_menger_sponge(level=int(args.get("level", 1)))
+        else:
+            raise ValueError(f"Unknown fractal type: '{ftype}'")
+
+        return self._format_mesh_output(mesh, fmt)
+
+    def _handle_generate_lod_pyramid(self, args: Dict[str, Any]) -> Dict[str, Any]:
+        raw_mesh = args.get("mesh_data")
+        shape_type = args.get("shape_type")
+        params = args.get("shape_params", {})
+        ratios = args.get("ratios", [1.0, 0.5, 0.25, 0.1])
+
+        if raw_mesh:
+            mesh = ensure_mesh_data(raw_mesh)
+        elif shape_type:
+            mesh = self._generate_mesh_from_params(shape_type, params)
+        else:
+            mesh = generate_torus_knot()
+
+        from .procedural_fractals import generate_lod_pyramid
+        lod_data = generate_lod_pyramid(mesh, lod_ratios=ratios)
+        return {
+            "summary": lod_data["summary"],
+            "base_mesh_name": lod_data["base_mesh_name"],
+            "levels": {k: v.to_dict() for k, v in lod_data["levels"].items()},
+        }
 
     def _handle_get_diagnostics(self, args: Dict[str, Any]) -> Dict[str, Any]:
         diag = get_system_diagnostics()

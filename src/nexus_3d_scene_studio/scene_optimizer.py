@@ -485,3 +485,22 @@ class SceneOptimizer:
             name=mesh.name,
             metadata={**mesh.metadata, "centered": True, "offset": [cx, cy, cz]},
         )
+
+    @staticmethod
+    def decimate_mesh(
+        mesh_data: Union[MeshData, Dict[str, Any]],
+        target_ratio: float = 0.5,
+    ) -> MeshData:
+        """Decimate mesh polygon count towards target_ratio using edge-length contraction."""
+        from .procedural_fractals import decimate_mesh as _decimate
+        return _decimate(mesh_data, target_ratio=target_ratio)
+
+    @staticmethod
+    def generate_lod_pyramid(
+        mesh_data: Union[MeshData, Dict[str, Any]],
+        lod_ratios: Sequence[float] = (1.0, 0.5, 0.25, 0.1),
+    ) -> Dict[str, Any]:
+        """Generate a multi-tier Level-of-Detail (LOD) pyramid for 3D streaming and performance scaling."""
+        from .procedural_fractals import generate_lod_pyramid as _gen_lod
+        return _gen_lod(mesh_data, lod_ratios=lod_ratios)
+

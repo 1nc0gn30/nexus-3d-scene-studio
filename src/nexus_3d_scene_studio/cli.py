@@ -175,6 +175,28 @@ def _resolve_shape(shape_name: str, params: Dict[str, Any]) -> MeshData:
             count=int(params.get("count", 200)),
             radius=float(params.get("radius", 2.5)),
         )
+    elif st in ("attractor", "strange_attractor", "lorenz", "rossler", "aizawa", "chen"):
+        from .procedural_fractals import generate_strange_attractor
+        atype = params.get("attractor_type", st if st not in ("attractor", "strange_attractor") else "lorenz")
+        return generate_strange_attractor(
+            attractor_type=atype,
+            steps=int(params.get("steps", 1500)),
+            dt=float(params.get("dt", 0.01)),
+            tube_radius=float(params.get("tube_radius", 0.06)),
+        )
+    elif st in ("klein", "klein_bottle"):
+        from .procedural_fractals import generate_klein_bottle
+        return generate_klein_bottle(
+            u_segments=int(params.get("u_segments", 32)),
+            v_segments=int(params.get("v_segments", 16)),
+            scale=float(params.get("scale", 1.0)),
+        )
+    elif st in ("menger", "menger_sponge"):
+        from .procedural_fractals import generate_menger_sponge
+        return generate_menger_sponge(
+            level=int(params.get("level", 1)),
+            size=float(params.get("size", 2.0)),
+        )
     else:
         raise ValueError(
             f"Unknown procedural shape: '{shape_name}'. "
