@@ -171,18 +171,18 @@ class TestMcpClientConfigs:
 
 
 class TestStudioPublicApp:
-    """Test suite for public/index.html Google Material 3 Studio app."""
+    """Test suite for public/index.html Nexus 3D Studio app."""
 
     def test_public_index_html_structure(self):
-        """Verify Google Material 3 Studio web application."""
+        """Verify Nexus 3D Studio web application."""
         index_file = PUBLIC_DIR / "index.html"
         assert index_file.is_file(), "public/index.html is missing"
         html = index_file.read_text(encoding="utf-8")
 
         # Check MD3 branding & tokens
-        assert "Google Nexus 3D Studio" in html
-        assert "#1a73e8" in html # Google Blue
-        assert "google-dots" in html # Google 4-dots branding
+        assert "Nexus 3D Studio" in html
+        assert "#1a73e8" in html # Material Blue
+        assert "google-dots" in html # 4-dots accent branding
         assert "studio-canvas" in html # 3D WebGL Canvas
 
         # Check Primitives

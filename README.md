@@ -2,13 +2,13 @@
 
 <div align="center">
 
-![Nexus 3D Header](https://img.shields.io/badge/Google%20Material%203-Studio%20UI-1a73e8?style=for-the-badge&logo=google)
+![Nexus 3D Header](https://img.shields.io/badge/Material%203-Studio%20UI-1a73e8?style=for-the-badge)
 ![Python 3.9+](https://img.shields.io/badge/Python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![MCP Protocol](https://img.shields.io/badge/Model%20Context%20Protocol-MCP%20Ready-1e8e3e?style=for-the-badge)
 ![Zero Dependencies](https://img.shields.io/badge/Core%20Engine-100%25%20Stdlib-f9ab00?style=for-the-badge)
 ![License MIT](https://img.shields.io/badge/License-MIT-d93025?style=for-the-badge)
 
-**A pure Python 3D mathematical geometry engine, WebGL Material 3 studio, and Model Context Protocol (MCP) server for generative 3D modeling and autonomous AI agents.**
+**A pure Python 3D mathematical geometry engine, WebGL Material 3 studio (design influenced by Material 3), and Model Context Protocol (MCP) server for generative 3D modeling and autonomous AI agents.**
 
 [Live Studio Web UI](#-interactive-web-studio) • [Procedural Primitives](#-procedural-primitives-catalog) • [MCP Integration](#-ai-agent--mcp-server) • [Python API](#-python-api-quickstart) • [CLI Commands](#-cli-interface)
 
@@ -18,7 +18,7 @@
 
 ## 💎 Highlights & Capabilities
 
-- 🎨 **Google Material 3 Light Mode Studio**: Interactive WebGL 3D canvas with Google 4-dots branding, system fonts, smooth OrbitControls, wireframe/solid shading, lighting rigs, and real-time geometry telemetry HUD.
+- 🎨 **Material 3 Light Mode Studio**: Interactive WebGL 3D canvas (design influenced by Material 3), system fonts, smooth OrbitControls, wireframe/solid shading, lighting rigs, and real-time geometry telemetry HUD.
 - 🔮 **4D Hypercube (Tesseract) Engine**: Real-time 4D rotation matrices in $SO(4)$ Lie group projected into 3D space via stereographic projection.
 - 🌀 **Parametric Space Curves & Surfaces**: Torus knots $(p, q)$ with Frenet-Serret tube framing, Superquadrics with taper/twist/bend deformations, Fibonacci golden spiral spherical lattices, Buckyballs (Fullerene C60), and Möbius ribbons.
 - 🏔️ **Procedural Fractal Terrain**: Multi-octave Fractional Brownian Motion (fBm) elevation heightfields with analytical normal gradient calculations.
@@ -35,7 +35,7 @@
 │                                 NEXUS 3D SCENE STUDIO                                  │
 ├──────────────────────────────┬──────────────────────────┬──────────────────────────────┤
 │      🎨 Web Studio HUD       │   🤖 AI Agent / MCP Hub   │      💻 CLI Interface        │
-│   (Google Material 3 UI)     │  (FastMCP / JSON-RPC 2)  │    (`nexus3d` commands)      │
+│   (Material 3 Studio UI)     │  (FastMCP / JSON-RPC 2)  │    (`nexus3d` commands)      │
 └──────────────┬───────────────┴────────────┬─────────────┴──────────────┬───────────────┘
                │                            │                            │
                ▼                            ▼                            ▼
@@ -123,7 +123,7 @@ nexus3d generate tesseract --rotation-4d 0.8 --export tesseract.obj
 # Generate a Parametric Torus Knot
 nexus3d generate torus-knot --p 3 --q 5 --tube-radius 0.4 --export knot.stl
 
-# Launch the interactive Google Material 3 Studio Web UI
+# Launch the interactive Nexus 3D Studio Web UI
 nexus3d serve --port 8080
 
 # Inspect geometry telemetry of any OBJ file

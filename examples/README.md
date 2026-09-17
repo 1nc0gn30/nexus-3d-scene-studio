@@ -45,7 +45,7 @@ python examples/procedural-shapes/generate_gallery.py
 ```
 
 ### 2. [Standalone 3D Viewers](./standalone-viewers/)
-Self-contained HTML5 / WebGL viewers styled with Google Material 3.
+Self-contained HTML5 / WebGL viewers styled with Material 3 (design influenced by Material 3).
 - No node build step, no web server required.
 - Double click to launch in your browser.
 

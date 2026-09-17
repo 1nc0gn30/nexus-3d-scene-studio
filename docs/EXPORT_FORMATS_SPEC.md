@@ -139,5 +139,5 @@ Nexus 3D exports modern `BufferGeometry` Object JSON:
 When exporting to `.html`, the engine embeds:
 1. **Inlined Mesh Buffers**: Flat Float32 vertex and normal arrays.
 2. **WebGL Rendering Pipeline**: Pure WebGL 2.0 / Three.js lightweight canvas.
-3. **Google Material 3 Responsive HUD**: Orbit controls, camera presets, wireframe/solid toggle, performance metrics.
+3. **Material 3 Responsive HUD (design influenced by Material 3)**: Orbit controls, camera presets, wireframe/solid toggle, performance metrics.
 4. **Zero Network Requirement**: Works 100% offline with zero dependencies.

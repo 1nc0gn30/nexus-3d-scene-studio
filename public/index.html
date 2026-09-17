@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Nexus 3D Studio - Mathematical Geometry Engine & MCP Hub</title>
+  <title>Nexus 3D Studio - Mathematical Geometry Engine & MCP Hub</title>
   <style>
     :root {
-      /* Google Material 3 Light Mode Palette */
+      /* Material 3 Light Mode Palette (design influenced by Material 3) */
       --md-sys-color-primary: #1a73e8;
       --md-sys-color-on-primary: #ffffff;
       --md-sys-color-primary-container: #d2e3fc;
@@ -573,7 +573,7 @@
         <div class="dot dot-green"></div>
       </div>
       <div class="brand-title">
-        Google Nexus 3D Studio
+        Nexus 3D Studio
         <span class="badge-pill">v1.0.0</span>
       </div>
     </div>
@@ -1405,7 +1405,7 @@ nexus3d serve --port 8080</pre>
       const norm = geo.attributes.normal;
       const index = geo.index;
 
-      let obj = `# Google Nexus 3D Studio - Wavefront OBJ Exporter\n# Mesh: ${currentShape}\n\no ${currentShape}\n\n`;
+      let obj = `# Nexus 3D Studio - Wavefront OBJ Exporter\n# Mesh: ${currentShape}\n\no ${currentShape}\n\n`;
       for (let i = 0; i < pos.count; i++) {
         obj += `v ${pos.getX(i).toFixed(6)} ${pos.getY(i).toFixed(6)} ${pos.getZ(i).toFixed(6)}\n`;
       }

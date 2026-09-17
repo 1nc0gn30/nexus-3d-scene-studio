@@ -2,7 +2,7 @@
 
 This directory contains lightweight, zero-dependency, self-contained single-file HTML 3D viewers.
 
-Each viewer provides an interactive WebGL 3D canvas styled with **Google Material 3**, real-time mathematical parameter sliders, live geometry telemetry, and 1-click Wavefront OBJ exporter.
+Each viewer provides an interactive WebGL 3D canvas styled with **Material 3** (design influenced by Material 3), real-time mathematical parameter sliders, live geometry telemetry, and 1-click Wavefront OBJ exporter.
 
 ---
 
@@ -17,7 +17,7 @@ Each viewer provides an interactive WebGL 3D canvas styled with **Google Materia
 
 ## 🌟 Architecture & Key Features
 
-- **Google Material 3 Light Mode UI**: Styled with clean Google Blue (`#1a73e8`), emerald green (`#1e8e3e`), amber (`#f9ab00`), and Google 4-dots branding.
+- **Material 3 Light Mode UI**: Styled with clean Material Blue (`#1a73e8`), emerald green (`#1e8e3e`), amber (`#f9ab00`), and 4-color accent system (influenced by Google Material tokens).
 - **Pure Client-Side Execution**: Zero backend or Node server required. Double-click to open in any web browser (Chrome, Firefox, Safari, Edge).
 - **Responsive Orbit & Touch Controls**: Mouse drag to orbit, scroll to zoom, right-click to pan. Full touch support for mobile and tablets.
 - **Export On Demand**: Export the currently viewed parameter configuration directly to `.obj` with 1 click.

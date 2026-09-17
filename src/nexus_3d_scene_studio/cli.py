@@ -1,7 +1,7 @@
 """Command Line Interface (CLI) for Nexus 3D Scene Studio.
 
 Provides command line tools for procedural 3D shape generation, polygon budget auditing,
-stdio MCP server running, Google Material 3 3D Studio Web UI server, and platform diagnostics.
+stdio MCP server running, Nexus 3D Studio Web UI server (design influenced by Material 3), and platform diagnostics.
 Pure Python standard library with zero external runtime dependencies.
 """
 
@@ -503,7 +503,7 @@ def build_parser() -> argparse.ArgumentParser:
     # 4. serve
     serve_parser = subparsers.add_parser(
         "serve",
-        help="Start Google Material 3 3D Studio Web UI server",
+        help="Start Nexus 3D Studio Web UI server (design influenced by Material 3)",
     )
     serve_parser.add_argument(
         "-p", "--port",
