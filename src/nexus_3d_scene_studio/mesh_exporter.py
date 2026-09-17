@@ -7,8 +7,10 @@ Pure Python standard library with zero external runtime dependencies.
 
 from __future__ import annotations
 
+import base64
 import json
 import math
+import struct
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 from .geometry_engine import MeshData, ensure_mesh_data, vec3_cross, vec3_normalize, vec3_sub
@@ -535,3 +537,330 @@ class MeshExporter:
 </html>
 """
         return html_template
+
+    @staticmethod
+    def export_gltf_dict(
+        mesh_data: Union[MeshData, Dict[str, Any]],
+        object_name: str = "nexus_geometry",
+        material_name: str = "nexus_pbr_material",
+        metallic: float = 0.15,
+        roughness: float = 0.35,
+        color: Tuple[float, float, float, float] = (0.1, 0.45, 0.91, 1.0),
+    ) -> Dict[str, Any]:
+        """Export geometry into standard glTF 2.0 ASCII scene specification dictionary.
+
+        Embeds all binary buffer data (vertices, triangulated indices, normals, UVs, colors)
+        as an inline Base64 data URI buffer with standard PBR metallic-roughness material.
+
+        Args:
+            mesh_data: Input MeshData or dictionary.
+            object_name: Mesh / Node identifier.
+            material_name: PBR material identifier.
+            metallic: Surface metallic factor in [0.0, 1.0].
+            roughness: Surface roughness factor in [0.0, 1.0].
+            color: Base RGBA diffuse color tuple in [0.0, 1.0].
+
+        Returns:
+            Dictionary matching official glTF 2.0 schema.
+        """
+        mesh = ensure_mesh_data(mesh_data)
+        verts = mesh.vertices
+        if not verts:
+            raise ValueError("Cannot export empty mesh with 0 vertices to glTF")
+
+        # 1. Triangulate faces
+        indices: List[int] = []
+        for face in mesh.faces:
+            if len(face) == 3:
+                indices.extend(face)
+            elif len(face) > 3:
+                for k in range(1, len(face) - 1):
+                    indices.extend([face[0], face[k], face[k + 1]])
+
+        # 2. Pack binary buffers
+        raw_buffer = bytearray()
+        buffer_views: List[Dict[str, Any]] = []
+        accessors: List[Dict[str, Any]] = []
+        attributes: Dict[str, int] = {}
+
+        # 2a. Position Accessor (FLOAT, VEC3)
+        pos_offset = len(raw_buffer)
+        min_x = min(v[0] for v in verts)
+        max_x = max(v[0] for v in verts)
+        min_y = min(v[1] for v in verts)
+        max_y = max(v[1] for v in verts)
+        min_z = min(v[2] for v in verts)
+        max_z = max(v[2] for v in verts)
+
+        for v in verts:
+            raw_buffer.extend(struct.pack("<fff", float(v[0]), float(v[1]), float(v[2])))
+
+        pos_len = len(raw_buffer) - pos_offset
+        buffer_views.append({
+            "buffer": 0,
+            "byteOffset": pos_offset,
+            "byteLength": pos_len,
+            "target": 34962,  # ARRAY_BUFFER
+        })
+        accessors.append({
+            "bufferView": len(buffer_views) - 1,
+            "byteOffset": 0,
+            "componentType": 5126,  # FLOAT
+            "count": len(verts),
+            "type": "VEC3",
+            "min": [round(min_x, 6), round(min_y, 6), round(min_z, 6)],
+            "max": [round(max_x, 6), round(max_y, 6), round(max_z, 6)],
+        })
+        attributes["POSITION"] = 0
+
+        # 2b. Indices Accessor
+        if indices:
+            pad = (4 - (len(raw_buffer) % 4)) % 4
+            raw_buffer.extend(b"\x00" * pad)
+
+            idx_offset = len(raw_buffer)
+            use_uint32 = max(indices) >= 65536
+            idx_component = 5125 if use_uint32 else 5123
+            pack_fmt = "<I" if use_uint32 else "<H"
+
+            for idx in indices:
+                raw_buffer.extend(struct.pack(pack_fmt, int(idx)))
+
+            idx_len = len(raw_buffer) - idx_offset
+            buffer_views.append({
+                "buffer": 0,
+                "byteOffset": idx_offset,
+                "byteLength": idx_len,
+                "target": 34963,  # ELEMENT_ARRAY_BUFFER
+            })
+            accessors.append({
+                "bufferView": len(buffer_views) - 1,
+                "byteOffset": 0,
+                "componentType": idx_component,
+                "count": len(indices),
+                "type": "SCALAR",
+                "min": [min(indices)],
+                "max": [max(indices)],
+            })
+            indices_accessor_idx: Optional[int] = len(accessors) - 1
+        else:
+            indices_accessor_idx = None
+
+        # 2c. Normals Accessor (optional)
+        if mesh.normals and len(mesh.normals) == len(verts):
+            pad = (4 - (len(raw_buffer) % 4)) % 4
+            raw_buffer.extend(b"\x00" * pad)
+            norm_offset = len(raw_buffer)
+            for n in mesh.normals:
+                raw_buffer.extend(struct.pack("<fff", float(n[0]), float(n[1]), float(n[2])))
+            norm_len = len(raw_buffer) - norm_offset
+            buffer_views.append({
+                "buffer": 0,
+                "byteOffset": norm_offset,
+                "byteLength": norm_len,
+                "target": 34962,
+            })
+            accessors.append({
+                "bufferView": len(buffer_views) - 1,
+                "byteOffset": 0,
+                "componentType": 5126,
+                "count": len(verts),
+                "type": "VEC3",
+            })
+            attributes["NORMAL"] = len(accessors) - 1
+
+        # 2d. UVs Accessor (optional)
+        if mesh.uvs and len(mesh.uvs) == len(verts):
+            pad = (4 - (len(raw_buffer) % 4)) % 4
+            raw_buffer.extend(b"\x00" * pad)
+            uv_offset = len(raw_buffer)
+            for uv in mesh.uvs:
+                raw_buffer.extend(struct.pack("<ff", float(uv[0]), float(uv[1])))
+            uv_len = len(raw_buffer) - uv_offset
+            buffer_views.append({
+                "buffer": 0,
+                "byteOffset": uv_offset,
+                "byteLength": uv_len,
+                "target": 34962,
+            })
+            accessors.append({
+                "bufferView": len(buffer_views) - 1,
+                "byteOffset": 0,
+                "componentType": 5126,
+                "count": len(verts),
+                "type": "VEC2",
+            })
+            attributes["TEXCOORD_0"] = len(accessors) - 1
+
+        # 2e. Vertex Colors Accessor (optional)
+        if mesh.colors and len(mesh.colors) == len(verts):
+            pad = (4 - (len(raw_buffer) % 4)) % 4
+            raw_buffer.extend(b"\x00" * pad)
+            col_offset = len(raw_buffer)
+            for c in mesh.colors:
+                raw_buffer.extend(struct.pack("<fff", float(c[0]), float(c[1]), float(c[2])))
+            col_len = len(raw_buffer) - col_offset
+            buffer_views.append({
+                "buffer": 0,
+                "byteOffset": col_offset,
+                "byteLength": col_len,
+                "target": 34962,
+            })
+            accessors.append({
+                "bufferView": len(buffer_views) - 1,
+                "byteOffset": 0,
+                "componentType": 5126,
+                "count": len(verts),
+                "type": "VEC3",
+            })
+            attributes["COLOR_0"] = len(accessors) - 1
+
+        # Base64 data URI buffer
+        b64_buffer = base64.b64encode(raw_buffer).decode("ascii")
+
+        primitive_dict: Dict[str, Any] = {
+            "attributes": attributes,
+            "material": 0,
+            "mode": 4,  # TRIANGLES
+        }
+        if indices_accessor_idx is not None:
+            primitive_dict["indices"] = indices_accessor_idx
+
+        gltf_doc: Dict[str, Any] = {
+            "asset": {
+                "version": "2.0",
+                "generator": "Nexus 3D Scene Studio glTF Exporter (Pure Python)",
+                "copyright": "Design influenced by Material 3 tokens",
+            },
+            "scene": 0,
+            "scenes": [
+                {
+                    "name": "DefaultScene",
+                    "nodes": [0],
+                }
+            ],
+            "nodes": [
+                {
+                    "name": object_name,
+                    "mesh": 0,
+                }
+            ],
+            "materials": [
+                {
+                    "name": material_name,
+                    "pbrMetallicRoughness": {
+                        "baseColorFactor": [float(color[0]), float(color[1]), float(color[2]), float(color[3]) if len(color) > 3 else 1.0],
+                        "metallicFactor": float(max(0.0, min(1.0, metallic))),
+                        "roughnessFactor": float(max(0.0, min(1.0, roughness))),
+                    },
+                    "doubleSided": True,
+                }
+            ],
+            "meshes": [
+                {
+                    "name": object_name,
+                    "primitives": [primitive_dict],
+                }
+            ],
+            "accessors": accessors,
+            "bufferViews": buffer_views,
+            "buffers": [
+                {
+                    "byteLength": len(raw_buffer),
+                    "uri": f"data:application/octet-stream;base64,{b64_buffer}",
+                }
+            ],
+        }
+        return gltf_doc
+
+    @staticmethod
+    def export_gltf(
+        mesh_data: Union[MeshData, Dict[str, Any]],
+        object_name: str = "nexus_geometry",
+        material_name: str = "nexus_pbr_material",
+        metallic: float = 0.15,
+        roughness: float = 0.35,
+        color: Tuple[float, float, float, float] = (0.1, 0.45, 0.91, 1.0),
+        indent: int = 2,
+    ) -> str:
+        """Export geometry to glTF 2.0 ASCII formatted JSON string."""
+        gltf_dict = MeshExporter.export_gltf_dict(
+            mesh_data=mesh_data,
+            object_name=object_name,
+            material_name=material_name,
+            metallic=metallic,
+            roughness=roughness,
+            color=color,
+        )
+        return json.dumps(gltf_dict, indent=indent)
+
+    @staticmethod
+    def export_ply(
+        mesh_data: Union[MeshData, Dict[str, Any]],
+        object_name: str = "nexus_mesh",
+    ) -> str:
+        """Export geometry to Stanford ASCII PLY (Polygon File Format) string.
+
+        Args:
+            mesh_data: Input MeshData or dictionary.
+            object_name: Header comment identifier.
+
+        Returns:
+            Standard ASCII PLY string.
+        """
+        mesh = ensure_mesh_data(mesh_data)
+        verts = mesh.vertices
+        faces = mesh.faces
+
+        has_normals = bool(mesh.normals and len(mesh.normals) == len(verts))
+        has_colors = bool(mesh.colors and len(mesh.colors) == len(verts))
+
+        lines: List[str] = [
+            "ply",
+            "format ascii 1.0",
+            f"comment Nexus 3D Scene Studio PLY Exporter - {object_name}",
+            "comment Design influenced by Material 3 tokens",
+            f"element vertex {len(verts)}",
+            "property float x",
+            "property float y",
+            "property float z",
+        ]
+
+        if has_normals:
+            lines.extend([
+                "property float nx",
+                "property float ny",
+                "property float nz",
+            ])
+
+        if has_colors:
+            lines.extend([
+                "property uchar red",
+                "property uchar green",
+                "property uchar blue",
+            ])
+
+        lines.extend([
+            f"element face {len(faces)}",
+            "property list uchar int vertex_indices",
+            "end_header",
+        ])
+
+        for idx, v in enumerate(verts):
+            parts = [f"{v[0]:.6f}", f"{v[1]:.6f}", f"{v[2]:.6f}"]
+            if has_normals and mesh.normals:
+                n = mesh.normals[idx]
+                parts.extend([f"{n[0]:.6f}", f"{n[1]:.6f}", f"{n[2]:.6f}"])
+            if has_colors and mesh.colors:
+                c = mesh.colors[idx]
+                r = int(max(0, min(255, round(c[0] * 255))))
+                g = int(max(0, min(255, round(c[1] * 255))))
+                b = int(max(0, min(255, round(c[2] * 255))))
+                parts.extend([str(r), str(g), str(b)])
+            lines.append(" ".join(parts))
+
+        for face in faces:
+            parts = [str(len(face))] + [str(v_idx) for v_idx in face]
+            lines.append(" ".join(parts))
+
+        return "\n".join(lines) + "\n"

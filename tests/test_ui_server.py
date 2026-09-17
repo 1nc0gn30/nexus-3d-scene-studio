@@ -188,6 +188,20 @@ class TestUIServer(unittest.TestCase):
         self.assertEqual(res["format"], "html")
         self.assertIn("<!DOCTYPE html>", res["content"])
 
+        # 4. glTF
+        status, _, body = self._http_request("POST", "/api/export", data={"shape": "cube", "format": "gltf"})
+        self.assertEqual(status, 200)
+        res = json.loads(body.decode("utf-8"))
+        self.assertEqual(res["format"], "gltf")
+        self.assertIn("asset", json.loads(res["content"]))
+
+        # 5. PLY
+        status, _, body = self._http_request("POST", "/api/export", data={"shape": "cube", "format": "ply"})
+        self.assertEqual(status, 200)
+        res = json.loads(body.decode("utf-8"))
+        self.assertEqual(res["format"], "ply")
+        self.assertTrue(res["content"].startswith("ply\n"))
+
     def test_api_audit(self) -> None:
         """Test POST /api/audit endpoint."""
         payload = {"shape": "buckyball", "params": {"radius": 2.0}}
@@ -218,6 +232,8 @@ class TestUIServer(unittest.TestCase):
             self.assertIn("model.obj", file_names)
             self.assertIn("material.mtl", file_names)
             self.assertIn("model.stl", file_names)
+            self.assertIn("model.gltf", file_names)
+            self.assertIn("model.ply", file_names)
             self.assertIn("model.json", file_names)
             self.assertIn("viewer.html", file_names)
             self.assertIn("audit.json", file_names)

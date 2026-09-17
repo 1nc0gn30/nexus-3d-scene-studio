@@ -203,6 +203,10 @@ def handle_generate(args: argparse.Namespace) -> int:
         elif fmt in ("json", "threejs"):
             threejs_dict = MeshExporter.export_threejs_json(mesh)
             output_content = json.dumps(threejs_dict, indent=2)
+        elif fmt in ("gltf", "glb"):
+            output_content = MeshExporter.export_gltf(mesh, object_name=mesh.name)
+        elif fmt == "ply":
+            output_content = MeshExporter.export_ply(mesh, object_name=mesh.name)
         elif fmt == "html":
             output_content = MeshExporter.export_standalone_html(
                 mesh,
@@ -448,7 +452,7 @@ def build_parser() -> argparse.ArgumentParser:
     gen_parser.add_argument(
         "-f", "--format",
         default="obj",
-        choices=["obj", "stl", "json", "html"],
+        choices=["obj", "stl", "json", "html", "gltf", "ply"],
         help="Export format (default: obj)",
     )
     gen_parser.add_argument(

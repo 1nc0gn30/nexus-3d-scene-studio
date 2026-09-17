@@ -278,7 +278,7 @@ class MCPServer:
             input_schema={
                 "type": "object",
                 "properties": {
-                    "format": {"type": "string", "enum": ["obj", "stl", "json", "html"], "default": "obj"},
+                    "format": {"type": "string", "enum": ["obj", "stl", "json", "html", "gltf", "ply"], "default": "obj"},
                     "shape_type": {"type": "string", "description": "Preset shape name (e.g. tesseract, torus_knot, superquadric, icosahedron, terrain, buckyball)"},
                     "shape_params": {"type": "object", "description": "Parameters for procedural shape generator", "default": {}},
                     "mesh_data": {"type": "object", "description": "Raw mesh data dictionary with vertices and faces"},
@@ -330,6 +330,10 @@ class MCPServer:
             return MeshExporter.export_ascii_stl(mesh, solid_name=mesh.name)
         elif fmt_clean in ("json", "threejs"):
             return MeshExporter.export_threejs_json(mesh)
+        elif fmt_clean in ("gltf", "glb"):
+            return MeshExporter.export_gltf_dict(mesh, object_name=mesh.name)
+        elif fmt_clean == "ply":
+            return MeshExporter.export_ply(mesh, object_name=mesh.name)
         elif fmt_clean == "html":
             return MeshExporter.export_standalone_html(mesh, title=mesh.name)
         return mesh.to_dict()
@@ -490,6 +494,21 @@ class MCPServer:
                 "filename": f"{mesh.name}.html",
                 "content": MeshExporter.export_standalone_html(mesh, title=title, theme=theme),
                 "mime_type": "text/html",
+            }
+        elif fmt_clean in ("gltf", "glb"):
+            return {
+                "format": "gltf",
+                "filename": f"{mesh.name}.gltf",
+                "data": MeshExporter.export_gltf_dict(mesh, object_name=mesh.name),
+                "content": MeshExporter.export_gltf(mesh, object_name=mesh.name),
+                "mime_type": "model/gltf+json",
+            }
+        elif fmt_clean == "ply":
+            return {
+                "format": "ply",
+                "filename": f"{mesh.name}.ply",
+                "content": MeshExporter.export_ply(mesh, object_name=mesh.name),
+                "mime_type": "text/plain",
             }
         else:
             raise ValueError(f"Unknown export format: '{fmt}'")
