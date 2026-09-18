@@ -197,11 +197,18 @@ def _resolve_shape(shape_name: str, params: Dict[str, Any]) -> MeshData:
             level=int(params.get("level", 1)),
             size=float(params.get("size", 2.0)),
         )
+    elif st in ("sdf", "gyroid", "schwarz_p", "neovius", "mandelbulb", "smooth_csg", "metaballs", "twisted_torus"):
+        from .sdf_isosurface import generate_sdf_preset
+        preset = st if st != "sdf" else params.get("preset", "gyroid")
+        resolution = int(params.get("resolution", 20))
+        bounds_scale = float(params.get("bounds_scale", 1.2))
+        return generate_sdf_preset(preset=preset, resolution=resolution, bounds_scale=bounds_scale)
     else:
         raise ValueError(
             f"Unknown procedural shape: '{shape_name}'. "
             f"Supported shapes: tesseract, torus_knot, superquadric, solid, tetrahedron, "
-            f"cube, octahedron, dodecahedron, icosahedron, buckyball, terrain, mobius, fibonacci."
+            f"cube, octahedron, dodecahedron, icosahedron, buckyball, terrain, mobius, fibonacci, "
+            f"lorenz, klein, menger, gyroid, schwarz_p, neovius, mandelbulb, smooth_csg, metaballs, twisted_torus, sdf."
         )
 
 

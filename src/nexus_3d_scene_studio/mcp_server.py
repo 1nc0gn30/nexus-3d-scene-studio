@@ -31,6 +31,27 @@ from .geometry_engine import (
 )
 from .mesh_exporter import MeshExporter
 from .scene_optimizer import SceneOptimizer
+from .sdf_isosurface import (
+    generate_sdf_preset,
+    marching_tetrahedra,
+    sdf_box,
+    sdf_capsule,
+    sdf_cylinder,
+    sdf_gyroid,
+    sdf_intersection,
+    sdf_mandelbulb,
+    sdf_metaballs,
+    sdf_neovius,
+    sdf_schwarz_p,
+    sdf_smooth_intersection,
+    sdf_smooth_subtraction,
+    sdf_smooth_union,
+    sdf_sphere,
+    sdf_subtraction,
+    sdf_torus,
+    sdf_twist,
+    sdf_union,
+)
 
 MCP_PROTOCOL_VERSION = "2024-11-05"
 SERVER_NAME = "nexus-3d-scene-studio"
@@ -356,6 +377,59 @@ class MCPServer:
             handler=self._handle_generate_lod_pyramid,
         )
 
+        # 11. nexus_generate_sdf_isosurface
+        self.register_tool(
+            name="nexus_generate_sdf_isosurface",
+            description="Polygonize volumetric signed distance fields (SDF) and Triply Periodic Minimal Surfaces (TPMS Gyroid, Schwarz P, Neovius, Mandelbulb fractal, metaballs, smooth CSG) using watertight Marching Tetrahedra.",
+            input_schema={
+                "type": "object",
+                "properties": {
+                    "preset": {
+                        "type": "string",
+                        "enum": ["gyroid", "schwarz_p", "neovius", "mandelbulb", "smooth_csg", "metaballs", "twisted_torus"],
+                        "default": "gyroid",
+                        "description": "TPMS or SDF preset name",
+                    },
+                    "resolution": {"type": "integer", "description": "Voxel grid subdivisions per axis (10-40)", "default": 20},
+                    "bounds_scale": {"type": "number", "description": "Half-extent bounding box size", "default": 1.2},
+                    "format": {"type": "string", "enum": ["dict", "obj", "stl", "json", "html", "gltf", "ply"], "default": "dict"},
+                },
+            },
+            handler=self._handle_generate_sdf_isosurface,
+        )
+
+        # 12. nexus_evaluate_csg_boolean
+        self.register_tool(
+            name="nexus_evaluate_csg_boolean",
+            description="Evaluate analytic Constructive Solid Geometry (CSG) Boolean operations (union, difference, intersection, smooth_union) between primitives and polygonize via Marching Tetrahedra.",
+            input_schema={
+                "type": "object",
+                "properties": {
+                    "operation": {
+                        "type": "string",
+                        "enum": ["union", "difference", "intersection", "smooth_union", "smooth_difference", "smooth_intersection"],
+                        "default": "smooth_union",
+                        "description": "Boolean set operation or smooth blending operator",
+                    },
+                    "primitive_a": {
+                        "type": "object",
+                        "description": "First shape specification (e.g. {'type': 'sphere', 'radius': 1.0} or {'type': 'box', 'size': [0.8, 0.8, 0.8]})",
+                        "default": {"type": "sphere", "radius": 1.0},
+                    },
+                    "primitive_b": {
+                        "type": "object",
+                        "description": "Second shape specification (e.g. {'type': 'torus', 'r1': 0.8, 'r2': 0.3} or {'type': 'cylinder', 'radius': 0.5, 'height': 1.2})",
+                        "default": {"type": "torus", "r1": 0.8, "r2": 0.3},
+                    },
+                    "smoothing": {"type": "number", "description": "Smoothing factor k for smooth operations", "default": 0.2},
+                    "resolution": {"type": "integer", "description": "Voxel grid resolution", "default": 20},
+                    "bounds_scale": {"type": "number", "description": "Bounding box half-extent", "default": 1.4},
+                    "format": {"type": "string", "enum": ["dict", "obj", "stl", "json", "html", "gltf", "ply"], "default": "dict"},
+                },
+            },
+            handler=self._handle_evaluate_csg_boolean,
+        )
+
     # -----------------------------------------------------------------------
     # Built-in Tool Handlers
     # -----------------------------------------------------------------------
@@ -455,6 +529,11 @@ class MCPServer:
                 level=int(params.get("level", 1)),
                 size=float(params.get("size", 2.0)),
             )
+        elif st in ("sdf", "gyroid", "schwarz_p", "neovius", "mandelbulb", "smooth_csg", "metaballs", "twisted_torus"):
+            preset_name = st if st != "sdf" else params.get("preset", "gyroid")
+            res = int(params.get("resolution", 20))
+            b_scale = float(params.get("bounds_scale", 1.2))
+            return generate_sdf_preset(preset=preset_name, resolution=res, bounds_scale=b_scale)
         else:
             raise ValueError(f"Unsupported shape type: '{shape_type}'")
 
@@ -646,6 +725,76 @@ class MCPServer:
         if not args.get("include_env", False):
             diag.pop("environment_variables", None)
         return diag
+
+    def _handle_generate_sdf_isosurface(self, args: Dict[str, Any]) -> Any:
+        preset = args.get("preset", "gyroid")
+        resolution = int(args.get("resolution", 20))
+        bounds_scale = float(args.get("bounds_scale", 1.2))
+        fmt = args.get("format", "dict")
+        mesh = generate_sdf_preset(preset=preset, resolution=resolution, bounds_scale=bounds_scale)
+        return self._format_mesh_output(mesh, fmt)
+
+    def _handle_evaluate_csg_boolean(self, args: Dict[str, Any]) -> Any:
+        operation = args.get("operation", "smooth_union").lower().strip()
+        prim_a_spec = args.get("primitive_a", {"type": "sphere", "radius": 1.0})
+        prim_b_spec = args.get("primitive_b", {"type": "torus", "r1": 0.8, "r2": 0.3})
+        smoothing = float(args.get("smoothing", 0.2))
+        resolution = int(args.get("resolution", 20))
+        bounds_scale = float(args.get("bounds_scale", 1.4))
+        fmt = args.get("format", "dict")
+
+        def _build_primitive(spec: Dict[str, Any]):
+            ptype = spec.get("type", "sphere").lower().strip()
+            if ptype == "sphere":
+                r = float(spec.get("radius", 1.0))
+                return lambda p: sdf_sphere(p, r=r)
+            elif ptype == "box":
+                b = spec.get("size", [0.8, 0.8, 0.8])
+                if isinstance(b, (int, float)):
+                    b_tuple = (float(b), float(b), float(b))
+                else:
+                    b_tuple = (float(b[0]), float(b[1]), float(b[2]))
+                return lambda p: sdf_box(p, b=b_tuple)
+            elif ptype == "torus":
+                r1 = float(spec.get("r1", 0.8))
+                r2 = float(spec.get("r2", 0.3))
+                return lambda p: sdf_torus(p, r1=r1, r2=r2)
+            elif ptype == "cylinder":
+                r = float(spec.get("radius", 0.5))
+                h = float(spec.get("height", 1.2))
+                return lambda p: sdf_cylinder(p, r=r, h=h)
+            elif ptype == "capsule":
+                r = float(spec.get("radius", 0.3))
+                return lambda p: sdf_capsule(p, a=(0.0, -0.6, 0.0), b=(0.0, 0.6, 0.0), r=r)
+            else:
+                return lambda p: sdf_sphere(p, r=1.0)
+
+        fn_a = _build_primitive(prim_a_spec)
+        fn_b = _build_primitive(prim_b_spec)
+
+        if operation in ("union", "or"):
+            eval_fn = lambda p: sdf_union(fn_a(p), fn_b(p))
+        elif operation in ("difference", "subtract", "subtraction"):
+            eval_fn = lambda p: sdf_subtraction(fn_a(p), fn_b(p))
+        elif operation in ("intersection", "and"):
+            eval_fn = lambda p: sdf_intersection(fn_a(p), fn_b(p))
+        elif operation in ("smooth_union", "blend"):
+            eval_fn = lambda p: sdf_smooth_union(fn_a(p), fn_b(p), k=smoothing)
+        elif operation in ("smooth_difference", "smooth_subtraction"):
+            eval_fn = lambda p: sdf_smooth_subtraction(fn_a(p), fn_b(p), k=smoothing)
+        elif operation in ("smooth_intersection",):
+            eval_fn = lambda p: sdf_smooth_intersection(fn_a(p), fn_b(p), k=smoothing)
+        else:
+            eval_fn = lambda p: sdf_smooth_union(fn_a(p), fn_b(p), k=smoothing)
+
+        b = bounds_scale
+        mesh = marching_tetrahedra(
+            eval_fn,
+            bounds=(-b, b, -b, b, -b, b),
+            resolution=resolution,
+            name=f"CSG_{operation}",
+        )
+        return self._format_mesh_output(mesh, fmt)
 
     # -----------------------------------------------------------------------
     # JSON-RPC 2.0 Dispatch & Protocol Handler

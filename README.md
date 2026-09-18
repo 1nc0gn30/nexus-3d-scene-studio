@@ -19,11 +19,15 @@
 ## 💎 Highlights & Capabilities
 
 - 🎨 **Material 3 Light Mode Studio**: Interactive WebGL 3D canvas (design influenced by Material 3), system fonts, smooth OrbitControls, wireframe/solid shading, lighting rigs, and real-time geometry telemetry HUD.
+- 🧊 **Marching Tetrahedra Volumetric Isosurface Engine**: Watertight, ambiguity-free 3D isosurface polygonizer with analytical central finite-difference normal estimation and vertex normal-map coloring.
+- 🧬 **Triply Periodic Minimal Surfaces (TPMS)**: Analytic Gyroid infill scaffold, Schwarz P primitive crystal, and Neovius porous minimal surfaces.
+- 🧮 **Analytic Signed Distance Functions (SDF) & CSG Booleans**: Primitives (sphere, box, torus, cylinder, capsule) with exact and polynomial smooth Boolean operators (union, intersection, subtraction) and non-linear axial twist deformers.
+- 🌌 **3D Mandelbulb Fractal & Organic Metaballs**: High-power 3D hypercomplex Mandelbulb fractal fields and multi-center organic metaball clusters.
 - 🔮 **4D Hypercube (Tesseract) Engine**: Real-time 4D rotation matrices in $SO(4)$ Lie group projected into 3D space via stereographic projection.
 - 🌀 **Parametric Space Curves & Surfaces**: Torus knots $(p, q)$ with Frenet-Serret tube framing, Superquadrics with taper/twist/bend deformations, Fibonacci golden spiral spherical lattices, Buckyballs (Fullerene C60), and Möbius ribbons.
 - 🏔️ **Procedural Fractal Terrain**: Multi-octave Fractional Brownian Motion (fBm) elevation heightfields with analytical normal gradient calculations.
 - 💾 **1-Click Multi-Format Exporters**: Wavefront `.obj` + `.mtl`, ASCII & Binary `.stl` (3D printing ready), `.ply`, Three.js BufferGeometry `.json`, and single-file standalone `.html` viewers.
-- 🤖 **Model Context Protocol (MCP) Server**: Native stdio / JSON-RPC 2.0 interface for Claude Desktop, Cursor IDE, Cline, Zed, and autonomous AI coding agents.
+- 🤖 **Model Context Protocol (MCP) Server**: Native stdio / JSON-RPC 2.0 interface for Claude Desktop, Cursor IDE, Cline, Zed, and autonomous AI coding agents with dedicated isosurface polygonization and CSG Boolean evaluation tools.
 - ⚡ **Pure Standard Library Core**: 100% Python standard library geometry computation without NumPy/SciPy dependency requirements.
 
 ---
@@ -68,6 +72,11 @@
 | **Buckyball C60** | Truncated regular icosahedron ($\chi = 60 - 90 + 32 = 2$) | `radius`, `truncation_factor` |
 | **Möbius Strip** | $\mathbf{S}(u, v) = ((R + v\cos\frac{nu}{2})\cos u, (R + v\cos\frac{nu}{2})\sin u, v\sin\frac{nu}{2})$ | `radius`, `width`, `twists` |
 | **Fractal Terrain** | $h(x, z) = \sum_{k=0}^{M-1} A \rho^k \mathcal{N}(f \lambda^k x, f \lambda^k z)$ | `grid_size`, `scale`, `octaves`, `height_scale` |
+| **TPMS Gyroid** | $\cos x \sin y + \cos y \sin z + \cos z \sin x = 0$ via Marching Tetrahedra | `resolution`, `scale`, `thickness` |
+| **Schwarz P Minimal Surface** | $\cos x + \cos y + \cos z = 0$ implicit crystal lattice | `resolution`, `scale`, `thickness` |
+| **Neovius Minimal Surface** | $3(\cos x + \cos y + \cos z) + 4\cos x \cos y \cos z = 0$ | `resolution`, `scale`, `thickness` |
+| **3D Mandelbulb Fractal** | $v_{n+1} = v_n^8 + c$ spherical hypercomplex iteration | `resolution`, `power`, `max_iter` |
+| **Smooth CSG Blend** | $f_{\text{union}} = \text{smin}(d_1, d_2, k) = d_2 + (d_1-d_2)h - kh(1-h)$ | `resolution`, `primitive_a`, `primitive_b`, `smoothing` |
 
 Detailed mathematical derivations and proofs are documented in [docs/PROCEDURAL_GEOMETRY_MATH.md](docs/PROCEDURAL_GEOMETRY_MATH.md).
 

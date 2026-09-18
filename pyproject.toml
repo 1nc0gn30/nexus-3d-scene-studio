@@ -15,7 +15,9 @@ authors = [
 keywords = [
     "3d", "graphics", "procedural-generation", "mcp", "model-context-protocol",
     "geometry", "tesseract", "torus-knot", "superquadric", "threejs",
-    "webgl", "wavefront-obj", "stl", "material-design-3"
+    "webgl", "wavefront-obj", "stl", "material-design-3",
+    "sdf", "signed-distance-field", "marching-tetrahedra", "isosurface",
+    "tpms-gyroid", "csg-booleans"
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
