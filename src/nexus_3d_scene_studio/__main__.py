@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Package main entrypoint for `python -m nexus_3d_scene_studio`."""
 
 from __future__ import annotations

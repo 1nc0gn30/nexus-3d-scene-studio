@@ -1,0 +1,18 @@
+{
+  "name": "nexus-3d-scene-studio",
+  "version": "1.0.0",
+  "description": "Pure Python 3D mathematical geometry engine & WebGL Material 3 studio",
+  "main": "bin/nexus-3d",
+  "bin": {
+    "nexus-3d": "bin/nexus-3d"
+  },
+  "scripts": {
+    "start": "bin/nexus-3d serve",
+    "cli": "bin/nexus-3d",
+    "ui": "python3 -m nexus_3d_scene_studio.ui_server",
+    "mcp": "python3 -m nexus_3d_scene_studio.mcp_server",
+    "test": "pytest"
+  },
+  "author": "Micro-Tools Web & Media",
+  "license": "MIT"
+}
