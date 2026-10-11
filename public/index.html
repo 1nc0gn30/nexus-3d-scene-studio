@@ -13,7 +13,10 @@
   <meta property="og:description" content="Parametric 3D mathematical geometry engine, parametric mesh generator, and MCP server running 100% in-browser.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://nexus-3d-studio.netlify.app/">
-  <meta property="og:image" content="https://nexus-3d-studio.netlify.app/og-image.png">
+  <meta property="og:image" content="https://nexus-3d-studio.netlify.app/assets/banner.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Nexus 3D Studio Banner - Mathematical Geometry Engine & FastMCP Hub">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
@@ -21,7 +24,7 @@
   <meta name="twitter:creator" content="@1nc0gn30">
   <meta name="twitter:title" content="Nexus 3D Studio - Mathematical Geometry Engine & MCP Hub">
   <meta name="twitter:description" content="Parametric 3D mathematical geometry engine running 100% in-browser with zero external dependencies.">
-  <meta name="twitter:image" content="https://nexus-3d-studio.netlify.app/og-image.png">
+  <meta name="twitter:image" content="https://nexus-3d-studio.netlify.app/assets/banner.png">
 
   <!-- Schema.org JSON-LD Graph -->
   <script type="application/ld+json">
@@ -80,6 +83,7 @@
   }
   </script>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/icon.png">
   <script src="https://integrate.depay.com/widgets/v13.js" defer></script>
   <style>
     :root {
@@ -719,15 +723,11 @@
 <!-- Top App Bar -->
   <header class="app-bar">
     <div class="brand-group">
-      <div class="google-dots">
-        <div class="dot dot-blue"></div>
-        <div class="dot dot-red"></div>
-        <div class="dot dot-yellow"></div>
-        <div class="dot dot-green"></div>
-      </div>
+      <img src="/assets/icon.png" alt="Nexus 3D Studio Logo" style="width:36px; height:36px; border-radius:8px; border:1px solid rgba(212,175,55,0.4); box-shadow:0 0 12px rgba(212,175,55,0.25); object-fit:contain;">
       <div class="brand-title">
         Nexus 3D Studio
-        <span class="badge-pill" id="pro-badge">FREE TIER</span>
+        <span class="badge-pill" style="margin-left:4px; font-size:11px; background:rgba(255,255,255,0.06); color:#a1a1aa;">v2.5 SOVEREIGN</span>
+        <span class="badge-pill" id="licenseBadge" data-role="license-badge">⚡ FREE TIER</span>
       </div>
     </div>
 
@@ -1574,7 +1574,8 @@ nexus3d serve --port 8080</pre>
     // =========================================================================
 
     function isProLicensed() {
-      return localStorage.getItem('zoth_nexus3d_licensed') === 'true';
+      return localStorage.getItem('zoth_nexus3d_licensed') === 'true' ||
+             localStorage.getItem('nexus3d_pro_licensed') === 'true';
     }
 
     function exportOBJ() {
@@ -1859,18 +1860,22 @@ nexus3d serve --port 8080</pre>
     // License Verification & Pro Unlock
     function checkLicense() {
       const urlParams = new URLSearchParams(window.location.search);
-      const isParamLicensed = urlParams.get('licensed') === 'true';
-      const isSavedLicensed = localStorage.getItem('zoth_nexus3d_licensed') === 'true';
+      const isParamLicensed = urlParams.get('licensed') === 'true' || urlParams.get('pro') === 'true';
+      const isSavedLicensed = isProLicensed();
 
       if (isParamLicensed || isSavedLicensed) {
         unlockPro();
+        if (isParamLicensed && window.history && window.history.replaceState) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
       }
     }
 
     function unlockPro() {
       localStorage.setItem('zoth_nexus3d_licensed', 'true');
+      localStorage.setItem('nexus3d_pro_licensed', 'true');
       showToast('⭐ PRO LICENSE ACTIVE - Unlimited Precision Exports Unlocked');
-      const badge = document.getElementById('pro-badge') || document.querySelector('.badge-pill');
+      const badge = document.getElementById('licenseBadge') || document.getElementById('pro-badge') || document.querySelector('.badge-pill');
       if (badge) {
         badge.innerText = '⭐ PRO ACTIVE';
         badge.style.background = 'rgba(212,175,55,0.2)';
@@ -1899,25 +1904,32 @@ nexus3d serve --port 8080</pre>
       if (featEl && feature) {
         featEl.textContent = feature;
       }
-      const m = document.getElementById('license-modal');
+      const m = document.getElementById('licenseModal') || document.getElementById('license-modal');
       if (m) m.style.display = 'flex';
     }
 
     function closeLicenseModal() {
-      const m = document.getElementById('license-modal');
+      const m = document.getElementById('licenseModal') || document.getElementById('license-modal');
       if (m) m.style.display = 'none';
     }
 
-    function activateLicense() {
-      const val = document.getElementById('license-input').value.trim();
+    function activateLicense(providedKey) {
+      const inputEl = document.getElementById('license-input');
+      const val = (providedKey || (inputEl ? inputEl.value : '')).trim();
       if (val.length >= 3) {
+        localStorage.setItem('nexus3d_pro_key', val);
         unlockPro();
         closeLicenseModal();
-        alert('🎉 Pro License Activated! Lifetime access unlocked.');
+        if (!providedKey) {
+          alert('🎉 Pro License Activated! Lifetime access unlocked.');
+        }
+        return true;
       } else {
         alert('Please enter a valid license key or receipt email.');
+        return false;
       }
     }
+    window.activateLicenseKey = activateLicense;
 
     window.onload = () => {
       init();
@@ -1926,7 +1938,7 @@ nexus3d serve --port 8080</pre>
   </script>
 
   <!-- Pro Paywall & License Key Activation Modal -->
-  <div id="license-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+  <div id="licenseModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
     <div style="background:#14141c; border:1px solid rgba(212,175,55,0.4); border-radius:14px; padding:24px; width:100%; max-width:540px; display:flex; flex-direction:column; gap:16px; box-shadow:0 20px 50px rgba(0,0,0,0.8); position:relative; color:#f4f4f5;">
       <button type="button" onclick="closeLicenseModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; font-size:22px; color:#a1a1aa; cursor:pointer;">&times;</button>
       <div style="display:inline-block; background:#D4AF37; color:#08080B; font-weight:800; font-size:11px; padding:3px 8px; border-radius:4px; letter-spacing:0.5px; width:fit-content;">PRO FOUNDING ACCESS</div>
@@ -1962,8 +1974,8 @@ nexus3d serve --port 8080</pre>
       <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:12px;">
         <label for="license-input" style="display:block; font-size:0.75rem; color:#a1a1aa; margin-bottom:6px;">Already purchased? Enter your receipt email or license key:</label>
         <div style="display:flex; gap:8px;">
-          <input type="text" id="license-input" style="background:#08080b; border:1px solid #27272a; color:#FFF; padding:8px 12px; border-radius:6px; font-family:monospace; font-size:0.85rem; flex:1; outline:none;" placeholder="e.g. zoth-nexus-pro or your@email.com">
-          <button onclick="activateLicense()" style="background:#D4AF37; border:none; color:#08080b; padding:8px 16px; border-radius:6px; font-weight:800; font-size:0.8rem; cursor:pointer;">Activate</button>
+          <input type="text" id="license-input" style="background:#08080b; border:1px solid #27272a; color:#FFF; padding:8px 12px; border-radius:6px; font-family:monospace; font-size:0.85rem; flex:1; outline:none;" placeholder="NEXUS-PRO-2026 or receipt email">
+          <button id="btnActivateKey" onclick="activateLicense()" style="background:#D4AF37; border:none; color:#08080b; padding:8px 16px; border-radius:6px; font-weight:800; font-size:0.8rem; cursor:pointer;">Activate</button>
         </div>
       </div>
     </div>

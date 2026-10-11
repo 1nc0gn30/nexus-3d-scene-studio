@@ -1,6 +1,6 @@
 {
   "name": "nexus-3d-scene-studio",
-  "version": "1.0.0",
+  "version": "2.5.0",
   "description": "Procedural 3D Geometry Studio, Mathematical Topology Engine, WebGL Exporter & MCP Server",
   "main": "electron/main.cjs",
   "bin": {
@@ -13,7 +13,7 @@
     "cli": "node bin/nexus-3d.js",
     "test": "pytest tests/"
   },
-  "author": "Zoth Core Intelligence",
+  "author": "Neal Frazier Tech (@1nc0gn30) • NullAI Platform",
   "license": "MIT",
   "devDependencies": {
     "electron": "^34.5.8"
