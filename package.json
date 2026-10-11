@@ -6,13 +6,29 @@
   "bin": {
     "nexus-3d": "./bin/nexus-3d.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1nc0gn30/nexus-3d-scene-studio.git"
+  },
   "scripts": {
     "start": "electron .",
     "desktop": "electron .",
     "web": "node bin/nexus-3d.js web",
     "cli": "node bin/nexus-3d.js",
-    "test": "pytest tests/"
+    "test": "pytest tests/",
+    "test:ui": "python3 scripts/verify_ui.py"
   },
+  "keywords": [
+    "3d-geometry",
+    "threejs",
+    "webgl",
+    "tesseract",
+    "topology",
+    "stl",
+    "obj",
+    "mcp",
+    "sovereign"
+  ],
   "author": "Neal Frazier Tech (@1nc0gn30) • NullAI Platform",
   "license": "MIT",
   "devDependencies": {

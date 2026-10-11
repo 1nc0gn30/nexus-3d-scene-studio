@@ -658,7 +658,6 @@
     .paywall-blur {
       filter: blur(5px);
       user-select: none;
-      pointer-events: none;
     }
     html, body {
       overflow-x: hidden !important;
@@ -703,7 +702,7 @@
 <div class="zoth-brand-bar"><span class="zoth-z">Z</span><span class="zoth-name">Zoth Studio</span><span class="zoth-tool">Nexus 3D Scene Studio</span><span class="zoth-spacer"></span><span class="zoth-badge">NULLAI · SOVEREIGN</span></div>
 
   <!-- Founding Member Sales Banner -->
-  <aside class="sales-banner" aria-label="Special Offer" style="background:linear-gradient(90deg, rgba(212,175,55,0.15) 0%, rgba(56,189,248,0.15) 100%); border-bottom:1px solid rgba(212,175,55,0.3); padding:10px 16px; font-size:0.85rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; width:100%; box-sizing:border-box;">
+  <aside class="sales-banner" id="salesBanner" aria-label="Special Offer" style="background:linear-gradient(90deg, rgba(212,175,55,0.15) 0%, rgba(56,189,248,0.15) 100%); border-bottom:1px solid rgba(212,175,55,0.3); padding:10px 16px; font-size:0.85rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; width:100%; box-sizing:border-box;">
     <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
       <span style="background:#D4AF37; color:#000; font-weight:800; font-size:0.7rem; padding:2px 8px; border-radius:4px; letter-spacing:0.5px; text-transform:uppercase;">Founding Lifetime Offer</span>
       <span>Nexus 3D Studio Pro: <strong>$19</strong> lifetime <strike style="color:#9CA3AF;">$79</strike></span>
@@ -931,12 +930,12 @@
           </div>
 
           <div class="grid-2">
-            <button class="btn primary" onclick="exportOBJ()">Wavefront .OBJ</button>
-            <button class="btn" onclick="exportMTL()">Material .MTL</button>
-            <button class="btn" onclick="exportSTL()">ASCII .STL</button>
-            <button class="btn" onclick="exportThreeJSON()">Three.js JSON</button>
+            <button id="btn-export-obj" class="btn primary" onclick="exportOBJ()">Wavefront .OBJ</button>
+            <button id="btn-export-mtl" class="btn" onclick="exportMTL()">Material .MTL</button>
+            <button id="btn-export-stl" class="btn" onclick="exportSTL()">ASCII .STL</button>
+            <button id="btn-export-three" class="btn" onclick="exportThreeJSON()">Three.js JSON</button>
           </div>
-          <button class="btn tonal" style="margin-top: 4px;" onclick="exportStandaloneHTML()">
+          <button id="btn-export-html" class="btn tonal" style="margin-top: 4px;" onclick="exportStandaloneHTML()">
             <span>📦 Download Standalone HTML Viewer</span>
           </button>
         </div>
@@ -956,7 +955,7 @@
               <span>⚡ Solana ($19)</span>
             </a>
           </div>
-          <button onclick="openLicenseModal('1-Click Mesh Exporters')" style="background:transparent; border:none; color:#D4AF37; font-size:0.72rem; cursor:pointer; margin-top:8px; text-decoration:underline;">I already have a license key</button>
+          <button id="btn-paywall-key" onclick="openLicenseModal('1-Click Mesh Exporters')" style="background:transparent; border:none; color:#D4AF37; font-size:0.72rem; cursor:pointer; margin-top:8px; text-decoration:underline;">I already have a license key</button>
         </div>
       </div>
 
@@ -1575,7 +1574,9 @@ nexus3d serve --port 8080</pre>
 
     function isProLicensed() {
       return localStorage.getItem('zoth_nexus3d_licensed') === 'true' ||
-             localStorage.getItem('nexus3d_pro_licensed') === 'true';
+             localStorage.getItem('nexus3d_pro_licensed') === 'true' ||
+             localStorage.getItem('agent_nexus3d_pro') === 'true' ||
+             localStorage.getItem('pro_licensed') === 'true';
     }
 
     function exportOBJ() {
@@ -1860,7 +1861,7 @@ nexus3d serve --port 8080</pre>
     // License Verification & Pro Unlock
     function checkLicense() {
       const urlParams = new URLSearchParams(window.location.search);
-      const isParamLicensed = urlParams.get('licensed') === 'true' || urlParams.get('pro') === 'true';
+      const isParamLicensed = urlParams.get('licensed') === 'true' || urlParams.get('pro') === 'true' || urlParams.get('session_id');
       const isSavedLicensed = isProLicensed();
 
       if (isParamLicensed || isSavedLicensed) {
@@ -1868,21 +1869,34 @@ nexus3d serve --port 8080</pre>
         if (isParamLicensed && window.history && window.history.replaceState) {
           window.history.replaceState({}, document.title, window.location.pathname);
         }
+      } else {
+        const badge = document.getElementById('licenseBadge');
+        if (badge) {
+          badge.innerText = '⚡ FREE TIER';
+          badge.style.border = '1px solid rgba(255,255,255,0.2)';
+          badge.style.background = 'rgba(255,255,255,0.06)';
+          badge.style.color = '#a1a1aa';
+          badge.style.boxShadow = 'none';
+        }
       }
     }
 
     function unlockPro() {
       localStorage.setItem('zoth_nexus3d_licensed', 'true');
       localStorage.setItem('nexus3d_pro_licensed', 'true');
+      localStorage.setItem('agent_nexus3d_pro', 'true');
+      localStorage.setItem('pro_licensed', 'true');
       showToast('⭐ PRO LICENSE ACTIVE - Unlimited Precision Exports Unlocked');
-      const badge = document.getElementById('licenseBadge') || document.getElementById('pro-badge') || document.querySelector('.badge-pill');
+      const badge = document.getElementById('licenseBadge') || document.getElementById('pro-badge');
       if (badge) {
         badge.innerText = '⭐ PRO ACTIVE';
-        badge.style.background = 'rgba(212,175,55,0.2)';
-        badge.style.color = '#D4AF37';
+        badge.style.background = '#10B981';
+        badge.style.color = '#08080B';
+        badge.style.border = '1px solid #10B981';
+        badge.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.4)';
       }
 
-      const banner = document.querySelector('.sales-banner');
+      const banner = document.getElementById('salesBanner') || document.querySelector('.sales-banner');
       if (banner) {
         banner.style.display = 'none';
       }
@@ -1914,18 +1928,16 @@ nexus3d serve --port 8080</pre>
     }
 
     function activateLicense(providedKey) {
-      const inputEl = document.getElementById('license-input');
+      const inputEl = document.getElementById('license-input') || document.getElementById('licenseKeyInput');
       const val = (providedKey || (inputEl ? inputEl.value : '')).trim();
       if (val.length >= 3) {
         localStorage.setItem('nexus3d_pro_key', val);
         unlockPro();
         closeLicenseModal();
-        if (!providedKey) {
-          alert('🎉 Pro License Activated! Lifetime access unlocked.');
-        }
+        showToast('⭐ Pro License Activated! Lifetime access unlocked.');
         return true;
       } else {
-        alert('Please enter a valid license key or receipt email.');
+        showToast('Please enter a valid license key or receipt email.');
         return false;
       }
     }
@@ -1938,7 +1950,7 @@ nexus3d serve --port 8080</pre>
   </script>
 
   <!-- Pro Paywall & License Key Activation Modal -->
-  <div id="licenseModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+  <div id="licenseModal" data-alias="paywall-modal" class="pro-paywall-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
     <div style="background:#14141c; border:1px solid rgba(212,175,55,0.4); border-radius:14px; padding:24px; width:100%; max-width:540px; display:flex; flex-direction:column; gap:16px; box-shadow:0 20px 50px rgba(0,0,0,0.8); position:relative; color:#f4f4f5;">
       <button type="button" onclick="closeLicenseModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; font-size:22px; color:#a1a1aa; cursor:pointer;">&times;</button>
       <div style="display:inline-block; background:#D4AF37; color:#08080B; font-weight:800; font-size:11px; padding:3px 8px; border-radius:4px; letter-spacing:0.5px; width:fit-content;">PRO FOUNDING ACCESS</div>
@@ -1974,8 +1986,8 @@ nexus3d serve --port 8080</pre>
       <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:12px;">
         <label for="license-input" style="display:block; font-size:0.75rem; color:#a1a1aa; margin-bottom:6px;">Already purchased? Enter your receipt email or license key:</label>
         <div style="display:flex; gap:8px;">
-          <input type="text" id="license-input" style="background:#08080b; border:1px solid #27272a; color:#FFF; padding:8px 12px; border-radius:6px; font-family:monospace; font-size:0.85rem; flex:1; outline:none;" placeholder="NEXUS-PRO-2026 or receipt email">
-          <button id="btnActivateKey" onclick="activateLicense()" style="background:#D4AF37; border:none; color:#08080b; padding:8px 16px; border-radius:6px; font-weight:800; font-size:0.8rem; cursor:pointer;">Activate</button>
+          <input type="text" id="license-input" data-alias="license-key-input" style="background:#08080b; border:1px solid #27272a; color:#FFF; padding:8px 12px; border-radius:6px; font-family:monospace; font-size:0.85rem; flex:1; outline:none;" placeholder="NEXUS-PRO-2026 or receipt email">
+          <button id="btnActivateKey" data-alias="activate-key-btn" onclick="activateLicense()" style="background:#D4AF37; border:none; color:#08080b; padding:8px 16px; border-radius:6px; font-weight:800; font-size:0.8rem; cursor:pointer;">Activate</button>
         </div>
       </div>
     </div>
