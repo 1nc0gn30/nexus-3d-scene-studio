@@ -63,3 +63,5 @@ dmypy.json
 output/
 *.tmp
 *.bak
+
+node_modules/

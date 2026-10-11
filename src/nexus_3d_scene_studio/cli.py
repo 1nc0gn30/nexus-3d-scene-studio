@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Command Line Interface (CLI) for Nexus 3D Scene Studio.
 
 Provides command line tools for procedural 3D shape generation, polygon budget auditing,

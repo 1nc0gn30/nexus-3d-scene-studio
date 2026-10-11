@@ -1,0 +1,20 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Nexus 3D Scene Studio
+GenericName=Procedural 3D Topology & WebGL Workstation
+Comment=Mathematical Geometry Engine, Procedural Fractals, SDF Meshing & MCP 3D Workstation
+Exec=/usr/local/bin/nexus-3d desktop
+Icon=/media/neo/f2fdda77-178b-4603-ae80-c7aa4cd97908/zoth-micro-repos/nexus-3d-scene-studio/assets/icon.png
+Terminal=false
+Categories=Development;Graphics;3DGraphics;Science;
+StartupNotify=true
+Actions=CLI;Web;
+
+[Desktop Action CLI]
+Name=Open Nexus 3D CLI
+Exec=x-terminal-emulator -e "/usr/local/bin/nexus-3d --help"
+
+[Desktop Action Web]
+Name=Open Web UI (Port 8083)
+Exec=/usr/local/bin/nexus-3d web

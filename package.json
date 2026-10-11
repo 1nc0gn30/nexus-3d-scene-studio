@@ -1,18 +1,21 @@
 {
   "name": "nexus-3d-scene-studio",
   "version": "1.0.0",
-  "description": "Pure Python 3D mathematical geometry engine & WebGL Material 3 studio",
-  "main": "bin/nexus-3d",
+  "description": "Procedural 3D Geometry Studio, Mathematical Topology Engine, WebGL Exporter & MCP Server",
+  "main": "electron/main.cjs",
   "bin": {
-    "nexus-3d": "bin/nexus-3d"
+    "nexus-3d": "./bin/nexus-3d.js"
   },
   "scripts": {
-    "start": "bin/nexus-3d serve",
-    "cli": "bin/nexus-3d",
-    "ui": "python3 -m nexus_3d_scene_studio.ui_server",
-    "mcp": "python3 -m nexus_3d_scene_studio.mcp_server",
-    "test": "pytest"
+    "start": "electron .",
+    "desktop": "electron .",
+    "web": "node bin/nexus-3d.js web",
+    "cli": "node bin/nexus-3d.js",
+    "test": "pytest tests/"
   },
-  "author": "Micro-Tools Web & Media",
-  "license": "MIT"
+  "author": "Zoth Core Intelligence",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^34.5.8"
+  }
 }

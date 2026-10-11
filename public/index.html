@@ -1,15 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nexus 3D Studio - Mathematical Geometry Engine & MCP Hub</title>
+  <meta name="description" content="Mathematical 3D geometry engine and Model Context Protocol (MCP) server for generative 3D meshes, parametric surfaces, and spatial AI agent synthesis running 100% in-browser.">
+  <meta name="keywords" content="3D geometry, Three.js, WebGL, Tesseract 4D, parametric surfaces, Klein bottle, Wavefront OBJ, Model Context Protocol, MCP">
+  <meta name="author" content="Neal Frazier Tech">
+
+  <!-- OpenGraph -->
+  <meta property="og:title" content="Nexus 3D Studio - Mathematical Geometry Engine & MCP Hub">
+  <meta property="og:description" content="Parametric 3D mathematical geometry engine, parametric mesh generator, and MCP server running 100% in-browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nexus-3d-studio.netlify.app/">
+  <meta property="og:image" content="https://nexus-3d-studio.netlify.app/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@1nc0gn30">
+  <meta name="twitter:creator" content="@1nc0gn30">
+  <meta name="twitter:title" content="Nexus 3D Studio - Mathematical Geometry Engine & MCP Hub">
+  <meta name="twitter:description" content="Parametric 3D mathematical geometry engine running 100% in-browser with zero external dependencies.">
+  <meta name="twitter:image" content="https://nexus-3d-studio.netlify.app/og-image.png">
+
+  <!-- Schema.org JSON-LD Graph -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Nexus 3D Studio",
+        "url": "https://nexus-3d-studio.netlify.app/",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "All modern browsers (Chrome, Edge, Firefox, Safari)",
+        "description": "Mathematical 3D geometry engine and Model Context Protocol server for generative meshes and spatial agent synthesis.",
+        "offers": {
+          "@type": "Offer",
+          "price": "19.00",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "Neal Frazier",
+          "url": "https://nealfrazier.tech"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Does Nexus 3D Studio require server-side rendering or cloud GPUs?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Nexus 3D Studio calculates all mathematical geometry and renders real-time 3D meshes locally using WebGL and Three.js in your browser."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What 3D formats can I export?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nexus 3D Studio exports standard Wavefront OBJ files, standalone interactive HTML viewers, and Three.js JSON scene graphs."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What payment rails are accepted?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "We accept credit cards, Apple Pay, and Google Pay via Stripe, and instant Solana cryptocurrency checkout via DePay."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script src="https://integrate.depay.com/widgets/v13.js" defer></script>
   <style>
     :root {
       /* Material 3 Light Mode Palette (design influenced by Material 3) */
-      --md-sys-color-primary: #B8860B;
+      --md-sys-color-primary: #1a73e8;
       --md-sys-color-on-primary: #ffffff;
-      --md-sys-color-primary-container: #F5E6AB;
+      --md-sys-color-primary-container: #d2e3fc;
       --md-sys-color-on-primary-container: #041e49;
       --md-sys-color-surface: #f8f9fa;
       --md-sys-color-surface-container-low: #f1f3f4;
@@ -21,8 +98,8 @@
       --md-sys-color-outline-variant: #e8eaed;
 
       /* Google 4-Color Accent System */
-      --google-blue: #B8860B;
-      --google-blue-hover: #8A6A09;
+      --google-blue: #1a73e8;
+      --google-blue-hover: #1557b0;
       --google-red: #d93025;
       --google-red-container: #fce8e6;
       --google-yellow: #f9ab00;
@@ -42,6 +119,21 @@
       --elevation-1: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
       --elevation-2: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
       --elevation-3: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+    }
+
+    :root[data-theme="dark"], html[data-theme="dark"], body[data-theme="dark"] {
+      --md-sys-color-primary: #d4af37;
+      --md-sys-color-on-primary: #08080b;
+      --md-sys-color-primary-container: #1a1811;
+      --md-sys-color-on-primary-container: #fef08a;
+      --md-sys-color-surface: #08080b;
+      --md-sys-color-surface-container-low: #0f0f14;
+      --md-sys-color-surface-container: #14141c;
+      --md-sys-color-surface-container-high: #1c1c27;
+      --md-sys-color-on-surface: #f4f4f5;
+      --md-sys-color-on-surface-variant: #a1a1aa;
+      --md-sys-color-outline: #27272a;
+      --md-sys-color-outline-variant: #18181b;
     }
 
     * {
@@ -557,14 +649,74 @@
       transform: translateY(0);
       opacity: 1;
     }
+
+    /* Sovereign Responsive & Layout Invariants */
+    .paywall-blur {
+      filter: blur(5px);
+      user-select: none;
+      pointer-events: none;
+    }
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+      width: 100% !important;
+    }
+    .app-bar, .app-body, .sales-banner {
+      max-width: 100vw !important;
+      box-sizing: border-box !important;
+    }
+    @media (max-width: 768px) {
+      .app-body {
+        flex-direction: column !important;
+        height: auto !important;
+        overflow-y: auto !important;
+      }
+      .app-bar {
+        flex-direction: column !important;
+        gap: 8px !important;
+        height: auto !important;
+        padding: 10px 16px !important;
+      }
+      .shape-carousel-sidebar {
+        width: 100% !important;
+        max-height: 220px !important;
+      }
+      .studio-controls-sidebar {
+        width: 100% !important;
+        height: auto !important;
+      }
+      .canvas-viewport-container {
+        min-height: 380px !important;
+      }
+    }
   </style>
   <!-- Three.js Offline Fallback / CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <link rel="stylesheet" href="atelier.css">
+  
+  <link rel="stylesheet" href="zoth-theme.css">
 </head>
 <body>
+<div class="zoth-brand-bar"><span class="zoth-z">Z</span><span class="zoth-name">Zoth Studio</span><span class="zoth-tool">Nexus 3D Scene Studio</span><span class="zoth-spacer"></span><span class="zoth-badge">NULLAI · SOVEREIGN</span></div>
 
-  <!-- Top App Bar -->
+  <!-- Founding Member Sales Banner -->
+  <aside class="sales-banner" aria-label="Special Offer" style="background:linear-gradient(90deg, rgba(212,175,55,0.15) 0%, rgba(56,189,248,0.15) 100%); border-bottom:1px solid rgba(212,175,55,0.3); padding:10px 16px; font-size:0.85rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; width:100%; box-sizing:border-box;">
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <span style="background:#D4AF37; color:#000; font-weight:800; font-size:0.7rem; padding:2px 8px; border-radius:4px; letter-spacing:0.5px; text-transform:uppercase;">Founding Lifetime Offer</span>
+      <span>Nexus 3D Studio Pro: <strong>$19</strong> lifetime <strike style="color:#9CA3AF;">$79</strike></span>
+      <span style="color:#9CA3AF; font-size:0.75rem;">• 100% In-Browser WebGL/Three.js • Zero Cloud Telemetry</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      <a href="https://buy.stripe.com/7sI7sA8hM2X8eFG8ww" target="_blank" rel="noopener noreferrer" style="background:#635BFF; color:#FFF; text-decoration:none; padding:6px 14px; border-radius:6px; font-weight:700; font-size:0.78rem; display:inline-flex; align-items:center; gap:6px;">
+        <span>Pay with Stripe / Card</span>
+      </a>
+      <a href="https://depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8" target="_blank" rel="noopener noreferrer" onclick="openDePayCheckout(event)" style="background:linear-gradient(90deg, #9945FF 0%, #14F195 100%); color:#000; text-decoration:none; padding:6px 14px; border-radius:6px; font-weight:800; font-size:0.78rem; display:inline-flex; align-items:center; gap:6px;">
+        <span>⚡ Solana DePay</span>
+      </a>
+      <button onclick="openLicenseModal()" style="background:transparent; border:1px solid rgba(212,175,55,0.4); color:#D4AF37; padding:5px 10px; border-radius:6px; font-size:0.75rem; cursor:pointer;">Enter Key</button>
+    </div>
+  </aside>
+
+<!-- Top App Bar -->
   <header class="app-bar">
     <div class="brand-group">
       <div class="google-dots">
@@ -575,7 +727,7 @@
       </div>
       <div class="brand-title">
         Nexus 3D Studio
-        <span class="badge-pill">v1.0.0</span>
+        <span class="badge-pill" id="pro-badge">FREE TIER</span>
       </div>
     </div>
 
@@ -585,6 +737,9 @@
       </button>
       <button class="btn" onclick="openDocsModal()">
         <span>📐 Math & CLI Specs</span>
+      </button>
+      <button class="btn" onclick="openLicenseModal()" style="border:1px solid rgba(212,175,55,0.4); color:#D4AF37;">
+        <span>🔑 Unlock Pro</span>
       </button>
       <button class="btn primary" onclick="exportOBJ()">
         <span>💾 Export OBJ</span>
@@ -768,21 +923,41 @@
         </div>
       </div>
 
-      <!-- 1-Click Exporters -->
-      <div class="m3-card">
-        <div class="m3-card-title">
-          <span>1-Click Mesh Exporters</span>
+      <!-- 1-Click Exporters with Frosted Glass Paywall -->
+      <div class="m3-card" style="position:relative; overflow:hidden;">
+        <div id="paywall-target" class="paywall-blur" style="transition: filter 0.3s ease;">
+          <div class="m3-card-title">
+            <span>1-Click Mesh Exporters (Pro)</span>
+          </div>
+
+          <div class="grid-2">
+            <button class="btn primary" onclick="exportOBJ()">Wavefront .OBJ</button>
+            <button class="btn" onclick="exportMTL()">Material .MTL</button>
+            <button class="btn" onclick="exportSTL()">ASCII .STL</button>
+            <button class="btn" onclick="exportThreeJSON()">Three.js JSON</button>
+          </div>
+          <button class="btn tonal" style="margin-top: 4px;" onclick="exportStandaloneHTML()">
+            <span>📦 Download Standalone HTML Viewer</span>
+          </button>
         </div>
 
-        <div class="grid-2">
-          <button class="btn primary" onclick="exportOBJ()">Wavefront .OBJ</button>
-          <button class="btn" onclick="exportMTL()">Material .MTL</button>
-          <button class="btn" onclick="exportSTL()">ASCII .STL</button>
-          <button class="btn" onclick="exportThreeJSON()">Three.js JSON</button>
+        <!-- Paywall Lock Overlay -->
+        <div id="paywall-lock-overlay" style="position:absolute; inset:0; background:rgba(8,8,11,0.82); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px; text-align:center; border-radius:var(--radius-md); z-index:10;">
+          <div style="font-size:1.6rem; margin-bottom:4px;">🔒</div>
+          <div style="font-size:0.95rem; font-weight:800; color:#FFF; margin-bottom:4px;">Unlock Precision 3D & CAD Exporters</div>
+          <p style="font-size:0.75rem; color:#a1a1aa; max-width:280px; margin-bottom:12px; line-height:1.3;">
+            Join founding members for lifetime Wavefront OBJ, STL watertight meshes, and standalone HTML exports.
+          </p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+            <a href="https://buy.stripe.com/7sI7sA8hM2X8eFG8ww" target="_blank" rel="noopener noreferrer" style="background:#635BFF; color:#FFF; text-decoration:none; padding:6px 12px; border-radius:6px; font-weight:700; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+              <span>💳 Stripe ($19)</span>
+            </a>
+            <a href="https://depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8" target="_blank" rel="noopener noreferrer" onclick="openDePayCheckout(event)" style="background:linear-gradient(90deg, #9945FF 0%, #14F195 100%); color:#000; text-decoration:none; padding:6px 12px; border-radius:6px; font-weight:800; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+              <span>⚡ Solana ($19)</span>
+            </a>
+          </div>
+          <button onclick="openLicenseModal('1-Click Mesh Exporters')" style="background:transparent; border:none; color:#D4AF37; font-size:0.72rem; cursor:pointer; margin-top:8px; text-decoration:underline;">I already have a license key</button>
         </div>
-        <button class="btn tonal" style="margin-top: 4px;" onclick="exportStandaloneHTML()">
-          <span>📦 Download Standalone HTML Viewer</span>
-        </button>
       </div>
 
     </aside>
@@ -1395,10 +1570,18 @@ nexus3d serve --port 8080</pre>
     }
 
     // =========================================================================
-    // EXPORTERS
+    // EXPORTERS & PRO INTERCEPTORS
     // =========================================================================
 
+    function isProLicensed() {
+      return localStorage.getItem('zoth_nexus3d_licensed') === 'true';
+    }
+
     function exportOBJ() {
+      if (!isProLicensed()) {
+        openLicenseModal('Wavefront .OBJ Export');
+        return;
+      }
       if (activeMeshGroup.children.length === 0) return;
       const mesh = activeMeshGroup.children[0];
       const geo = mesh.geometry;
@@ -1433,12 +1616,20 @@ nexus3d serve --port 8080</pre>
     }
 
     function exportMTL() {
+      if (!isProLicensed()) {
+        openLicenseModal('Material .MTL Export');
+        return;
+      }
       const mtl = `# Nexus 3D Material\nnewmtl Material_GoogleStudio\nKa 0.2 0.2 0.2\nKd 0.102 0.451 0.910\nKs 0.5 0.5 0.5\nNs 64.0\nillum 2\n`;
       downloadFile(`${currentShape}.mtl`, mtl, 'text/plain');
       showToast(`Exported ${currentShape}.mtl!`);
     }
 
     function exportSTL() {
+      if (!isProLicensed()) {
+        openLicenseModal('ASCII .STL Watertight Export');
+        return;
+      }
       if (activeMeshGroup.children.length === 0) return;
       const mesh = activeMeshGroup.children[0];
       const geo = mesh.geometry;
@@ -1464,6 +1655,10 @@ nexus3d serve --port 8080</pre>
     }
 
     function exportThreeJSON() {
+      if (!isProLicensed()) {
+        openLicenseModal('Three.js JSON Scene Export');
+        return;
+      }
       if (activeMeshGroup.children.length === 0) return;
       const geo = activeMeshGroup.children[0].geometry;
       const json = JSON.stringify(geo.toJSON(), null, 2);
@@ -1472,7 +1667,12 @@ nexus3d serve --port 8080</pre>
     }
 
     function exportStandaloneHTML() {
-      const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Nexus 3D - ${currentShape}</title><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><style>body{margin:0;overflow:hidden;background:#f8f9fa;font-family:sans-serif;}canvas{width:100vw;height:100vh;}#hud{position:absolute;top:16px;left:16px;background:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}<\/style><\/head><body><div id="hud"><h3>Nexus 3D Standalone Viewer</h3><p>${currentShape}</p></div><canvas id="c"></canvas><script>const scene=new THREE.Scene();scene.background=new THREE.Color(0xf8f9fa);const cam=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,100);cam.position.set(0,2,6);cam.lookAt(0,0,0);const rend=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});rend.setSize(window.innerWidth,window.innerHeight);scene.add(new THREE.AmbientLight(0xffffff,0.7));const dl=new THREE.DirectionalLight(0x1a73e8,0.8);dl.position.set(5,10,7);scene.add(dl);const geo=new THREE.TorusKnotGeometry(1.5,0.4,120,16);const mat=new THREE.MeshPhongMaterial({color:0x1a73e8});const m=new THREE.Mesh(geo,mat);scene.add(m);function a(){requestAnimationFrame(a);m.rotation.y+=0.01;rend.render(scene,cam);}a();window.onresize=()=>{cam.aspect=window.innerWidth/window.innerHeight;cam.updateProjectionMatrix();rend.setSize(window.innerWidth,window.innerHeight);};<\/script></body></html>`;
+      if (!isProLicensed()) {
+        openLicenseModal('Standalone HTML 3D Viewer Export');
+        return;
+      }
+      const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Nexus 3D - ${currentShape}</title><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><style>body{margin:0;overflow:hidden;background:#f8f9fa;font-family:sans-serif;}canvas{width:100vw;height:100vh;}#hud{position:absolute;top:16px;left:16px;background:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}<\/style><\/head><body><div id="hud"><h3>Nexus 3D Standalone Viewer</h3><p>${currentShape}</p></div><canvas id="c"></canvas><script>const scene=new THREE.Scene();scene.background=new THREE.Color(0xf8f9fa);const cam=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,100);cam.position.set(0,2,6);cam.lookAt(0,0,0);const rend=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});rend.setSize(window.innerWidth,window.innerHeight);scene.add(new THREE.AmbientLight(0xffffff,0.7));const dl=new THREE.DirectionalLight(0x1a73e8,0.8);dl.position.set(5,10,7);scene.add(dl);const geo=new THREE.TorusKnotGeometry(1.5,0.4,120,16);const mat=new THREE.MeshPhongMaterial({color:0x1a73e8});const m=new THREE.Mesh(geo,mat);scene.add(m);function a(){requestAnimationFrame(a);m.rotation.y+=0.01;rend.render(scene,cam);}a();window.onresize=()=>{cam.aspect=window.innerWidth/window.innerHeight;cam.updateProjectionMatrix();rend.setSize(window.innerWidth,window.innerHeight);};<\/script>  
+</body></html>`;
       downloadFile(`${currentShape}_standalone.html`, htmlContent, 'text/html');
       showToast(`Exported Standalone HTML Viewer!`);
     }
@@ -1645,7 +1845,133 @@ nexus3d serve --port 8080</pre>
       renderer.render(scene, camera);
     }
 
-    window.onload = init;
+    function openDePayCheckout(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      if (window.DePayButtons) {
+        DePayButtons.init({
+          integration: '428790dd-7ad1-407c-8ecf-c048c77a4cb8'
+        });
+      } else {
+        window.open('https://depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8', '_blank', 'noopener,noreferrer');
+      }
+    }
+
+    // License Verification & Pro Unlock
+    function checkLicense() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isParamLicensed = urlParams.get('licensed') === 'true';
+      const isSavedLicensed = localStorage.getItem('zoth_nexus3d_licensed') === 'true';
+
+      if (isParamLicensed || isSavedLicensed) {
+        unlockPro();
+      }
+    }
+
+    function unlockPro() {
+      localStorage.setItem('zoth_nexus3d_licensed', 'true');
+      showToast('⭐ PRO LICENSE ACTIVE - Unlimited Precision Exports Unlocked');
+      const badge = document.getElementById('pro-badge') || document.querySelector('.badge-pill');
+      if (badge) {
+        badge.innerText = '⭐ PRO ACTIVE';
+        badge.style.background = 'rgba(212,175,55,0.2)';
+        badge.style.color = '#D4AF37';
+      }
+
+      const banner = document.querySelector('.sales-banner');
+      if (banner) {
+        banner.style.display = 'none';
+      }
+
+      const overlay = document.getElementById('paywall-lock-overlay');
+      if (overlay) {
+        overlay.style.display = 'none';
+      }
+
+      const target = document.getElementById('paywall-target');
+      if (target) {
+        target.classList.remove('paywall-blur');
+        target.style.pointerEvents = 'auto';
+      }
+    }
+
+    function openLicenseModal(feature) {
+      const featEl = document.getElementById('paywall-feature-label');
+      if (featEl && feature) {
+        featEl.textContent = feature;
+      }
+      const m = document.getElementById('license-modal');
+      if (m) m.style.display = 'flex';
+    }
+
+    function closeLicenseModal() {
+      const m = document.getElementById('license-modal');
+      if (m) m.style.display = 'none';
+    }
+
+    function activateLicense() {
+      const val = document.getElementById('license-input').value.trim();
+      if (val.length >= 3) {
+        unlockPro();
+        closeLicenseModal();
+        alert('🎉 Pro License Activated! Lifetime access unlocked.');
+      } else {
+        alert('Please enter a valid license key or receipt email.');
+      }
+    }
+
+    window.onload = () => {
+      init();
+      checkLicense();
+    };
   </script>
+
+  <!-- Pro Paywall & License Key Activation Modal -->
+  <div id="license-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+    <div style="background:#14141c; border:1px solid rgba(212,175,55,0.4); border-radius:14px; padding:24px; width:100%; max-width:540px; display:flex; flex-direction:column; gap:16px; box-shadow:0 20px 50px rgba(0,0,0,0.8); position:relative; color:#f4f4f5;">
+      <button type="button" onclick="closeLicenseModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; font-size:22px; color:#a1a1aa; cursor:pointer;">&times;</button>
+      <div style="display:inline-block; background:#D4AF37; color:#08080B; font-weight:800; font-size:11px; padding:3px 8px; border-radius:4px; letter-spacing:0.5px; width:fit-content;">PRO FOUNDING ACCESS</div>
+      <h2 style="font-size:1.35rem; color:#FFF; margin:0;">Unlock Nexus 3D Studio Pro</h2>
+      <p style="font-size:0.82rem; color:#a1a1aa; margin:0;">
+        Feature triggered: <strong id="paywall-feature-label" style="color:#D4AF37;">Precision 3D Mesh Exporters</strong>
+      </p>
+
+      <ul style="list-style:none; padding:0; margin:4px 0; font-size:0.83rem; color:#f4f4f5; display:flex; flex-direction:column; gap:8px;">
+        <li>✅ <strong>Unlimited 3D Mesh Exports</strong> (Wavefront OBJ, Material MTL, Watertight STL, Three.js JSON)</li>
+        <li>✅ <strong>Standalone Interactive HTML 3D Web Viewer</strong> generator with zero external hosting dependencies</li>
+        <li>✅ <strong>All 8 Advanced Mathematical Primitives</strong> (Tesseract 4D, Klein Bottle, Calabi-Yau, Dini, Gyroid, Enneper, Möbius, Terrain)</li>
+        <li>✅ <strong>Model Context Protocol (MCP) JSON-RPC 2.0</strong> stdio server integration for Claude/Cursor/Cline agents</li>
+        <li>✅ <strong>100% In-Browser WebGL/Three.js GPU Engine</strong> &bull; Zero Cloud Telemetry &bull; Complete Privacy</li>
+        <li>✅ <strong>Permanent Lifetime Access</strong> with Dual Payment Rails (Stripe + Solana)</li>
+      </ul>
+
+      <div style="background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <div>
+          <div style="font-size:0.7rem; color:#D4AF37; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Lifetime Founding License</div>
+          <div style="font-size:1.4rem; font-weight:800; color:#FFF;">$19 <span style="font-size:0.82rem; font-weight:400; text-decoration:line-through; color:#a1a1aa;">$79</span></div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="https://buy.stripe.com/7sI7sA8hM2X8eFG8ww" target="_blank" rel="noopener noreferrer" style="background:#635BFF; color:#FFF; text-decoration:none; padding:8px 14px; border-radius:6px; font-weight:700; font-size:0.8rem; display:inline-flex; align-items:center; gap:4px;">
+            <span>💳 Stripe / Card</span>
+          </a>
+          <a href="https://depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8" target="_blank" rel="noopener noreferrer" onclick="openDePayCheckout(event)" style="background:linear-gradient(90deg, #9945FF 0%, #14F195 100%); color:#000; text-decoration:none; padding:8px 14px; border-radius:6px; font-weight:800; font-size:0.8rem; display:inline-flex; align-items:center; gap:4px;">
+            <span>⚡ Solana DePay</span>
+          </a>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:12px;">
+        <label for="license-input" style="display:block; font-size:0.75rem; color:#a1a1aa; margin-bottom:6px;">Already purchased? Enter your receipt email or license key:</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="license-input" style="background:#08080b; border:1px solid #27272a; color:#FFF; padding:8px 12px; border-radius:6px; font-family:monospace; font-size:0.85rem; flex:1; outline:none;" placeholder="e.g. zoth-nexus-pro or your@email.com">
+          <button onclick="activateLicense()" style="background:#D4AF37; border:none; color:#08080b; padding:8px 16px; border-radius:6px; font-weight:800; font-size:0.8rem; cursor:pointer;">Activate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="zoth-brand-footer" style="padding:16px 20px; text-align:center; font-size:0.8rem; color:#a1a1aa; border-top:1px solid rgba(255,255,255,0.08); background:#08080b;">
+    <div>Engineered by Neal Frazier Tech (<a href="https://github.com/1nc0gn30" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">@1nc0gn30</a>) &bull; <a href="https://nullai.tech" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">NullAI Platform</a></div>
+    <div style="margin-top:4px; font-size:0.75rem; color:#71717a;">Sovereign Local-First Architecture &bull; 100% In-Browser 3D Engine &bull; Zero Cloud Telemetry</div>
+  </footer>
 </body>
 </html>

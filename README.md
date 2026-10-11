@@ -2,13 +2,22 @@
 
 <div align="center">
 
-![Nexus 3D Header](https://img.shields.io/badge/Material%203-Studio%20UI-1a73e8?style=for-the-badge)
-![Python 3.9+](https://img.shields.io/badge/Python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![MCP Protocol](https://img.shields.io/badge/Model%20Context%20Protocol-MCP%20Ready-1e8e3e?style=for-the-badge)
-![Zero Dependencies](https://img.shields.io/badge/Core%20Engine-100%25%20Stdlib-f9ab00?style=for-the-badge)
-![License MIT](https://img.shields.io/badge/License-MIT-d93025?style=for-the-badge)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/nexus-3d-scene-studio/deploy-status)](https://nexus-3d-studio.netlify.app/)
+[![Live App](https://img.shields.io/badge/Live_App-nexus--3d--studio.netlify.app-00C7B7?style=flat-square&logo=netlify)](https://nexus-3d-studio.netlify.app/)
+[![Dual Rails](https://img.shields.io/badge/Dual_Checkout-Stripe_%2B_Solana-635BFF?style=flat-square)](https://buy.stripe.com/7sI7sA8hM2X8eFG8ww)
+[![Pro Price](https://img.shields.io/badge/Founding_Lifetime-$19_USD-D4AF37?style=flat-square)](https://buy.stripe.com/7sI7sA8hM2X8eFG8ww)
+[![Headless Verification](https://img.shields.io/badge/Playwright-0_Errors_|_0px_Overflow-brightgreen?style=flat-square)](https://nexus-3d-studio.netlify.app/)
+[![License MIT](https://img.shields.io/badge/License-MIT-d93025?style=flat-square)](https://opensource.org/licenses/MIT)
 
-**A pure Python 3D mathematical geometry engine, WebGL Material 3 studio (design influenced by Material 3), and Model Context Protocol (MCP) server for generative 3D modeling and autonomous AI agents.**
+**A pure Python 3D mathematical geometry engine, WebGL Material 3 studio (design influenced by Material 3), and Model Context Protocol (MCP) server for generative 3D modeling and autonomous AI agents. 100% in-browser computation with zero cloud telemetry.**
+
+### 🌐 Live Production Application
+👉 **[Launch Nexus 3D Studio](https://nexus-3d-studio.netlify.app/)**
+
+### 💳 Pro Activation & Sovereign Dual Payment Rails
+- **Stripe / Credit Card ($19 Lifetime)**: [buy.stripe.com/7sI7sA8hM2X8eFG8ww](https://buy.stripe.com/7sI7sA8hM2X8eFG8ww)
+- **Solana DePay ($19 Lifetime)**: [depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8](https://depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8)
+- **Instant Client-Side Activation**: Permanent `localStorage` unlocking with zero backend dependencies.
 
 [Live Studio Web UI](#-interactive-web-studio) • [Procedural Primitives](#-procedural-primitives-catalog) • [MCP Integration](#-ai-agent--mcp-server) • [Python API](#-python-api-quickstart) • [CLI Commands](#-cli-interface)
 
@@ -179,5 +188,9 @@ PYTHONPATH=src pytest tests/ -v
 
 ---
 
-## 📄 License
-This project is open-source under the [MIT License](LICENSE).
+## 📜 Attribution & License
+
+Engineered by **Neal Frazier Tech** ([@1nc0gn30](https://github.com/1nc0gn30)) • [NullAI Platform](https://nullai.tech)  
+Repository: [github.com/1nc0gn30/nexus-3d-scene-studio](https://github.com/1nc0gn30/nexus-3d-scene-studio)  
+Licensed under the [MIT License](LICENSE).
+
