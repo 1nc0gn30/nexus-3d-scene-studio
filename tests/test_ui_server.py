@@ -99,7 +99,7 @@ class TestUIServer(unittest.TestCase):
         status, headers, body = self._http_request("GET", "/api/health")
         self.assertEqual(status, 200)
         self.assertIn("application/json", headers.get("content-type", ""))
-        self.assertEqual(headers.get("access-control-allow-origin"), "*")
+        self.assertEqual(headers.get("access-control-allow-origin"), "http://127.0.0.1")
 
         data = json.loads(body.decode("utf-8"))
         self.assertEqual(data["status"], "ok")
@@ -255,7 +255,7 @@ class TestUIServer(unittest.TestCase):
         """Test OPTIONS pre-flight request returns CORS headers."""
         status, headers, _ = self._http_request("OPTIONS", "/api/generate")
         self.assertIn(status, [200, 204])
-        self.assertEqual(headers.get("access-control-allow-origin"), "*")
+        self.assertEqual(headers.get("access-control-allow-origin"), "http://127.0.0.1")
         self.assertIn("POST", headers.get("access-control-allow-methods", ""))
 
     def test_root_embedded_ui_fallback(self) -> None:

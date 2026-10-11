@@ -546,8 +546,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     serve_parser.add_argument(
         "-H", "--host",
-        default="0.0.0.0",
-        help="Host address to bind (default: 0.0.0.0)",
+        default="127.0.0.1",
+        help="Host address to bind (default: 127.0.0.1; use 0.0.0.0 only on trusted networks)",
     )
     serve_parser.add_argument(
         "--public",
