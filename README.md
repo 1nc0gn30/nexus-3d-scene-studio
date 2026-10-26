@@ -1,3 +1,9 @@
+<div align="center">
+  <img src="assets/hero-banner.svg" alt="Nexus 3D Scene Studio — Sovereign Architecture Banner" width="100%" />
+</div>
+
+<br />
+
 # 🌟 Nexus 3D Scene Studio
 
 <div align="center">
