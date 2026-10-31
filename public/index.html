@@ -40,7 +40,7 @@
         "description": "Mathematical 3D geometry engine and Model Context Protocol server for generative meshes and spatial agent synthesis.",
         "offers": {
           "@type": "Offer",
-          "price": "19.00",
+          "price": "0",
           "priceCurrency": "USD",
           "availability": "https://schema.org/InStock"
         },
@@ -71,10 +71,10 @@
           },
           {
             "@type": "Question",
-            "name": "What payment rails are accepted?",
+            "name": "How can I support Nexus 3D Scene Studio?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "We accept credit cards, Apple Pay, and Google Pay via Stripe, and instant Solana cryptocurrency checkout via DePay."
+              "text": "Nexus 3D Scene Studio is 100% free and open-access by default with zero paywalls. You can support the project via Buy Us a Coffee (Stripe) or tip via Solana (GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK)."
             }
           }
         ]
@@ -84,7 +84,6 @@
   </script>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/assets/icon.png">
-  <script src="https://integrate.depay.com/widgets/v13.js" defer></script>
   <style>
     :root {
       /* Material 3 Light Mode Palette (design influenced by Material 3) */
@@ -564,7 +563,7 @@
       width: 100vw;
       height: 100vh;
       background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(4px);
+      backdrop-filter: none;
       display: none;
       align-items: center;
       justify-content: center;
@@ -656,7 +655,7 @@
 
     /* Sovereign Responsive & Layout Invariants */
     .paywall-blur {
-      filter: blur(5px);
+      filter: none;
       user-select: none;
     }
     html, body {
@@ -697,27 +696,48 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   
   <link rel="stylesheet" href="zoth-theme.css">
+
+  <!-- Zoth 100% Open-Access & Buy Us a Coffee Invariant -->
+  <script id="zoth-open-access-init">
+    (function() {
+      try {
+        var keys = ['agent_audiocipher_pro', 'agent_cyber_turtle_pro', 'agent_datamosh_pro', 'agent_nexus3d_pro', 'agent_policy_pro', 'audiocipher_license', 'audiocipher_pro_licensed', 'badge3d_pro_licensed', 'certpath_pro_key', 'certpath_pro_licensed', 'cron_rhythm_pro_key', 'cron_rhythm_pro_licensed', 'cwv-speed-engine_pro_licensed', 'cwv_pro_licensed', 'cyber_turtle_pro_licensed', 'datamosh_pro_licensed', 'deepsearch-research-agent_pro_licensed', 'deepsearch_pro_licensed', 'entropy_studio_licensed', 'envguard-secrets-vault_pro_licensed', 'envguard_pro_license', 'etsy_connector_pro', 'jwt_guard_licensed', 'mdg_pro_licensed', 'neuro_pro_licensed', 'nexus3d_pro_licensed', 'omnipost_pro_key', 'omnipost_pro_licensed', 'osint_pro_licensed', 'payload-entropy-studio_pro_licensed', 'polyglot_pro_licensed', 'pro_licensed', 'promptmaster_pro_licensed', 'promptmaster_pro_active', 'robots-txt-auditor_pro_licensed', 'robots_pro_licensed', 'schema_illustrator_pro_licensed', 'sovereign_pro_licensed', 'subsweep-lead-scanner_pro_licensed', 'subsweep_licensed', 'turtle_pro_licensed', 'ufo_sacred_licensed', 'vector-search-engine_pro_licensed', 'vector_studio_pro_licensed', 'web-security-guard_pro_licensed', 'web_security_guard_licensed', 'yourdigitalspace_pro', 'zela_guide_pro_licensed', 'zoth_ascii_magic_pro', 'zoth_audiocipher_licensed', 'zoth_badge3d_licensed', 'zoth_cyber_turtle_licensed', 'zoth_datamosh_licensed', 'zoth_etsy_licensed', 'zoth_nexus3d_licensed', 'zoth_osint_licensed', 'zoth_policy_licensed', 'zoth_sacred_licensed', 'zoth_ufo_licensed'];
+        for (var i = 0; i < keys.length; i++) {
+          localStorage.setItem(keys[i], 'true');
+        }
+        localStorage.setItem('pm_license_v2', JSON.stringify({ method: 'open_access', ref: 'free_forever', at: '2026-01-01T00:00:00Z' }));
+        window.isPro = true;
+        window.isProLicensed = true;
+      } catch (e) {}
+    })();
+  </script>
+  <style id="zoth-open-access-override">
+    .paywall-overlay, .output-paywall-overlay, #outputPaywallOverlay, #schemaPaywallOverlay,
+    #transformerPaywallOverlay, #proPaywallModal, #licenseModal, #salesBanner, #founding-offer-banner,
+    #funnelHeroBanner, [data-alias="paywallOverlay"], [data-alias="founding-offer-banner"] {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+    .paywall-wrap #outputPreview, .paywall-wrap #reportContentArea, .paywall-content,
+    .paywall-content.locked, .paywall-wrap.is-locked #outputPreview, .paywall-wrap.locked #outputPreview {
+      filter: none !important;
+      -webkit-filter: none !important;
+      user-select: auto !important;
+      pointer-events: auto !important;
+    }
+  </style>
+
 </head>
 <body>
-<div class="zoth-brand-bar"><span class="zoth-z">Z</span><span class="zoth-name">Zoth Studio</span><span class="zoth-tool">Nexus 3D Scene Studio</span><span class="zoth-spacer"></span><span class="zoth-badge">NULLAI · SOVEREIGN</span></div>
 
-  <!-- Founding Member Sales Banner -->
-  <aside class="sales-banner" id="salesBanner" aria-label="Special Offer" style="background:linear-gradient(90deg, rgba(212,175,55,0.15) 0%, rgba(56,189,248,0.15) 100%); border-bottom:1px solid rgba(212,175,55,0.3); padding:10px 16px; font-size:0.85rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; width:100%; box-sizing:border-box;">
-    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-      <span style="background:#D4AF37; color:#000; font-weight:800; font-size:0.7rem; padding:2px 8px; border-radius:4px; letter-spacing:0.5px; text-transform:uppercase;">Founding Lifetime Offer</span>
-      <span>Nexus 3D Studio Pro: <strong>$19</strong> lifetime <strike style="color:#9CA3AF;">$79</strike></span>
-      <span style="color:#9CA3AF; font-size:0.75rem;">• 100% In-Browser WebGL/Three.js • Zero Cloud Telemetry</span>
-    </div>
-    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-      <a href="https://buy.stripe.com/4gMfZg9AheOsdhKbcAfw40L" target="_blank" rel="noopener noreferrer" style="background:#635BFF; color:#FFF; text-decoration:none; padding:6px 14px; border-radius:6px; font-weight:700; font-size:0.78rem; display:inline-flex; align-items:center; gap:6px;">
-        <span>Pay with Stripe / Card</span>
-      </a>
-      <a href="https://depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8" target="_blank" rel="noopener noreferrer" onclick="openDePayCheckout(event)" style="background:linear-gradient(90deg, #9945FF 0%, #14F195 100%); color:#000; text-decoration:none; padding:6px 14px; border-radius:6px; font-weight:800; font-size:0.78rem; display:inline-flex; align-items:center; gap:6px;">
-        <span>⚡ Solana DePay</span>
-      </a>
-      <button onclick="openLicenseModal()" style="background:transparent; border:1px solid rgba(212,175,55,0.4); color:#D4AF37; padding:5px 10px; border-radius:6px; font-size:0.75rem; cursor:pointer;">Enter Key</button>
-    </div>
-  </aside>
+<div id="zoth-coffee-support-bar" style="background: linear-gradient(90deg, rgba(16,185,129,0.12), rgba(212,175,55,0.14)); border-bottom: 1px solid rgba(212,175,55,0.35); padding: 8px 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12px; z-index: 9999;">
+  <span style="color: #10B981; font-weight: 800;">✦ 100% FREE &amp; OPEN ACCESS · ZERO PAYWALLS</span>
+  <a href="https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X" target="_blank" rel="noopener noreferrer" style="background: #D4AF37; color: #08080B; padding: 4px 12px; border-radius: 6px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">☕ Buy Us a Coffee (Stripe)</a>
+  <a href="solana:GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK" onclick="if(navigator.clipboard){navigator.clipboard.writeText('GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK');this.textContent='✓ Copied GG2eQb...dXoK!';}" style="background: rgba(20,241,149,0.15); color: #14F195; border: 1px solid rgba(20,241,149,0.45); padding: 4px 12px; border-radius: 6px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">◎ Solana Tip (GG2e...dXoK)</a>
+</div>
+
+<div class="zoth-brand-bar"><span class="zoth-z">Z</span><span class="zoth-name">Zoth Studio</span><span class="zoth-tool">Nexus 3D Scene Studio</span><span class="zoth-spacer"></span><span class="zoth-badge">NULLAI · SOVEREIGN</span></div>
 
 <!-- Top App Bar -->
   <header class="app-bar">
@@ -726,7 +746,7 @@
       <div class="brand-title">
         Nexus 3D Studio
         <span class="badge-pill" style="margin-left:4px; font-size:11px; background:rgba(255,255,255,0.06); color:#a1a1aa;">v2.5 SOVEREIGN</span>
-        <span class="badge-pill" id="licenseBadge" data-role="license-badge">⚡ FREE TIER</span>
+        <span class="badge-pill" id="licenseBadge" data-role="license-badge" style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); color:#10B981;">✦ 100% FREE & UNLOCKED</span>
       </div>
     </div>
 
@@ -736,9 +756,6 @@
       </button>
       <button class="btn" onclick="openDocsModal()">
         <span>📐 Math & CLI Specs</span>
-      </button>
-      <button class="btn" onclick="openLicenseModal()" style="border:1px solid rgba(212,175,55,0.4); color:#D4AF37;">
-        <span>🔑 Unlock Pro</span>
       </button>
       <button class="btn primary" onclick="exportOBJ()">
         <span>💾 Export OBJ</span>
@@ -941,18 +958,18 @@
         </div>
 
         <!-- Paywall Lock Overlay -->
-        <div id="paywall-lock-overlay" style="position:absolute; inset:0; background:rgba(8,8,11,0.82); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px; text-align:center; border-radius:var(--radius-md); z-index:10;">
+        <div id="paywall-lock-overlay" style="position:absolute; inset:0; background:rgba(8,8,11,0.82); backdrop-filter: none; -webkit-backdrop-filter: none; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px; text-align:center; border-radius:var(--radius-md); z-index:10;">
           <div style="font-size:1.6rem; margin-bottom:4px;">🔒</div>
           <div style="font-size:0.95rem; font-weight:800; color:#FFF; margin-bottom:4px;">Unlock Precision 3D & CAD Exporters</div>
           <p style="font-size:0.75rem; color:#a1a1aa; max-width:280px; margin-bottom:12px; line-height:1.3;">
             Join founding members for lifetime Wavefront OBJ, STL watertight meshes, and standalone HTML exports.
           </p>
           <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-            <a href="https://buy.stripe.com/4gMfZg9AheOsdhKbcAfw40L" target="_blank" rel="noopener noreferrer" style="background:#635BFF; color:#FFF; text-decoration:none; padding:6px 12px; border-radius:6px; font-weight:700; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
-              <span>💳 Stripe ($19)</span>
+            <a href="https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X" target="_blank" rel="noopener noreferrer" style="background:#635BFF; color:#FFF; text-decoration:none; padding:6px 12px; border-radius:6px; font-weight:700; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+              <span>☕ Buy Us a Coffee</span>
             </a>
-            <a href="https://depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8" target="_blank" rel="noopener noreferrer" onclick="openDePayCheckout(event)" style="background:linear-gradient(90deg, #9945FF 0%, #14F195 100%); color:#000; text-decoration:none; padding:6px 12px; border-radius:6px; font-weight:800; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
-              <span>⚡ Solana ($19)</span>
+            <a href="solana:GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK" target="_blank" rel="noopener noreferrer" onclick="openDePayCheckout(event)" style="background:linear-gradient(90deg, #9945FF 0%, #14F195 100%); color:#000; text-decoration:none; padding:6px 12px; border-radius:6px; font-weight:800; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
+              <span>⚡ Solana (Free (100% Open Access))</span>
             </a>
           </div>
           <button id="btn-paywall-key" onclick="openLicenseModal('1-Click Mesh Exporters')" style="background:transparent; border:none; color:#D4AF37; font-size:0.72rem; cursor:pointer; margin-top:8px; text-decoration:underline;">I already have a license key</button>
@@ -1618,20 +1635,12 @@ nexus3d serve --port 8080</pre>
     }
 
     function exportMTL() {
-      if (!isProLicensed()) {
-        openLicenseModal('Material .MTL Export');
-        return;
-      }
       const mtl = `# Nexus 3D Material\nnewmtl Material_GoogleStudio\nKa 0.2 0.2 0.2\nKd 0.102 0.451 0.910\nKs 0.5 0.5 0.5\nNs 64.0\nillum 2\n`;
       downloadFile(`${currentShape}.mtl`, mtl, 'text/plain');
       showToast(`Exported ${currentShape}.mtl!`);
     }
 
     function exportSTL() {
-      if (!isProLicensed()) {
-        openLicenseModal('ASCII .STL Watertight Export');
-        return;
-      }
       if (activeMeshGroup.children.length === 0) return;
       const mesh = activeMeshGroup.children[0];
       const geo = mesh.geometry;
@@ -1657,10 +1666,6 @@ nexus3d serve --port 8080</pre>
     }
 
     function exportThreeJSON() {
-      if (!isProLicensed()) {
-        openLicenseModal('Three.js JSON Scene Export');
-        return;
-      }
       if (activeMeshGroup.children.length === 0) return;
       const geo = activeMeshGroup.children[0].geometry;
       const json = JSON.stringify(geo.toJSON(), null, 2);
@@ -1669,10 +1674,6 @@ nexus3d serve --port 8080</pre>
     }
 
     function exportStandaloneHTML() {
-      if (!isProLicensed()) {
-        openLicenseModal('Standalone HTML 3D Viewer Export');
-        return;
-      }
       const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Nexus 3D - ${currentShape}</title><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><style>body{margin:0;overflow:hidden;background:#f8f9fa;font-family:sans-serif;}canvas{width:100vw;height:100vh;}#hud{position:absolute;top:16px;left:16px;background:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}<\/style><\/head><body><div id="hud"><h3>Nexus 3D Standalone Viewer</h3><p>${currentShape}</p></div><canvas id="c"></canvas><script>const scene=new THREE.Scene();scene.background=new THREE.Color(0xf8f9fa);const cam=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,100);cam.position.set(0,2,6);cam.lookAt(0,0,0);const rend=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});rend.setSize(window.innerWidth,window.innerHeight);scene.add(new THREE.AmbientLight(0xffffff,0.7));const dl=new THREE.DirectionalLight(0x1a73e8,0.8);dl.position.set(5,10,7);scene.add(dl);const geo=new THREE.TorusKnotGeometry(1.5,0.4,120,16);const mat=new THREE.MeshPhongMaterial({color:0x1a73e8});const m=new THREE.Mesh(geo,mat);scene.add(m);function a(){requestAnimationFrame(a);m.rotation.y+=0.01;rend.render(scene,cam);}a();window.onresize=()=>{cam.aspect=window.innerWidth/window.innerHeight;cam.updateProjectionMatrix();rend.setSize(window.innerWidth,window.innerHeight);};<\/script>  
 </body></html>`;
       downloadFile(`${currentShape}_standalone.html`, htmlContent, 'text/html');
@@ -1854,7 +1855,7 @@ nexus3d serve --port 8080</pre>
           integration: '428790dd-7ad1-407c-8ecf-c048c77a4cb8'
         });
       } else {
-        window.open('https://depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8', '_blank', 'noopener,noreferrer');
+        window.open('solana:GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK', '_blank', 'noopener,noreferrer');
       }
     }
 
@@ -1949,49 +1950,7 @@ nexus3d serve --port 8080</pre>
     };
   </script>
 
-  <!-- Pro Paywall & License Key Activation Modal -->
-  <div id="licenseModal" data-alias="paywall-modal" class="pro-paywall-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
-    <div style="background:#14141c; border:1px solid rgba(212,175,55,0.4); border-radius:14px; padding:24px; width:100%; max-width:540px; display:flex; flex-direction:column; gap:16px; box-shadow:0 20px 50px rgba(0,0,0,0.8); position:relative; color:#f4f4f5;">
-      <button type="button" onclick="closeLicenseModal()" style="position:absolute; top:16px; right:16px; background:transparent; border:none; font-size:22px; color:#a1a1aa; cursor:pointer;">&times;</button>
-      <div style="display:inline-block; background:#D4AF37; color:#08080B; font-weight:800; font-size:11px; padding:3px 8px; border-radius:4px; letter-spacing:0.5px; width:fit-content;">PRO FOUNDING ACCESS</div>
-      <h2 style="font-size:1.35rem; color:#FFF; margin:0;">Unlock Nexus 3D Studio Pro</h2>
-      <p style="font-size:0.82rem; color:#a1a1aa; margin:0;">
-        Feature triggered: <strong id="paywall-feature-label" style="color:#D4AF37;">Precision 3D Mesh Exporters</strong>
-      </p>
-
-      <ul style="list-style:none; padding:0; margin:4px 0; font-size:0.83rem; color:#f4f4f5; display:flex; flex-direction:column; gap:8px;">
-        <li>✅ <strong>Unlimited 3D Mesh Exports</strong> (Wavefront OBJ, Material MTL, Watertight STL, Three.js JSON)</li>
-        <li>✅ <strong>Standalone Interactive HTML 3D Web Viewer</strong> generator with zero external hosting dependencies</li>
-        <li>✅ <strong>All 8 Advanced Mathematical Primitives</strong> (Tesseract 4D, Klein Bottle, Calabi-Yau, Dini, Gyroid, Enneper, Möbius, Terrain)</li>
-        <li>✅ <strong>Model Context Protocol (MCP) JSON-RPC 2.0</strong> stdio server integration for Claude/Cursor/Cline agents</li>
-        <li>✅ <strong>100% In-Browser WebGL/Three.js GPU Engine</strong> &bull; Zero Cloud Telemetry &bull; Complete Privacy</li>
-        <li>✅ <strong>Permanent Lifetime Access</strong> with Dual Payment Rails (Stripe + Solana)</li>
-      </ul>
-
-      <div style="background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.3); border-radius:10px; padding:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-        <div>
-          <div style="font-size:0.7rem; color:#D4AF37; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Lifetime Founding License</div>
-          <div style="font-size:1.4rem; font-weight:800; color:#FFF;">$19 <span style="font-size:0.82rem; font-weight:400; text-decoration:line-through; color:#a1a1aa;">$79</span></div>
-        </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <a href="https://buy.stripe.com/4gMfZg9AheOsdhKbcAfw40L" target="_blank" rel="noopener noreferrer" style="background:#635BFF; color:#FFF; text-decoration:none; padding:8px 14px; border-radius:6px; font-weight:700; font-size:0.8rem; display:inline-flex; align-items:center; gap:4px;">
-            <span>💳 Stripe / Card</span>
-          </a>
-          <a href="https://depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8" target="_blank" rel="noopener noreferrer" onclick="openDePayCheckout(event)" style="background:linear-gradient(90deg, #9945FF 0%, #14F195 100%); color:#000; text-decoration:none; padding:8px 14px; border-radius:6px; font-weight:800; font-size:0.8rem; display:inline-flex; align-items:center; gap:4px;">
-            <span>⚡ Solana DePay</span>
-          </a>
-        </div>
-      </div>
-
-      <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:12px;">
-        <label for="license-input" style="display:block; font-size:0.75rem; color:#a1a1aa; margin-bottom:6px;">Already purchased? Enter your receipt email or license key:</label>
-        <div style="display:flex; gap:8px;">
-          <input type="text" id="license-input" data-alias="license-key-input" style="background:#08080b; border:1px solid #27272a; color:#FFF; padding:8px 12px; border-radius:6px; font-family:monospace; font-size:0.85rem; flex:1; outline:none;" placeholder="NEXUS-PRO-2026 or receipt email">
-          <button id="btnActivateKey" data-alias="activate-key-btn" onclick="activateLicense()" style="background:#D4AF37; border:none; color:#08080b; padding:8px 16px; border-radius:6px; font-weight:800; font-size:0.8rem; cursor:pointer;">Activate</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Footer -->
 
   <footer class="zoth-brand-footer" style="padding:16px 20px; text-align:center; font-size:0.8rem; color:#a1a1aa; border-top:1px solid rgba(255,255,255,0.08); background:#08080b;">
     <div>Engineered by Neal Frazier Tech (<a href="https://github.com/1nc0gn30" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">@1nc0gn30</a>) &bull; <a href="https://nullai.tech" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">NullAI Platform</a></div>

@@ -10,9 +10,9 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/nexus-3d-scene-studio/deploy-status)](https://nexus-3d-studio.netlify.app/)
 [![Live App](https://img.shields.io/badge/Live_App-nexus--3d--studio.netlify.app-00C7B7?style=flat-square&logo=netlify)](https://nexus-3d-studio.netlify.app/)
-[![Dual Rails](https://img.shields.io/badge/Dual_Checkout-Stripe_%2B_Solana-635BFF?style=flat-square)](https://buy.stripe.com/7sI7sA8hM2X8eFG8ww)
-[![Pro Price](https://img.shields.io/badge/Founding_Lifetime-$19_USD-D4AF37?style=flat-square)](https://buy.stripe.com/7sI7sA8hM2X8eFG8ww)
-[![Headless Verification](https://img.shields.io/badge/Playwright-0_Errors_|_0px_Overflow-brightgreen?style=flat-square)](https://nexus-3d-studio.netlify.app/)
+[![Access](https://img.shields.io/badge/Access-100%25_Free_&_Unlocked-10B981?style=flat-square)](https://nexus-3d-studio.netlify.app/)
+[![Support](https://img.shields.io/badge/☕_Buy_Us_A_Coffee-Stripe-D4AF37?style=flat-square)](https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X)
+[![Solana Tip](https://img.shields.io/badge/◎_Solana_Tip-GG2e...dXoK-14F195?style=flat-square)](https://explorer.solana.com/address/GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK)
 [![License MIT](https://img.shields.io/badge/License-MIT-d93025?style=flat-square)](https://opensource.org/licenses/MIT)
 
 **A pure Python 3D mathematical geometry engine, WebGL Material 3 studio (design influenced by Material 3), and Model Context Protocol (MCP) server for generative 3D modeling and autonomous AI agents. 100% in-browser computation with zero cloud telemetry.**
@@ -20,10 +20,10 @@
 ### 🌐 Live Production Application
 👉 **[Launch Nexus 3D Studio](https://nexus-3d-studio.netlify.app/)**
 
-### 💳 Pro Activation & Sovereign Dual Payment Rails
-- **Stripe / Credit Card ($19 Lifetime)**: [buy.stripe.com/7sI7sA8hM2X8eFG8ww](https://buy.stripe.com/7sI7sA8hM2X8eFG8ww)
-- **Solana DePay ($19 Lifetime)**: [depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8](https://depay.com/pay/428790dd-7ad1-407c-8ecf-c048c77a4cb8)
-- **Instant Client-Side Activation**: Permanent `localStorage` unlocking with zero backend dependencies.
+### ☕ 100% Free & Open-Access Support Architecture
+- **100% Free, Unlocked & Sovereign**: Zero paywalls, zero license keys, zero export locks, and zero cloud tracking.
+- **☕ Buy Us a Coffee (Stripe)**: [buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X](https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X)
+- **◎ Solana Tip Address**: `GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK` (`solana:GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK`)
 
 [Live Studio Web UI](#-interactive-web-studio) • [Procedural Primitives](#-procedural-primitives-catalog) • [MCP Integration](#-ai-agent--mcp-server) • [Python API](#-python-api-quickstart) • [CLI Commands](#-cli-interface)
 

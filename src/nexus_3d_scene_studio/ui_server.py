@@ -224,7 +224,7 @@ class NexusStudioRequestHandler(SimpleHTTPRequestHandler):
         query_params = urllib.parse.parse_qs(parsed_url.query)
 
         # 1. API: Health Check
-        if path == "/api/health":
+        if path in ("/api/health", "/health"):
             uptime = round(time.time() - _SERVER_START_TIME, 2)
             diag = get_platform_info().to_dict()
             now_utc = datetime.datetime.now(datetime.timezone.utc)
