@@ -196,7 +196,7 @@ PYTHONPATH=src pytest tests/ -v
 
 ## 📜 Attribution & License
 
-Engineered by **Neal Frazier Tech** ([@1nc0gn30](https://github.com/1nc0gn30)) • [NullAI Platform](https://nullai.tech)  
+Engineered by **1nc0gn30 • NullAI** ([@1nc0gn30](https://github.com/1nc0gn30)) • [NullAI Platform](https://nullai.tech)  
 Repository: [github.com/1nc0gn30/nexus-3d-scene-studio](https://github.com/1nc0gn30/nexus-3d-scene-studio)  
 Licensed under the [MIT License](LICENSE).
 

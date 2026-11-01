@@ -1,0 +1,41 @@
+{
+  "repo_id": "nexus-3d-scene-studio",
+  "title": "Nexus 3D Scene Studio",
+  "engineered_by": "1nc0gn30 (@1nc0gn30) \u2022 NullAI Platform",
+  "gpu_engine": "NVIDIA A100 80GB PCIe (ComfyUI FLUX.1 + Qwen2.5-Coder-32B + Trimesh GLB)",
+  "archetype": "tesseract",
+  "accent_hex": "#38BDF8",
+  "qwen32b_design_spec": "Nexus 3D Scene Studio: Tesseract archetype, #38BDF8 accent, dynamic lighting, interactive elements, seamless transitions, intuitive UI.",
+  "assets": {
+    "hero_4k": "/assets/gpu-hero-4k.png",
+    "og_banner": "/og-banner.jpg",
+    "model_3d_glb": "/assets/gpu-artifact.glb",
+    "showreel_webm": "/assets/gpu-showreel.webm",
+    "ad_mp4": "/assets/gpu-ad-15s.mp4"
+  },
+  "benchmark_ms": {
+    "index": 49,
+    "total_repos": 99,
+    "repo_id": "nexus-3d-scene-studio",
+    "title": "Nexus 3D Scene Studio",
+    "archetype": "tesseract",
+    "accent_hex": "#38BDF8",
+    "glb_ms": 573,
+    "flux_hero_ms": 6624,
+    "flux_og_ms": 6288,
+    "video_ms": 3138,
+    "qwen32b_ms": 4279,
+    "total_ms": 20904,
+    "glb_kb": 126.8,
+    "hero_kb": 872.7,
+    "og_kb": 489.8,
+    "qwen32b_spec": "Nexus 3D Scene Studio: Tesseract archetype, #38BDF8 accent, dynamic lighting, interactive elements, seamless transitions, intuitive UI.",
+    "hero_gallery_url": "/gallery/nexus-3d-scene-studio_gpu-hero-4k.png",
+    "og_gallery_url": "/gallery/nexus-3d-scene-studio_og-banner.jpg",
+    "glb_gallery_url": "/gallery/nexus-3d-scene-studio.glb",
+    "vram_used_mb": 55829,
+    "vram_total_mb": 81152,
+    "timestamp": "03:37:00 UTC"
+  },
+  "timestamp": "2026-11-01T03:37:00Z"
+}

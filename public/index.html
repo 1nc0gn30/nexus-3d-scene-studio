@@ -6,7 +6,7 @@
   <title>Nexus 3D Studio - Mathematical Geometry Engine & MCP Hub</title>
   <meta name="description" content="Mathematical 3D geometry engine and Model Context Protocol (MCP) server for generative 3D meshes, parametric surfaces, and spatial AI agent synthesis running 100% in-browser.">
   <meta name="keywords" content="3D geometry, Three.js, WebGL, Tesseract 4D, parametric surfaces, Klein bottle, Wavefront OBJ, Model Context Protocol, MCP">
-  <meta name="author" content="Neal Frazier Tech">
+  <meta name="author" content="1nc0gn30 • NullAI">
 
   <!-- OpenGraph -->
   <meta property="og:title" content="Nexus 3D Studio - Mathematical Geometry Engine & MCP Hub">
@@ -46,8 +46,8 @@
         },
         "creator": {
           "@type": "Person",
-          "name": "Neal Frazier",
-          "url": "https://nealfrazier.tech"
+          "name": "1nc0gn30",
+          "url": "https://nullai.tech"
         }
       },
       {
@@ -226,7 +226,7 @@
       padding: 8px 18px;
       border-radius: var(--radius-full);
       border: 1px solid var(--md-sys-color-outline);
-      background: #ffffff;
+      background: var(--md-sys-color-surface-container-high);
       color: var(--md-sys-color-on-surface);
       font-size: 0.86rem;
       font-weight: 500;
@@ -235,26 +235,27 @@
     }
     .btn:hover {
       background: var(--md-sys-color-surface-container-low);
-      border-color: #bdc1c6;
+      border-color: var(--md-sys-color-primary);
     }
     .btn:active {
       transform: scale(0.98);
     }
     .btn.primary {
-      background: var(--google-blue);
-      color: #ffffff;
-      border-color: var(--google-blue);
+      background: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      border-color: var(--md-sys-color-primary);
+      font-weight: 700;
     }
     .btn.primary:hover {
-      background: var(--google-blue-hover);
+      background: #eab308;
     }
     .btn.tonal {
       background: var(--md-sys-color-primary-container);
       color: var(--md-sys-color-on-primary-container);
-      border-color: transparent;
+      border-color: rgba(212, 175, 55, 0.35);
     }
     .btn.tonal:hover {
-      background: #c2dbff;
+      background: rgba(212, 175, 55, 0.22);
     }
     .btn-icon {
       padding: 8px;
@@ -274,8 +275,8 @@
     /* Left Sidebar: Shape Carousel */
     .shape-carousel-sidebar {
       width: 280px;
-      background: #ffffff;
-      border-right: 1px solid var(--md-sys-color-outline-variant);
+      background: var(--md-sys-color-surface-container-low);
+      border-right: 1px solid var(--md-sys-color-outline);
       display: flex;
       flex-direction: column;
       padding: 16px 12px;
@@ -299,17 +300,17 @@
       gap: 12px;
       padding: 12px 14px;
       border-radius: var(--radius-md);
-      border: 1px solid transparent;
-      background: #ffffff;
+      border: 1px solid var(--md-sys-color-outline);
+      background: var(--md-sys-color-surface-container);
       cursor: pointer;
       transition: all 0.18s ease;
     }
     .shape-card:hover {
-      background: var(--md-sys-color-surface-container-low);
+      background: var(--md-sys-color-surface-container-high);
     }
     .shape-card.active {
       background: var(--md-sys-color-primary-container);
-      border-color: rgba(26, 115, 232, 0.4);
+      border-color: rgba(212, 175, 55, 0.55);
     }
     .shape-card-icon {
       font-size: 1.4rem;
@@ -319,11 +320,11 @@
       width: 36px;
       height: 36px;
       border-radius: var(--radius-sm);
-      background: #f8f9fa;
+      background: var(--md-sys-color-surface-container-high);
       flex-shrink: 0;
     }
     .shape-card.active .shape-card-icon {
-      background: #ffffff;
+      background: rgba(212, 175, 55, 0.18);
     }
     .shape-card-info {
       display: flex;
@@ -339,7 +340,7 @@
       overflow: hidden;
     }
     .shape-card.active .shape-card-title {
-      color: var(--google-blue);
+      color: var(--md-sys-color-primary);
     }
     .shape-card-sub {
       font-size: 0.74rem;
@@ -353,7 +354,7 @@
     .viewport-stage {
       flex: 1;
       position: relative;
-      background: radial-gradient(circle at center, #ffffff 0%, #f1f3f4 100%);
+      background: radial-gradient(circle at center, #12131c 0%, #08080b 100%);
       overflow: hidden;
     }
 
@@ -368,9 +369,9 @@
       position: absolute;
       top: 16px;
       left: 16px;
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(20, 20, 28, 0.92);
       backdrop-filter: blur(12px);
-      border: 1px solid var(--md-sys-color-outline-variant);
+      border: 1px solid var(--md-sys-color-outline);
       border-radius: var(--radius-md);
       padding: 12px 18px;
       box-shadow: var(--elevation-1);
@@ -398,9 +399,9 @@
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(20, 20, 28, 0.95);
       backdrop-filter: blur(12px);
-      border: 1px solid var(--md-sys-color-outline-variant);
+      border: 1px solid var(--md-sys-color-outline);
       border-radius: var(--radius-full);
       padding: 6px 12px;
       box-shadow: var(--elevation-2);
@@ -422,32 +423,33 @@
       transition: all 0.15s;
     }
     .tool-chip:hover {
-      background: var(--md-sys-color-surface-container-low);
+      background: var(--md-sys-color-surface-container-high);
     }
     .tool-chip.active {
       background: var(--md-sys-color-primary-container);
-      color: var(--google-blue);
+      color: var(--md-sys-color-primary);
+      border-color: rgba(212, 175, 55, 0.45);
       font-weight: 600;
     }
 
     /* Right Control & Telemetry Panel */
     .control-sidebar {
       width: 380px;
-      background: #ffffff;
-      border-left: 1px solid var(--md-sys-color-outline-variant);
+      background: var(--md-sys-color-surface-container-low);
+      border-left: 1px solid var(--md-sys-color-outline);
       display: flex;
       flex-direction: column;
       overflow-y: auto;
       padding: 20px 16px;
       gap: 16px;
       flex-shrink: 0;
-      box-shadow: -2px 0 8px rgba(0,0,0,0.02);
+      box-shadow: -2px 0 8px rgba(0,0,0,0.2);
     }
 
     /* Card component */
     .m3-card {
-      background: #ffffff;
-      border: 1px solid var(--md-sys-color-outline-variant);
+      background: var(--md-sys-color-surface-container);
+      border: 1px solid var(--md-sys-color-outline);
       border-radius: var(--radius-md);
       padding: 16px;
       display: flex;
@@ -476,10 +478,11 @@
       justify-content: space-between;
       font-size: 0.83rem;
       font-weight: 500;
+      color: var(--md-sys-color-on-surface);
     }
     .param-val {
       font-weight: 600;
-      color: var(--google-blue);
+      color: var(--md-sys-color-primary);
       font-variant-numeric: tabular-nums;
     }
 
@@ -488,7 +491,7 @@
       width: 100%;
       height: 6px;
       border-radius: 3px;
-      background: #e0e0e0;
+      background: var(--md-sys-color-outline);
       outline: none;
     }
     input[type="range"]::-webkit-slider-thumb {
@@ -496,7 +499,7 @@
       width: 18px;
       height: 18px;
       border-radius: 50%;
-      background: var(--google-blue);
+      background: var(--md-sys-color-primary);
       cursor: pointer;
       box-shadow: 0 1px 3px rgba(0,0,0,0.3);
       transition: transform 0.1s;
@@ -523,7 +526,8 @@
       gap: 8px;
     }
     .tele-cell {
-      background: #f8f9fa;
+      background: var(--md-sys-color-surface-container-high);
+      border: 1px solid var(--md-sys-color-outline);
       border-radius: var(--radius-sm);
       padding: 8px 12px;
       display: flex;
@@ -551,8 +555,9 @@
       border-radius: var(--radius-full);
       font-size: 0.72rem;
       font-weight: 700;
-      background: var(--google-green-container);
-      color: var(--google-green);
+      background: rgba(16, 185, 129, 0.15);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.35);
     }
 
     /* Drawer / Modal Components */
@@ -562,7 +567,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.65);
       backdrop-filter: none;
       display: none;
       align-items: center;
@@ -576,13 +581,13 @@
       width: 680px;
       max-width: 90vw;
       max-height: 85vh;
-      background: #ffffff;
+      background: var(--md-sys-color-surface-container);
       border-radius: var(--radius-lg);
       box-shadow: var(--elevation-3);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border: 1px solid var(--md-sys-color-outline-variant);
+      border: 1px solid var(--md-sys-color-outline);
     }
     .modal-header {
       padding: 20px 24px;
@@ -939,11 +944,11 @@
         </div>
       </div>
 
-      <!-- 1-Click Exporters with Frosted Glass Paywall -->
+      <!-- 1-Click Exporters -->
       <div class="m3-card" style="position:relative; overflow:hidden;">
-        <div id="paywall-target" class="paywall-blur" style="transition: filter 0.3s ease;">
+        <div>
           <div class="m3-card-title">
-            <span>1-Click Mesh Exporters (Pro)</span>
+            <span>1-Click Mesh Exporters</span>
           </div>
 
           <div class="grid-2">
@@ -955,24 +960,6 @@
           <button id="btn-export-html" class="btn tonal" style="margin-top: 4px;" onclick="exportStandaloneHTML()">
             <span>📦 Download Standalone HTML Viewer</span>
           </button>
-        </div>
-
-        <!-- Paywall Lock Overlay -->
-        <div id="paywall-lock-overlay" style="position:absolute; inset:0; background:rgba(8,8,11,0.82); backdrop-filter: none; -webkit-backdrop-filter: none; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px; text-align:center; border-radius:var(--radius-md); z-index:10;">
-          <div style="font-size:1.6rem; margin-bottom:4px;">🔒</div>
-          <div style="font-size:0.95rem; font-weight:800; color:#FFF; margin-bottom:4px;">Unlock Precision 3D & CAD Exporters</div>
-          <p style="font-size:0.75rem; color:#a1a1aa; max-width:280px; margin-bottom:12px; line-height:1.3;">
-            Join founding members for lifetime Wavefront OBJ, STL watertight meshes, and standalone HTML exports.
-          </p>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-            <a href="https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X" target="_blank" rel="noopener noreferrer" style="background:#635BFF; color:#FFF; text-decoration:none; padding:6px 12px; border-radius:6px; font-weight:700; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
-              <span>☕ Buy Us a Coffee</span>
-            </a>
-            <a href="solana:GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK" target="_blank" rel="noopener noreferrer" onclick="openDePayCheckout(event)" style="background:linear-gradient(90deg, #9945FF 0%, #14F195 100%); color:#000; text-decoration:none; padding:6px 12px; border-radius:6px; font-weight:800; font-size:0.75rem; display:inline-flex; align-items:center; gap:4px;">
-              <span>⚡ Solana (Free (100% Open Access))</span>
-            </a>
-          </div>
-          <button id="btn-paywall-key" onclick="openLicenseModal('1-Click Mesh Exporters')" style="background:transparent; border:none; color:#D4AF37; font-size:0.72rem; cursor:pointer; margin-top:8px; text-decoration:underline;">I already have a license key</button>
         </div>
       </div>
 
@@ -1072,7 +1059,7 @@ nexus3d serve --port 8080</pre>
     let currentColor = 0x1a73e8;
     let autoRotate = true;
     let isWireframe = false;
-    let bgTone = 0xf8f9fa;
+    let bgTone = 0x0c0d14;
 
     // Three.js Objects
     let scene, camera, renderer, activeMeshGroup;
@@ -1590,17 +1577,10 @@ nexus3d serve --port 8080</pre>
     // =========================================================================
 
     function isProLicensed() {
-      return localStorage.getItem('zoth_nexus3d_licensed') === 'true' ||
-             localStorage.getItem('nexus3d_pro_licensed') === 'true' ||
-             localStorage.getItem('agent_nexus3d_pro') === 'true' ||
-             localStorage.getItem('pro_licensed') === 'true';
+      return true;
     }
 
     function exportOBJ() {
-      if (!isProLicensed()) {
-        openLicenseModal('Wavefront .OBJ Export');
-        return;
-      }
       if (activeMeshGroup.children.length === 0) return;
       const mesh = activeMeshGroup.children[0];
       const geo = mesh.geometry;
@@ -1675,6 +1655,7 @@ nexus3d serve --port 8080</pre>
 
     function exportStandaloneHTML() {
       const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Nexus 3D - ${currentShape}</title><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><style>body{margin:0;overflow:hidden;background:#f8f9fa;font-family:sans-serif;}canvas{width:100vw;height:100vh;}#hud{position:absolute;top:16px;left:16px;background:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}<\/style><\/head><body><div id="hud"><h3>Nexus 3D Standalone Viewer</h3><p>${currentShape}</p></div><canvas id="c"></canvas><script>const scene=new THREE.Scene();scene.background=new THREE.Color(0xf8f9fa);const cam=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,100);cam.position.set(0,2,6);cam.lookAt(0,0,0);const rend=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});rend.setSize(window.innerWidth,window.innerHeight);scene.add(new THREE.AmbientLight(0xffffff,0.7));const dl=new THREE.DirectionalLight(0x1a73e8,0.8);dl.position.set(5,10,7);scene.add(dl);const geo=new THREE.TorusKnotGeometry(1.5,0.4,120,16);const mat=new THREE.MeshPhongMaterial({color:0x1a73e8});const m=new THREE.Mesh(geo,mat);scene.add(m);function a(){requestAnimationFrame(a);m.rotation.y+=0.01;rend.render(scene,cam);}a();window.onresize=()=>{cam.aspect=window.innerWidth/window.innerHeight;cam.updateProjectionMatrix();rend.setSize(window.innerWidth,window.innerHeight);};<\/script>  
+  <script src="/assets/sovereign-upgrade.js" defer></script>
 </body></html>`;
       downloadFile(`${currentShape}_standalone.html`, htmlContent, 'text/html');
       showToast(`Exported Standalone HTML Viewer!`);
@@ -1848,112 +1829,15 @@ nexus3d serve --port 8080</pre>
       renderer.render(scene, camera);
     }
 
-    function openDePayCheckout(e) {
-      if (e && e.preventDefault) e.preventDefault();
-      if (window.DePayButtons) {
-        DePayButtons.init({
-          integration: '428790dd-7ad1-407c-8ecf-c048c77a4cb8'
-        });
-      } else {
-        window.open('solana:GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK', '_blank', 'noopener,noreferrer');
-      }
-    }
-
-    // License Verification & Pro Unlock
-    function checkLicense() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const isParamLicensed = urlParams.get('licensed') === 'true' || urlParams.get('pro') === 'true' || urlParams.get('session_id');
-      const isSavedLicensed = isProLicensed();
-
-      if (isParamLicensed || isSavedLicensed) {
-        unlockPro();
-        if (isParamLicensed && window.history && window.history.replaceState) {
-          window.history.replaceState({}, document.title, window.location.pathname);
-        }
-      } else {
-        const badge = document.getElementById('licenseBadge');
-        if (badge) {
-          badge.innerText = '⚡ FREE TIER';
-          badge.style.border = '1px solid rgba(255,255,255,0.2)';
-          badge.style.background = 'rgba(255,255,255,0.06)';
-          badge.style.color = '#a1a1aa';
-          badge.style.boxShadow = 'none';
-        }
-      }
-    }
-
-    function unlockPro() {
-      localStorage.setItem('zoth_nexus3d_licensed', 'true');
-      localStorage.setItem('nexus3d_pro_licensed', 'true');
-      localStorage.setItem('agent_nexus3d_pro', 'true');
-      localStorage.setItem('pro_licensed', 'true');
-      showToast('⭐ PRO LICENSE ACTIVE - Unlimited Precision Exports Unlocked');
-      const badge = document.getElementById('licenseBadge') || document.getElementById('pro-badge');
-      if (badge) {
-        badge.innerText = '⭐ PRO ACTIVE';
-        badge.style.background = '#10B981';
-        badge.style.color = '#08080B';
-        badge.style.border = '1px solid #10B981';
-        badge.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.4)';
-      }
-
-      const banner = document.getElementById('salesBanner') || document.querySelector('.sales-banner');
-      if (banner) {
-        banner.style.display = 'none';
-      }
-
-      const overlay = document.getElementById('paywall-lock-overlay');
-      if (overlay) {
-        overlay.style.display = 'none';
-      }
-
-      const target = document.getElementById('paywall-target');
-      if (target) {
-        target.classList.remove('paywall-blur');
-        target.style.pointerEvents = 'auto';
-      }
-    }
-
-    function openLicenseModal(feature) {
-      const featEl = document.getElementById('paywall-feature-label');
-      if (featEl && feature) {
-        featEl.textContent = feature;
-      }
-      const m = document.getElementById('licenseModal') || document.getElementById('license-modal');
-      if (m) m.style.display = 'flex';
-    }
-
-    function closeLicenseModal() {
-      const m = document.getElementById('licenseModal') || document.getElementById('license-modal');
-      if (m) m.style.display = 'none';
-    }
-
-    function activateLicense(providedKey) {
-      const inputEl = document.getElementById('license-input') || document.getElementById('licenseKeyInput');
-      const val = (providedKey || (inputEl ? inputEl.value : '')).trim();
-      if (val.length >= 3) {
-        localStorage.setItem('nexus3d_pro_key', val);
-        unlockPro();
-        closeLicenseModal();
-        showToast('⭐ Pro License Activated! Lifetime access unlocked.');
-        return true;
-      } else {
-        showToast('Please enter a valid license key or receipt email.');
-        return false;
-      }
-    }
-    window.activateLicenseKey = activateLicense;
-
     window.onload = () => {
       init();
-      checkLicense();
     };
   </script>
 
   <!-- Footer -->
 
   <footer class="zoth-brand-footer" style="padding:16px 20px; text-align:center; font-size:0.8rem; color:#a1a1aa; border-top:1px solid rgba(255,255,255,0.08); background:#08080b;">
-    <div>Engineered by Neal Frazier Tech (<a href="https://github.com/1nc0gn30" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">@1nc0gn30</a>) &bull; <a href="https://nullai.tech" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">NullAI Platform</a></div>
+    <div>Engineered by 1nc0gn30 • NullAI (<a href="https://github.com/1nc0gn30" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">@1nc0gn30</a>) &bull; <a href="https://nullai.tech" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">NullAI Platform</a></div>
     <div style="margin-top:4px; font-size:0.75rem; color:#71717a;">Sovereign Local-First Architecture &bull; 100% In-Browser 3D Engine &bull; Zero Cloud Telemetry</div>
   </footer>
 </body>
