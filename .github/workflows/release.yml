@@ -13,6 +13,10 @@ permissions:
   packages: write
   id-token: write
 
+env:
+  PYTHONUTF8: "1"
+  PYTHONIOENCODING: "utf-8"
+
 jobs:
   build-and-release:
     name: Build Packages, Checksums & Publish Release
@@ -41,12 +45,12 @@ jobs:
       - name: Generate SHA-256 Checksums
         run: |
           cd dist
-          sha256sum * > SHA256SUMS.txt
+          sha256sum *.tar.gz *.whl > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
       - name: Verify package distribution metadata
         run: |
-          python -m twine check --strict dist/*
+          python -m twine check --strict dist/*.tar.gz dist/*.whl
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
