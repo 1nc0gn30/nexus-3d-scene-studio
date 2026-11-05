@@ -1655,7 +1655,23 @@ nexus3d serve --port 8080</pre>
 
     function exportStandaloneHTML() {
       const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Nexus 3D - ${currentShape}</title><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script><style>body{margin:0;overflow:hidden;background:#f8f9fa;font-family:sans-serif;}canvas{width:100vw;height:100vh;}#hud{position:absolute;top:16px;left:16px;background:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}<\/style><\/head><body><div id="hud"><h3>Nexus 3D Standalone Viewer</h3><p>${currentShape}</p></div><canvas id="c"></canvas><script>const scene=new THREE.Scene();scene.background=new THREE.Color(0xf8f9fa);const cam=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,100);cam.position.set(0,2,6);cam.lookAt(0,0,0);const rend=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});rend.setSize(window.innerWidth,window.innerHeight);scene.add(new THREE.AmbientLight(0xffffff,0.7));const dl=new THREE.DirectionalLight(0x1a73e8,0.8);dl.position.set(5,10,7);scene.add(dl);const geo=new THREE.TorusKnotGeometry(1.5,0.4,120,16);const mat=new THREE.MeshPhongMaterial({color:0x1a73e8});const m=new THREE.Mesh(geo,mat);scene.add(m);function a(){requestAnimationFrame(a);m.rotation.y+=0.01;rend.render(scene,cam);}a();window.onresize=()=>{cam.aspect=window.innerWidth/window.innerHeight;cam.updateProjectionMatrix();rend.setSize(window.innerWidth,window.innerHeight);};<\/script>  
-  <script src="/assets/sovereign-upgrade.js" defer></script>
+  
+
+  <script src="/sovereign_tutorial.js"></script>
+  <script>
+    window.addEventListener("DOMContentLoaded", function() {
+      if (window.createSovereignTutorial) {
+        window.createSovereignTutorial({
+          toolId: "nexus-3d-scene-studio",
+          toolName: "Nexus 3D Scene Studio",
+          tagline: "Real-time 3D viewport editor with bloom shaders and object rigging!",
+          accentColor: "#38BDF8",
+          steps: [{"icon": "\ud83e\uddca", "title": "Build in 3D Space", "desc": "Drop 3D models into a virtual studio, move cameras, and arrange lighting in real time."}, {"icon": "\u2728", "title": "Cyberpunk Bloom & Fog", "desc": "Turn on high-end post-processing shaders like neon glow, depth of field, and ambient occlusion."}, {"icon": "\ud83c\udfa5", "title": "Animated Camera Rigs", "desc": "Orbit around your creations and record cinematic camera sweeps directly to MP4 or WebM."}]
+        });
+      }
+    });
+  </script>
+
 </body></html>`;
       downloadFile(`${currentShape}_standalone.html`, htmlContent, 'text/html');
       showToast(`Exported Standalone HTML Viewer!`);
@@ -1840,5 +1856,21 @@ nexus3d serve --port 8080</pre>
     <div>Engineered by 1nc0gn30 • NullAI (<a href="https://github.com/1nc0gn30" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">@1nc0gn30</a>) &bull; <a href="https://nullai.tech" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">NullAI Platform</a></div>
     <div style="margin-top:4px; font-size:0.75rem; color:#71717a;">Sovereign Local-First Architecture &bull; 100% In-Browser 3D Engine &bull; Zero Cloud Telemetry</div>
   </footer>
+
+  <script src="/sovereign_tutorial.js"></script>
+  <script>
+    window.addEventListener("DOMContentLoaded", function() {
+      if (window.createSovereignTutorial) {
+        window.createSovereignTutorial({
+          toolId: "nexus-3d-scene-studio",
+          toolName: "Nexus 3D Scene Studio",
+          tagline: "Real-time 3D viewport editor with bloom shaders and object rigging!",
+          accentColor: "#38BDF8",
+          steps: [{"icon": "\ud83e\uddca", "title": "Build in 3D Space", "desc": "Drop 3D models into a virtual studio, move cameras, and arrange lighting in real time."}, {"icon": "\u2728", "title": "Cyberpunk Bloom & Fog", "desc": "Turn on high-end post-processing shaders like neon glow, depth of field, and ambient occlusion."}, {"icon": "\ud83c\udfa5", "title": "Animated Camera Rigs", "desc": "Orbit around your creations and record cinematic camera sweeps directly to MP4 or WebM."}]
+        });
+      }
+    });
+  </script>
+
 </body>
 </html>
