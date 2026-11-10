@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import dataclasses
 import math
-from typing import Any, Dict, Iterator, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, Iterator, List, Optional, Sequence, Set, Tuple, Union
 
 # Permutation table for deterministic continuous 2D procedural noise
 _PERM = [

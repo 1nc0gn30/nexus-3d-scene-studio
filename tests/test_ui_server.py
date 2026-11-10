@@ -15,6 +15,7 @@ import urllib.parse
 import urllib.request
 import zipfile
 from http.server import ThreadingHTTPServer
+from typing import Any, Dict, Optional
 
 from nexus_3d_scene_studio.mcp_server import SERVER_NAME, SERVER_VERSION
 from nexus_3d_scene_studio.ui_server import (

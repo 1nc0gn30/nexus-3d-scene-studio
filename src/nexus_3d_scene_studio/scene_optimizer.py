@@ -8,7 +8,7 @@ Pure Python standard library with zero external runtime dependencies.
 from __future__ import annotations
 
 import math
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Set, Tuple, Union
 
 from .geometry_engine import (
     MeshData,

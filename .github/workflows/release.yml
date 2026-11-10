@@ -16,6 +16,7 @@ permissions:
 env:
   PYTHONUTF8: "1"
   PYTHONIOENCODING: "utf-8"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
   build-and-release:
@@ -42,15 +43,15 @@ jobs:
         run: |
           python -m build
 
+      - name: Verify package distribution metadata
+        run: |
+          python -m twine check --strict dist/*.tar.gz dist/*.whl
+
       - name: Generate SHA-256 Checksums
         run: |
           cd dist
           sha256sum *.tar.gz *.whl > SHA256SUMS.txt
           cat SHA256SUMS.txt
-
-      - name: Verify package distribution metadata
-        run: |
-          python -m twine check --strict dist/*.tar.gz dist/*.whl
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
