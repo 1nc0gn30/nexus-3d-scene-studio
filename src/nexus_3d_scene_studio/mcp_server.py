@@ -55,7 +55,7 @@ from .sdf_isosurface import (
 
 MCP_PROTOCOL_VERSION = "2024-11-05"
 SERVER_NAME = "nexus-3d-scene-studio"
-SERVER_VERSION = "1.0.0"
+SERVER_VERSION = "2.5.0"
 
 
 @dataclasses.dataclass

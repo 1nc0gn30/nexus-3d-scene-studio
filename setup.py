@@ -8,12 +8,12 @@ with open("README.md", "r", encoding="utf-8", errors="replace") as f:
 
 setup(
     name="nexus-3d-scene-studio",
-    version="1.0.0",
-    author="Nexus 3D Scene Studio Contributors",
+    version="2.5.0",
+    author="1nc0gn30",
     description="Pure Python stdlib 3D graphics studio, parametric geometry engine, MCP server, and WebGL scene exporter",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/nexus-3d/nexus-3d-scene-studio",
+    url="https://github.com/1nc0gn30/nexus-3d-scene-studio",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     package_data={

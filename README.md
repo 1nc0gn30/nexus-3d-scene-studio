@@ -1,258 +1,146 @@
-<div align="center">
-  <img src="assets/hero-banner.svg" alt="Nexus 3D Scene Studio — Sovereign Architecture Banner" width="100%" />
-</div>
+# Nexus 3D Scene Studio
 
-<br />
+<p align="center">
+  <img src="assets/hero-banner.svg" alt="Nexus 3D Scene Studio Banner" width="100%" />
+</p>
 
-# 🌟 Nexus 3D Scene Studio
+Pure-Python parametric 3D geometry synthesizer, Marching Tetrahedra SDF/TPMS isosurface polygonizer, analytic CSG evaluator, LOD mesh optimizer, multi-format exporter (`OBJ`, `STL`, `glTF 2.0`, `PLY`, Three.js `JSON`, standalone WebGL `HTML`), local REST server, and 12-tool Model Context Protocol (MCP) server. Zero external Python runtime dependencies.
 
-<div align="center">
+- **Version**: `2.5.0`
+- **Default Loopback Endpoint**: `http://127.0.0.1:8082`
+- **Zoth Studio v2 Dossier**: [https://zoth.nullai.tech/tools/nexus-3d-scene-studio](https://zoth.nullai.tech/tools/nexus-3d-scene-studio)
+- **Author**: 1nc0gn30 (`@1nc0gn30` · [https://1nc0gn30.si](https://1nc0gn30.si)) & NullAI ([https://nullai.tech](https://nullai.tech))
+- **License**: MIT (100% free and open-source)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/nexus-3d-scene-studio/deploy-status)](https://nexus-3d-studio.netlify.app/)
-[![Live App](https://img.shields.io/badge/Live_App-nexus--3d--studio.netlify.app-00C7B7?style=flat-square&logo=netlify)](https://nexus-3d-studio.netlify.app/)
-[![Access](https://img.shields.io/badge/Access-100%25_Free_&_Unlocked-10B981?style=flat-square)](https://nexus-3d-studio.netlify.app/)
-[![Support](https://img.shields.io/badge/☕_Buy_Us_A_Coffee-Stripe-D4AF37?style=flat-square)](https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X)
-[![Solana Tip](https://img.shields.io/badge/◎_Solana_Tip-GG2e...dXoK-14F195?style=flat-square)](https://explorer.solana.com/address/GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK)
-[![License MIT](https://img.shields.io/badge/License-MIT-d93025?style=flat-square)](https://opensource.org/licenses/MIT)
+## Overview
 
-**A pure Python 3D mathematical geometry engine, WebGL Material 3 studio (design influenced by Material 3), and Model Context Protocol (MCP) server for generative 3D modeling and autonomous AI agents. 100% in-browser computation with zero cloud telemetry.**
+Nexus 3D Scene Studio provides deterministic 3D mesh generation and topological analysis using only the Python standard library (`src/nexus_3d_scene_studio/`) paired with an interactive Three.js WebGL workstation (`public/index.html`):
 
-### 🌐 Live Production Application
-👉 **[Launch Nexus 3D Studio](https://nexus-3d-studio.netlify.app/)**
+- **Parametric & 4D Geometry (`geometry_engine.py`)**: 4D stereographic hypercubes (`tesseract`), `(p, q)` torus knots, deformed superquadrics (`pinch`, `taper`, `bend`, `twist`), Platonic solids, C60 Fullerene buckyballs, Mobius strips, Fibonacci sphere lattices, and multi-octave heightmap terrains.
+- **Fractals & Attractors (`procedural_fractals.py`)**: Lorenz, Rossler, Aizawa, and Chen strange-attractor tube ribbons, Klein bottles, Menger sponges, and multi-tier LOD decimation pyramids.
+- **Volumetric SDF & CSG Meshing (`sdf_isosurface.py`)**: Watertight Marching Tetrahedra polygonization of Triply Periodic Minimal Surfaces (`gyroid`, `schwarz_p`, `neovius`), Mandelbulb fractals, metaballs, and smooth/hard CSG boolean primitives.
+- **Multi-Format Export & Budget Auditing (`mesh_exporter.py`, `scene_optimizer.py`)**: Wavefront `.obj` + `.mtl`, ASCII `.stl`, ASCII `.ply`, embedded-buffer `.gltf` 2.0, Three.js `BufferGeometry` JSON, standalone OrbitControls WebGL `.html`, complete `.zip` asset bundles, and polygon/VRAM budget grading.
 
-### ☕ 100% Free & Open-Access Support Architecture
-- **100% Free, Unlocked & Sovereign**: Zero paywalls, zero license keys, zero export locks, and zero cloud tracking.
-- **☕ Buy Us a Coffee (Stripe)**: [buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X](https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X)
-- **◎ Solana Tip Address**: `GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK` (`solana:GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK`)
+## Architecture
 
-[Live Studio Web UI](#-interactive-web-studio) • [Procedural Primitives](#-procedural-primitives-catalog) • [MCP Integration](#-ai-agent--mcp-server) • [Python API](#-python-api-quickstart) • [CLI Commands](#-cli-interface)
-
-</div>
-
----
-
-## 💎 Highlights & Capabilities
-
-- 🎨 **Material 3 Light Mode Studio**: Interactive WebGL 3D canvas (design influenced by Material 3), system fonts, smooth OrbitControls, wireframe/solid shading, lighting rigs, and real-time geometry telemetry HUD.
-- 🧊 **Marching Tetrahedra Volumetric Isosurface Engine**: Watertight, ambiguity-free 3D isosurface polygonizer with analytical central finite-difference normal estimation and vertex normal-map coloring.
-- 🧬 **Triply Periodic Minimal Surfaces (TPMS)**: Analytic Gyroid infill scaffold, Schwarz P primitive crystal, and Neovius porous minimal surfaces.
-- 🧮 **Analytic Signed Distance Functions (SDF) & CSG Booleans**: Primitives (sphere, box, torus, cylinder, capsule) with exact and polynomial smooth Boolean operators (union, intersection, subtraction) and non-linear axial twist deformers.
-- 🌌 **3D Mandelbulb Fractal & Organic Metaballs**: High-power 3D hypercomplex Mandelbulb fractal fields and multi-center organic metaball clusters.
-- 🔮 **4D Hypercube (Tesseract) Engine**: Real-time 4D rotation matrices in $SO(4)$ Lie group projected into 3D space via stereographic projection.
-- 🌀 **Parametric Space Curves & Surfaces**: Torus knots $(p, q)$ with Frenet-Serret tube framing, Superquadrics with taper/twist/bend deformations, Fibonacci golden spiral spherical lattices, Buckyballs (Fullerene C60), and Möbius ribbons.
-- 🏔️ **Procedural Fractal Terrain**: Multi-octave Fractional Brownian Motion (fBm) elevation heightfields with analytical normal gradient calculations.
-- 💾 **1-Click Multi-Format Exporters**: Wavefront `.obj` + `.mtl`, ASCII & Binary `.stl` (3D printing ready), `.ply`, Three.js BufferGeometry `.json`, and single-file standalone `.html` viewers.
-- 🤖 **Model Context Protocol (MCP) Server**: Native stdio / JSON-RPC 2.0 interface for Claude Desktop, Cursor IDE, Cline, Zed, and autonomous AI coding agents with dedicated isosurface polygonization and CSG Boolean evaluation tools.
-- ⚡ **Pure Standard Library Core**: 100% Python standard library geometry computation without NumPy/SciPy dependency requirements.
-
----
-
-## 🏛️ System Architecture
-
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                                 NEXUS 3D SCENE STUDIO                                  │
-├──────────────────────────────┬──────────────────────────┬──────────────────────────────┤
-│      🎨 Web Studio HUD       │   🤖 AI Agent / MCP Hub   │      💻 CLI Interface        │
-│   (Material 3 Studio UI)     │  (FastMCP / JSON-RPC 2)  │    (`nexus3d` commands)      │
-└──────────────┬───────────────┴────────────┬─────────────┴──────────────┬───────────────┘
-               │                            │                            │
-               ▼                            ▼                            ▼
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                             CORE MATHEMATICAL ENGINE                                   │
-├──────────────────────────────┬──────────────────────────┬──────────────────────────────┤
-│  🔮 4D Stereographic Proj    │  🌀 (p,q) Torus Knots    │  💎 Superquadrics + Deform   │
-│  🌻 Fibonacci Spiral Lattice │  ⚽ Buckyball C60 Mesh   │  ♾️ Möbius Strip Ribbon      │
-│  🏔️ Multi-Octave fBm Terrain │  📐 Platonic Solids      │  📊 Mesh Telemetry & VRAM    │
-└──────────────────────────────┴────────────┬─────────────┴──────────────────────────────┘
-                                            │
-                                            ▼
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                              EXPORT & PACKAGING PIPELINE                               │
-│     • Wavefront OBJ + MTL    • ASCII / Binary STL       • Three.js BufferGeometry JSON │
-│     • Standalone HTML Viewer • PLY Point Cloud & Mesh   • GLTF 2.0 / GLB Layout        │
-└────────────────────────────────────────────────────────────────────────────────────────┘
+```text
+nexus-3d-scene-studio/
+├── assets/hero-banner.svg                  # Studio vector banner
+├── bin/nexus-3d.js                         # Unified CLI, web, and Electron launcher
+├── docs/                                   # Math, export format, and MCP specifications
+├── public/index.html                       # Interactive Three.js WebGL workstation
+├── src/nexus_3d_scene_studio/
+│   ├── geometry_engine.py                  # Parametric 3D/4D manifold generators
+│   ├── procedural_fractals.py              # Strange attractors, Klein bottle, Menger, & LOD
+│   ├── sdf_isosurface.py                   # Marching Tetrahedra SDF, TPMS, & CSG booleans
+│   ├── mesh_exporter.py                    # OBJ, MTL, STL, PLY, glTF 2.0, Three.js, & HTML
+│   ├── scene_optimizer.py                  # Polygon budget, VRAM, & bounding-box auditor
+│   ├── ui_server.py                        # ThreadingHTTPServer REST API & static host (:8082)
+│   ├── mcp_server.py                       # JSON-RPC 2.0 stdio MCP server (2024-11-05, 12 tools)
+│   └── cli.py                              # Subcommand CLI (nexus-3d / scene-studio)
+└── tests/                                  # Pytest geometry, SDF, glTF/PLY, CLI, MCP, & HTTP suite
 ```
 
----
+## Quickstart
 
-## 📐 Procedural Primitives Catalog
+Clone the repository and install in editable mode:
 
-| Primitive | Mathematical Formula / Algorithm | Key Parameters |
-| :--- | :--- | :--- |
-| **4D Tesseract** | $\mathbf{p}_{3D} = \frac{s}{d - w} R_{yw}(\phi) R_{xw}(\theta) \mathbf{v}_{4D}$ | `scale`, `rotation_4d`, `distance` |
-| **$(p, q)$ Torus Knot** | $r = \cos(qu) + 2$, $\mathbf{r} = (r\cos pu, r\sin pu, -\sin qu)$ with Frenet framing | `p`, `q`, `tube_radius`, `tubular_segments` |
-| **Superquadric** | $\mathbf{S}(\eta, \omega) = (a_1 C(\eta, s_1)C(\omega, s_2), a_2 C(\eta, s_1)S(\omega, s_2), a_3 S(\eta, s_1))$ | `s1`, `s2`, `rx`, `ry`, `rz`, `taper`, `twist` |
-| **Fibonacci Sphere** | $z_i = 1 - \frac{2i}{N-1}$, $\phi_i = i \cdot \pi(3-\sqrt{5})$, $r_i = \sqrt{1-z_i^2}$ | `num_points`, `radius` |
-| **Buckyball C60** | Truncated regular icosahedron ($\chi = 60 - 90 + 32 = 2$) | `radius`, `truncation_factor` |
-| **Möbius Strip** | $\mathbf{S}(u, v) = ((R + v\cos\frac{nu}{2})\cos u, (R + v\cos\frac{nu}{2})\sin u, v\sin\frac{nu}{2})$ | `radius`, `width`, `twists` |
-| **Fractal Terrain** | $h(x, z) = \sum_{k=0}^{M-1} A \rho^k \mathcal{N}(f \lambda^k x, f \lambda^k z)$ | `grid_size`, `scale`, `octaves`, `height_scale` |
-| **TPMS Gyroid** | $\cos x \sin y + \cos y \sin z + \cos z \sin x = 0$ via Marching Tetrahedra | `resolution`, `scale`, `thickness` |
-| **Schwarz P Minimal Surface** | $\cos x + \cos y + \cos z = 0$ implicit crystal lattice | `resolution`, `scale`, `thickness` |
-| **Neovius Minimal Surface** | $3(\cos x + \cos y + \cos z) + 4\cos x \cos y \cos z = 0$ | `resolution`, `scale`, `thickness` |
-| **3D Mandelbulb Fractal** | $v_{n+1} = v_n^8 + c$ spherical hypercomplex iteration | `resolution`, `power`, `max_iter` |
-| **Smooth CSG Blend** | $f_{\text{union}} = \text{smin}(d_1, d_2, k) = d_2 + (d_1-d_2)h - kh(1-h)$ | `resolution`, `primitive_a`, `primitive_b`, `smoothing` |
-
-Detailed mathematical derivations and proofs are documented in [docs/PROCEDURAL_GEOMETRY_MATH.md](docs/PROCEDURAL_GEOMETRY_MATH.md).
-
----
-
-## 🚀 Quickstart
-
-### Installation
 ```bash
-# Clone the repository
-git clone https://github.com/nexus-3d/nexus-3d-scene-studio.git
+git clone https://github.com/1nc0gn30/nexus-3d-scene-studio.git
 cd nexus-3d-scene-studio
-
-# Install in editable mode
-pip install -e .
+python3 -m pip install -e ".[dev]"
 ```
 
-### Python API Quickstart
-```python
-from nexus_3d_scene_studio.geometry_engine import (
-    generate_torus_knot,
-    generate_tesseract_4d,
-    generate_superquadric,
-)
-from nexus_3d_scene_studio.mesh_exporter import MeshExporter
-
-# 1. Generate a Parametric (3, 7) Torus Knot
-mesh = generate_torus_knot(p=3, q=7, tubular_segments=180, radial_segments=24)
-
-# 2. Inspect Mesh Telemetry
-print(f"Vertices: {mesh.vertex_count}")
-print(f"Triangles: {mesh.triangle_count}")
-print(f"Surface Area: {mesh.compute_surface_area():.3f}")
-
-# 3. Export to Wavefront OBJ with Normals
-MeshExporter.export_obj(mesh, "torus_knot_3_7.obj")
-
-# 4. Export to 3D-Printing ASCII STL
-MeshExporter.export_stl(mesh, "torus_knot_3_7.stl")
-
-# 5. Export to Standalone Offline HTML 3D Viewer
-MeshExporter.export_html_viewer(mesh, "torus_knot_viewer.html")
-```
-
----
-
-## 💻 CLI Interface
+Start the local WebGL workstation and REST API on `127.0.0.1:8082`:
 
 ```bash
-# Generate and export a 4D Hypercube Tesseract
-nexus3d generate tesseract --rotation-4d 0.8 --export tesseract.obj
-
-# Generate a Parametric Torus Knot
-nexus3d generate torus-knot --p 3 --q 5 --tube-radius 0.4 --export knot.stl
-
-# Launch the interactive Nexus 3D Studio Web UI
-nexus3d serve --port 8080
-
-# Inspect geometry telemetry of any OBJ file
-nexus3d inspect knot.obj
+nexus-3d serve --host 127.0.0.1 --port 8082
+# or via the Node wrapper:
+node bin/nexus-3d.js web
 ```
 
----
+Verify service health:
 
-## 🤖 AI Agent & MCP Server
-
-Nexus 3D Scene Studio implements the **Model Context Protocol (MCP)**, allowing AI agents to generate, inspect, and export 3D scenes autonomously.
-
-### Available MCP Tools:
-1. `generate_mesh`: Generates any of the 7 procedural primitives with custom math parameters.
-2. `export_scene`: Exports scenes to OBJ, MTL, STL, PLY, Three.js JSON, or Standalone HTML.
-3. `transform_mesh`: Applies translation, rotation, scale, taper, twist, and bend deformations.
-4. `inspect_geometry`: Returns live vertex counts, face counts, bounding box, surface area, and Euler characteristic.
-5. `list_primitives`: Returns available primitives and parameter schema.
-
-### Claude Desktop Integration
-Add to `claude_desktop_config.json`:
-```json
-{
-  "mcpServers": {
-    "nexus3d": {
-      "command": "python",
-      "args": ["-m", "nexus_3d_scene_studio.mcp_server"],
-      "env": { "PYTHONPATH": "src" }
-    }
-  }
-}
-```
-
-Full setup guides for Cursor, Cline, and Zed are available in [docs/MCP_GUIDE.md](docs/MCP_GUIDE.md).
-
----
-
-## 🧪 Testing
-
-Run the comprehensive unit test suite:
 ```bash
-PYTHONPATH=src pytest tests/ -v
+curl -s http://127.0.0.1:8082/health
 ```
 
----
+## CLI & MCP Usage
 
-## 📜 Attribution & License
+### CLI Subcommands
 
-Engineered by **1nc0gn30 • NullAI** ([@1nc0gn30](https://github.com/1nc0gn30)) • [NullAI Platform](https://nullai.tech)  
-Repository: [github.com/1nc0gn30/nexus-3d-scene-studio](https://github.com/1nc0gn30/nexus-3d-scene-studio)  
-Licensed under the [MIT License](LICENSE).
+Both `nexus-3d` (`scene-studio`) and `node bin/nexus-3d.js` expose the full CLI surface:
 
----
+```bash
+# Help, version, and JSON status
+nexus-3d --help
+nexus-3d --version
+nexus-3d --status --json
 
-## 🏛️ ZothOS v3.4, Zoth Studio v2 & Obsidian Second Brain Ecosystem
+# Generate procedural meshes to OBJ, STL, glTF, PLY, Three.js JSON, or standalone HTML
+nexus-3d generate torus_knot -p "p=3,q=5" -f obj -o knot.obj
+nexus-3d generate tesseract -p '{"size":2.0,"angle_4d":0.6}' -f gltf -o hypercube.gltf
+nexus-3d generate buckyball -f html --theme dark -o viewer.html
 
-```mermaid
-flowchart LR
-    subgraph ZothOS["🐧 ZothOS v3.4 CLI & Braille TUI"]
-        CLI["nexus-3d-scene-studio --help / --json"]
-        TUI["nexus-3d-scene-studio-tui<br/>Unicode U+2800 2x4 Braille"]
-    end
+# Audit polygon budget, surface area, bounding box, and VRAM footprint
+nexus-3d audit torus_knot -p "p=3,q=7" --json
+nexus-3d audit knot.obj --json
 
-    subgraph Workstation["⚡ Sovereign Workstation"]
-        WEB["http://127.0.0.1:8082<br/>REST API & /health"]
-    end
+# Inspect MCP tool definitions or emit client configuration JSON
+nexus-3d mcp --tools
+nexus-3d mcp --config claude
 
-    subgraph Studio["🌌 Zoth Studio v2 & ZothOS-Lite"]
-        GODMODE["http://127.0.0.1:3000/tools/nexus-3d-scene-studio<br/>God-Mode Workstation"]
-        LITE["http://127.0.0.1:8145<br/>ZothOS-Lite Web Desktop"]
-    end
-
-    subgraph SecondBrain["💎 Obsidian Second Brain & STDP"]
-        TRACKER["http://127.0.0.1:8151<br/>Zoth Obsidian Tracker"]
-        NEURO["http://127.0.0.1:8094<br/>Neuro-Memory STDP Cortex"]
-        NOTE["Studio/Tools/Studio nexus-3d-scene-studio.md"]
-    end
-
-    CLI --> WEB
-    TUI --> WEB
-    WEB <--> GODMODE
-    WEB <--> LITE
-    WEB --> TRACKER
-    TRACKER <--> NOTE
-    NOTE <--> NEURO
+# Runtime and platform diagnostics
+nexus-3d platform --json
 ```
 
-### Cross-Surface Integration Matrix
+### ZothOS v3.4.0 Integration
 
-| Surface | Endpoint / Binary | Capabilities |
+On ZothOS v3.4.0 workstations, `nexus-3d` is installed on the system `PATH` and pairs with the Zoth Studio v2 dossier (`https://zoth.nullai.tech/tools/nexus-3d-scene-studio`) on loopback port `127.0.0.1:8082` with local-origin CORS protection (`localhost`, `127.0.0.1`, `::1`).
+
+### REST API Endpoints (`127.0.0.1:8082`)
+
+| Method | Path | Description |
 | :--- | :--- | :--- |
-| **Standalone Workstation** | `http://127.0.0.1:8082` | 100% Free & Open-Access Web Deck, live `/health` & REST telemetry |
-| **Zoth Studio v2 Route** | `http://127.0.0.1:3000/tools/nexus-3d-scene-studio` | Interactive God-Mode component inside Zoth Studio (`https://zoth.nullai.tech`) |
-| **ZothOS v3.4 CLI & TUI** | `nexus-3d-scene-studio` / `nexus-3d-scene-studio-tui` | Global binary in `/usr/local/bin/` with Unicode `U+2800` Braille TUI & `--json` output |
-| **ZothOS-Lite Web Desktop** | `http://127.0.0.1:8145` | Browser-native KDE-style window manager & terminal launcher |
-| **Zoth Obsidian Tracker** | `http://127.0.0.1:8151` | Interactive Obsidian Second Brain vault explorer (`~/Documents/Obsidian Vault/Studio/Tools/Studio nexus-3d-scene-studio.md`) |
-| **Neuro-Memory STDP Cortex** | `http://127.0.0.1:8094` | 3-Factor STDP synaptic memory daemon & 21-tool MCP server |
+| `GET` | `/health`, `/api/health` | Service status, version, uptime, and platform summary |
+| `GET` | `/api/presets` | Default procedural shape presets and parameter schemas |
+| `GET` | `/api/sdf/presets` | Available volumetric SDF and TPMS presets |
+| `GET` | `/api/mcp/config` | Generate MCP client snippet (`?client=claude\|cursor\|cline\|zed\|generic`) |
+| `GET` | `/api/diagnostics` | Detailed system and Python runtime diagnostics |
+| `POST` | `/api/generate` | Generate a procedural mesh with Three.js JSON and budget audit |
+| `POST` | `/api/sdf/generate` | Polygonize a volumetric SDF/TPMS preset via Marching Tetrahedra |
+| `POST` | `/api/export` | Export mesh to `obj`, `stl`, `json`, `html`, `gltf`, or `ply` |
+| `POST` | `/api/audit` | Audit raw mesh data or a named procedural shape |
+| `POST` | `/api/export-zip` | Build a complete ZIP bundle (`OBJ`, `MTL`, `STL`, `glTF`, `PLY`, `JSON`, `HTML`, `audit.json`) |
+
+### MCP Server (`stdio`)
+
+Start the JSON-RPC 2.0 MCP server (`protocolVersion: 2024-11-05`):
 
 ```bash
-# Inspect CLI & Unicode U+2800 Braille TUI on ZothOS v3.4
-nexus-3d-scene-studio --help
-nexus-3d-scene-studio-tui --status
-nexus-3d-scene-studio-tui --json
-
-# Verify Second Brain Vault & 12-Step Verification Gallery on :8151
-zoth-obsidian-tracker --verify
+nexus-3d mcp
 ```
 
+Registered MCP tools (12) — see [docs/MCP_GUIDE.md](docs/MCP_GUIDE.md) for schemas:
+
+- `nexus_generate_tesseract`, `nexus_generate_torus_knot`, `nexus_generate_superquadric`, `nexus_generate_solid`, `nexus_generate_terrain`
+- `nexus_generate_fractal`, `nexus_generate_lod_pyramid`, `nexus_generate_sdf_isosurface`, `nexus_evaluate_csg_boolean`
+- `nexus_export_mesh`, `nexus_audit_mesh`, `nexus_get_diagnostics`
+
+## Testing & Verification
+
+Run the full test suite and secret scan locally:
+
+```bash
+python3 -m pytest -q
+node bin/nexus-3d.js --status --json
+gitleaks detect --source . --no-banner --redact
+```
+
+## Support
+
+Nexus 3D Scene Studio is 100% free and open-source with zero paywalls. Optional community support: [Buy Us a Coffee via Stripe](https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X).
+
+## License
+
+Released under the [MIT License](LICENSE). Copyright (c) 2026 1nc0gn30 & NullAI ([https://nullai.tech](https://nullai.tech)).

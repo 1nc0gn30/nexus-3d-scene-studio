@@ -1,176 +1,80 @@
 """
 verify_ui.py
-Automated Headless Playwright Verification Harness for Nexus 3D Scene Studio
-Triple-Viewport Responsiveness, Zero Console Errors, Zero Horizontal Overflow,
-Action Interception on Mesh Exporters, Instant Key Activation, and Clean URL Parameter Strip.
+Automated Headless Playwright Verification Harness for Nexus 3D Scene Studio.
+Verifies triple-viewport responsiveness, zero console errors, and zero horizontal overflow
+on an ephemeral loopback port.
 """
 
+from __future__ import annotations
+
+import os
 import sys
+import tempfile
+import threading
 import time
-import json
 from pathlib import Path
-from playwright.sync_api import sync_playwright
 
-SHOT_DIR = Path('~/.gemini/antigravity-cli/brain/302ed169-2fc4-4fe5-98e4-ebd229505405/pod_shots/nexus_3d_scene_studio')
-SHOT_DIR.mkdir(parents=True, exist_ok=True)
+ROOT_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT_DIR / "src"))
 
-PORT = 8866
-BASE_URL = f"http://127.0.0.1:{PORT}"
+from nexus_3d_scene_studio.ui_server import start_ui_server  # noqa: E402
 
-def verify():
-    print(f"[TEST] Starting Python Playwright Headless Verification on {BASE_URL}...")
+
+def verify() -> int:
+    from playwright.sync_api import sync_playwright
+
+    shot_dir = Path(os.environ.get("NEXUS3D_SHOT_DIR", tempfile.mkdtemp(prefix="nexus3d_shots_")))
+    shot_dir.mkdir(parents=True, exist_ok=True)
+
+    server = start_ui_server("127.0.0.1", 0, public_dir=str(ROOT_DIR / "public"))
+    port = server.server_address[1]
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    base_url = f"http://127.0.0.1:{port}"
 
     viewports = [
-        {"name": "home_mobile.jpg", "width": 390, "height": 844, "device": "Mobile (iPhone 14)"},
-        {"name": "home_tablet.jpg", "width": 820, "height": 1180, "device": "Tablet (iPad Air)"},
-        {"name": "home_desktop.jpg", "width": 1425, "height": 900, "device": "Desktop (HD)"},
+        {"name": "home_mobile.jpg", "width": 390, "height": 844, "device": "Mobile (390x844)"},
+        {"name": "home_tablet.jpg", "width": 820, "height": 1180, "device": "Tablet (820x1180)"},
+        {"name": "home_desktop.jpg", "width": 1425, "height": 900, "device": "Desktop (1425x900)"},
     ]
 
-    results = {
-        "viewports": [],
-        "interceptionPass": False,
-        "keyActivationPass": False,
-        "urlParamPass": False,
-        "consoleErrors": []
-    }
+    console_errors: list[str] = []
+    viewport_results = []
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch(
-            executable_path="/usr/bin/google-chrome",
-            headless=True,
-            args=["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"]
-        )
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"],
+            )
+            for vp in viewports:
+                page = browser.new_page(viewport={"width": vp["width"], "height": vp["height"]})
+                vp_errors: list[str] = []
+                page.on("console", lambda msg, errs=vp_errors: errs.append(msg.text) if msg.type == "error" else None)
+                page.on("pageerror", lambda err, errs=vp_errors: errs.append(str(err)))
 
-        # 1. Triple Viewport Tests
-        for vp in viewports:
-            page = browser.new_page(viewport={"width": vp["width"], "height": vp["height"]})
-            console_errors = []
+                page.goto(base_url, wait_until="networkidle")
+                time.sleep(0.4)
 
-            page.on("console", lambda msg: console_errors.append(msg.text) if msg.type == "error" else None)
-            page.on("pageerror", lambda err: console_errors.append(str(err)))
+                overflow = page.evaluate(
+                    "() => document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                )
+                page.screenshot(path=str(shot_dir / vp["name"]), full_page=False, type="jpeg", quality=85)
 
-            page.goto(BASE_URL, wait_until="networkidle")
-            time.sleep(0.5)
+                passed = len(vp_errors) == 0 and overflow <= 1
+                console_errors.extend(vp_errors)
+                viewport_results.append({"device": vp["device"], "overflow": overflow, "passed": passed})
+                page.close()
+            browser.close()
+    finally:
+        server.shutdown()
+        server.server_close()
 
-            overflow = page.evaluate("() => document.documentElement.scrollWidth - document.documentElement.clientWidth")
-
-            shot_path = SHOT_DIR / vp["name"]
-            page.screenshot(path=str(shot_path), full_page=False, type="jpeg", quality=85)
-
-            passed = (len(console_errors) == 0 and overflow <= 1)
-            print(f"[VIEWPORT] {vp['device']}: ConsoleErrors={len(console_errors)}, Overflow={overflow}px -> {'PASS' if passed else 'FAIL'}")
-
-            for err in console_errors:
-                results["consoleErrors"].append(f"[{vp['device']}] {err}")
-
-            results["viewports"].append({
-                "device": vp["device"],
-                "width": vp["width"],
-                "height": vp["height"],
-                "consoleErrors": len(console_errors),
-                "overflow": f"{overflow}px",
-                "passed": passed,
-                "screenshot": str(shot_path)
-            })
-
-            page.close()
-
-        # 2. Interactive Interception & Key Verification Test
-        context = browser.new_context(viewport={"width": 1425, "height": 900})
-        page = context.new_page()
-        interactive_errors = []
-
-        page.on("console", lambda msg: interactive_errors.append(msg.text) if msg.type == "error" else None)
-        page.on("pageerror", lambda err: interactive_errors.append(str(err)))
-
-        page.goto(BASE_URL, wait_until="networkidle")
-        time.sleep(0.5)
-
-        badge_el = page.locator("#licenseBadge")
-        initial_badge = badge_el.inner_text().strip()
-        print(f"[BADGE] Initial badge text: '{initial_badge}'")
-
-        # Trigger action interception on #btn-paywall-key
-        print("[ACTION] Triggering #btn-paywall-key to test paywall interception...")
-        page.click("#btn-paywall-key")
-        time.sleep(0.4)
-
-        modal_open = page.evaluate("() => { const m = document.getElementById('licenseModal'); return m && window.getComputedStyle(m).display !== 'none'; }")
-        print(f"[MODAL] #licenseModal is open: {modal_open}")
-        results["interceptionPass"] = bool(modal_open)
-
-        paywall_shot = SHOT_DIR / "paywall_modal.jpg"
-        page.screenshot(path=str(paywall_shot), full_page=False, type="jpeg", quality=85)
-
-        # Enter Key NEXUS-PRO-2026 and Activate
-        print("[LICENSE] Entering key 'NEXUS-PRO-2026' in modal...")
-        page.fill("#license-input", "NEXUS-PRO-2026")
-        page.click("#btnActivateKey")
-        time.sleep(0.9)
-
-        unlocked_badge = page.locator("#licenseBadge").inner_text().strip()
-        banner_hidden = page.evaluate("() => window.getComputedStyle(document.getElementById('salesBanner')).display === 'none'")
-        modal_closed = page.evaluate("() => { const m = document.getElementById('licenseModal'); return !m || window.getComputedStyle(m).display === 'none'; }")
-
-        print(f"[LICENSE] Unlocked badge: '{unlocked_badge}'")
-        print(f"[LICENSE] Sales banner hidden: {banner_hidden}")
-        print(f"[LICENSE] Paywall modal closed: {modal_closed}")
-
-        results["keyActivationPass"] = ("PRO ACTIVE" in unlocked_badge and banner_hidden and modal_closed)
-
-        unlocked_shot = SHOT_DIR / "pro_active_unlocked.jpg"
-        page.screenshot(path=str(unlocked_shot), full_page=False, type="jpeg", quality=85)
-
-        for err in interactive_errors:
-            results["consoleErrors"].append(f"[Interactive] {err}")
-
-        context.close()
-
-        # 3. URL Parameter Licensing Test (?licensed=true)
-        context_param = browser.new_context(viewport={"width": 1425, "height": 900})
-        page_param = context_param.new_page()
-        param_errors = []
-
-        page_param.on("console", lambda msg: param_errors.append(msg.text) if msg.type == "error" else None)
-        page_param.on("pageerror", lambda err: param_errors.append(str(err)))
-
-        print(f"[URL_PARAM] Navigating to {BASE_URL}/?licensed=true...")
-        page_param.goto(f"{BASE_URL}/?licensed=true", wait_until="networkidle")
-        time.sleep(0.5)
-
-        param_badge = page_param.locator("#licenseBadge").inner_text().strip()
-        current_url = page_param.url
-        print(f"[URL_PARAM] Badge after ?licensed=true: '{param_badge}'")
-        print(f"[URL_PARAM] Cleaned URL: {current_url}")
-
-        url_cleaned = ("licensed=true" not in current_url)
-        results["urlParamPass"] = ("PRO ACTIVE" in param_badge and url_cleaned)
-
-        for err in param_errors:
-            results["consoleErrors"].append(f"[URL Param] {err}")
-
-        context_param.close()
-        browser.close()
-
-    print("\n" + "="*50)
-    print("PLAYWRIGHT HEADLESS VERIFICATION SUMMARY")
-    print("="*50)
-    print(f"Total Console Errors: {len(results['consoleErrors'])}")
-    print(f"Action Interception Pass: {results['interceptionPass']}")
-    print(f"Key Activation Pass: {results['keyActivationPass']}")
-    print(f"URL Parameter Pass: {results['urlParamPass']}")
-    for vp in results["viewports"]:
-        print(f"- {vp['device']}: Overflow={vp['overflow']}, Errors={vp['consoleErrors']}, Pass={vp['passed']}")
-
-    all_passed = (
-        len(results["consoleErrors"]) == 0 and
-        results["interceptionPass"] and
-        results["keyActivationPass"] and
-        results["urlParamPass"] and
-        all(v["passed"] for v in results["viewports"])
-    )
-    print(f"\nOVERALL RESULT: {'ALL PASS 100%' if all_passed else 'FAIL'}")
+    all_passed = len(console_errors) == 0 and all(v["passed"] for v in viewport_results)
+    for v in viewport_results:
+        print(f"[VIEWPORT] {v['device']}: overflow={v['overflow']}px -> {'PASS' if v['passed'] else 'FAIL'}")
     return 0 if all_passed else 1
+
 
 if __name__ == "__main__":
     sys.exit(verify())

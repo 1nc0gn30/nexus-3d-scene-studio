@@ -551,8 +551,8 @@ def build_parser() -> argparse.ArgumentParser:
     serve_parser.add_argument(
         "-p", "--port",
         type=int,
-        default=8092,
-        help="HTTP port to listen on (default: 8092)",
+        default=8082,
+        help="HTTP port to listen on (default: 8082)",
     )
     serve_parser.add_argument(
         "-H", "--host",
@@ -607,7 +607,7 @@ def main(args: Optional[Sequence[str]] = None) -> int:
             "port": 8082,
             "platform": sys.platform,
             "mcp": True,
-            "license": "100% Free & Open Access (Zero Paywalls)"
+            "license": "MIT"
         }
         if getattr(parsed, "json", False):
             print(json.dumps(status_data, indent=2))
@@ -619,7 +619,7 @@ def main(args: Optional[Sequence[str]] = None) -> int:
             print(f"  {_bold('Status:')}           {_green('HEALTHY')}")
             print(f"  {_bold('Port:')}             8082")
             print(f"  {_bold('Version:')}          {SERVER_VERSION}")
-            print(f"  {_bold('Access:')}           100% Free & Open Access (Zero Paywalls)")
+            print(f"  {_bold('License:')}          MIT (Open-Source)")
             print(_bold(_cyan("═" * 60)) + "\n")
         return 0
 
@@ -631,7 +631,7 @@ def main(args: Optional[Sequence[str]] = None) -> int:
             "port": 8082,
             "platform": sys.platform,
             "mcp": True,
-            "license": "100% Free & Open Access (Zero Paywalls)"
+            "license": "MIT"
         }
         print(json.dumps(status_data, indent=2))
         return 0

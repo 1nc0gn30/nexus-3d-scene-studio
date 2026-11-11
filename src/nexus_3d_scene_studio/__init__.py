@@ -76,7 +76,7 @@ from .mcp_server import (
 from .cli import build_parser, main
 from .ui_server import NexusStudioRequestHandler, get_default_presets, start_ui_server
 
-__version__ = "1.0.0"
+__version__ = "2.5.0"
 
 __all__ = [
     "PlatformInfo",

@@ -1,182 +1,67 @@
 # Nexus 3D Model Context Protocol (MCP) Integration Guide
 
-This guide details how to integrate **Nexus 3D Scene Studio** with LLM agents (Claude Desktop, Cursor IDE, Cline, Zed, and custom autonomous agents) via the standard **Model Context Protocol (MCP)** over STDIO or JSON-RPC.
+This guide documents integrating **Nexus 3D Scene Studio** (`nexus_3d_scene_studio.mcp_server`) with MCP clients over JSON-RPC 2.0 `stdio` (`protocolVersion: 2024-11-05`).
 
----
+## Overview
 
-## 1. Overview & Architecture
+Launch the MCP server directly or generate a client snippet via the CLI:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                 AI Agent / LLM Host                         │
-│   (Claude Desktop / Cursor / Cline / Zed / AutoGen / LangChain)│
-└──────────────────────────────┬──────────────────────────────┘
-                               │ JSON-RPC 2.0 over STDIO
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│             Nexus 3D MCP Server (Python FastMCP)            │
-│              `nexus_3d_scene_studio.mcp_server`             │
-└──────────────┬──────────────────────────────┬───────────────┘
-               │                              │
-       ┌───────▼────────┐             ┌───────▼────────┐
-       │ GeometryEngine │             │  MeshExporter  │
-       │ (7 Primitives) │             │(OBJ/STL/HTML/..)│
-       └────────────────┘             └────────────────┘
+```bash
+nexus-3d mcp
+nexus-3d mcp --tools
+nexus-3d mcp --config claude
 ```
 
----
+## Registered MCP Tools (12)
 
-## 2. MCP Tools Reference
+1. `nexus_generate_tesseract` — Stereographic projection of a 4D hypercube (`size`, `angle_4d`, `distance_4d`, `format`).
+2. `nexus_generate_torus_knot` — Parametric `(p, q)` torus knot tubular mesh with normals and UVs.
+3. `nexus_generate_superquadric` — Superquadric surface with exponents `s1`, `s2` and `pinch`, `taper`, `bend`, `twist` deformations.
+4. `nexus_generate_solid` — Platonic solids (`tetrahedron`, `cube`, `octahedron`, `dodecahedron`, `icosahedron`) and `buckyball` (`c60`).
+5. `nexus_generate_terrain` — Multi-octave coherent heightmap terrain mesh (`grid_size`, `scale`, `height_factor`, `octaves`).
+6. `nexus_export_mesh` — Export procedural or raw mesh geometry to `obj`, `stl`, `json` (Three.js), `html`, `gltf`, or `ply`.
+7. `nexus_audit_mesh` — Compute polygon budget, bounding box, surface area, estimated VRAM bytes, and WebGL performance grade.
+8. `nexus_get_diagnostics` — Return platform, Python runtime, and MCP server diagnostics.
+9. `nexus_generate_fractal` — Strange attractors (`lorenz`, `rossler`, `aizawa`, `chen`), `klein_bottle`, and `menger_sponge`.
+10. `nexus_generate_lod_pyramid` — Multi-tier edge-decimated Level-of-Detail (LOD) pyramid with distance switch thresholds.
+11. `nexus_generate_sdf_isosurface` — Marching Tetrahedra polygonization of volumetric SDF/TPMS presets (`gyroid`, `schwarz_p`, `neovius`, `mandelbulb`, `smooth_csg`, `metaballs`, `twisted_torus`).
+12. `nexus_evaluate_csg_boolean` — Analytic CSG boolean evaluation (`union`, `difference`, `intersection`, `smooth_union`, `smooth_difference`, `smooth_intersection`) polygonized via Marching Tetrahedra.
 
-### Tool 1: `generate_mesh`
-Generates procedural 3D geometric meshes with mathematical parameter tuning.
+## JSON-RPC 2.0 Example
 
-#### Parameters:
-- `primitive` (string, required): One of `"tesseract"`, `"torus_knot"`, `"superquadric"`, `"fibonacci_sphere"`, `"buckyball"`, `"mobius_strip"`, `"terrain"`.
-- `params` (object, optional): Key-value parameters:
-  * For `"tesseract"`: `scale` (float), `rotation_4d` (float), `distance` (float).
-  * For `"torus_knot"`: `p` (int), `q` (int), `tube_radius` (float), `tubular_segments` (int), `radial_segments` (int).
-  * For `"superquadric"`: `s1` (float), `s2` (float), `rx` (float), `ry` (float), `rz` (float).
-  * For `"fibonacci_sphere"`: `num_points` (int), `radius` (float).
-  * For `"buckyball"`: `radius` (float).
-  * For `"mobius_strip"`: `radius` (float), `width` (float), `twists` (int).
-  * For `"terrain"`: `grid_size` (int), `scale` (float), `height_scale` (float), `octaves` (int).
-
-#### JSON-RPC Example:
 ```json
 {
   "jsonrpc": "2.0",
   "id": 1,
   "method": "tools/call",
   "params": {
-    "name": "generate_mesh",
+    "name": "nexus_generate_torus_knot",
     "arguments": {
-      "primitive": "torus_knot",
-      "params": {
-        "p": 3,
-        "q": 7,
-        "tube_radius": 0.35,
-        "tubular_segments": 160
-      }
-    }
-  }
-}
-```
-
----
-
-### Tool 2: `export_scene`
-Exports the current mesh or scene to a disk file.
-
-#### Parameters:
-- `mesh_id` (string, optional): Name or ID of the mesh to export.
-- `format` (string, required): `"obj"`, `"stl_ascii"`, `"stl_binary"`, `"ply"`, `"threejs_json"`, `"html_viewer"`.
-- `output_path` (string, required): Destination filepath.
-
-#### JSON-RPC Example:
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 2,
-  "method": "tools/call",
-  "params": {
-    "name": "export_scene",
-    "arguments": {
-      "format": "obj",
-      "output_path": "./models/my_torus_knot.obj"
-    }
-  }
-}
-```
-
----
-
-### Tool 3: `inspect_geometry`
-Retrieves live geometric telemetry, topology invariants, bounding box dimensions, and surface area calculations.
-
-#### JSON-RPC Response Example:
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 3,
-  "result": {
-    "primitive": "torus_knot",
-    "vertex_count": 1920,
-    "face_count": 1920,
-    "triangle_count": 3840,
-    "bounding_box": {
-      "min": [-2.45, -2.45, -1.35],
-      "max": [2.45, 2.45, 1.35],
-      "dimensions": [4.9, 4.9, 2.7]
-    },
-    "surface_area": 154.596,
-    "genus": 1,
-    "euler_characteristic": 0,
-    "coprime_check": {
       "p": 3,
-      "q": 7,
-      "gcd": 1,
-      "is_valid_single_knot": true
+      "q": 5,
+      "major_radius": 2.0,
+      "tube_radius": 0.4,
+      "format": "obj"
     }
   }
 }
 ```
 
----
+## Client Configuration
 
-### Tool 4: `transform_mesh`
-Applies affine transformations (translation, rotation, scale) or non-linear deformations (taper, twist, bend) to a mesh.
+Generate ready-to-paste configurations for Claude Desktop, Cursor, Cline, or Zed:
 
----
-
-### Tool 5: `list_primitives`
-Lists all available procedural shapes, valid parameter ranges, default values, and mathematical descriptions.
-
----
-
-## 3. Client Installation Guides
-
-### Claude Desktop
-Add to `claude_desktop_config.json`:
-```json
-{
-  "mcpServers": {
-    "nexus3d": {
-      "command": "python",
-      "args": ["-m", "nexus_3d_scene_studio.mcp_server"],
-      "env": {
-        "PYTHONPATH": "src"
-      }
-    }
-  }
-}
+```bash
+nexus-3d mcp --config cursor
 ```
 
-### Cursor IDE
-Add to `.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
     "nexus-3d-scene-studio": {
-      "command": "python",
-      "args": ["-m", "nexus_3d_scene_studio.mcp_server"],
-      "env": {
-        "PYTHONPATH": "src"
-      }
+      "command": "python3",
+      "args": ["-m", "nexus_3d_scene_studio.mcp_server"]
     }
   }
 }
 ```
-
----
-
-## 4. Agentic Prompting Examples
-
-Here are effective system prompt instructions for autonomous agents using Nexus 3D:
-
-> **Agent Prompt:**
-> "You have access to the `nexus3d` tool suite. When asked to create 3D assets:
-> 1. Use `nexus3d.list_primitives` to inspect mathematical shape options.
-> 2. Call `nexus3d.generate_mesh` with customized parameters.
-> 3. Verify mesh topology using `nexus3d.inspect_geometry` to ensure triangle count and bounding box meet constraints.
-> 4. Export the finalized asset using `nexus3d.export_scene` to `.obj` or standalone `.html` viewer."

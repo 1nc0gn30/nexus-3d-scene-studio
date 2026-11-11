@@ -10,7 +10,7 @@ help:
 	@echo "  make test-mcp     Run MCP server unit tests"
 	@echo "  make test-cli     Run CLI unit tests"
 	@echo "  make test-ui      Run UI server unit tests"
-	@echo "  make serve        Start Studio Web UI server on port 8092"
+	@echo "  make serve        Start Studio Web UI server on port 8082"
 	@echo "  make mcp          Run Stdio MCP JSON-RPC server"
 	@echo "  make clean        Remove build artifacts and cached files"
 
@@ -30,7 +30,7 @@ test-ui:
 	PYTHONPATH=src $(PYTHON) -m pytest tests/test_ui_server.py -v
 
 serve:
-	PYTHONPATH=src $(PYTHON) -m nexus_3d_scene_studio.ui_server --port 8092 --host 0.0.0.0
+	PYTHONPATH=src $(PYTHON) -m nexus_3d_scene_studio.ui_server --port 8082 --host 127.0.0.1
 
 mcp:
 	PYTHONPATH=src $(PYTHON) -m nexus_3d_scene_studio.mcp_server

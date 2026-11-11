@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nexus-3d-scene-studio"
-version = "1.0.0"
+version = "2.5.0"
 description = "Pure Python stdlib 3D graphics studio, parametric geometry engine, Model Context Protocol (MCP) server, and WebGL scene exporter"
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "MIT" }
 authors = [
-    { name = "Nexus 3D Scene Studio Contributors" }
+    { name = "1nc0gn30", email = "ops@nullai.tech" }
 ]
 keywords = [
     "3d", "graphics", "procedural-generation", "mcp", "model-context-protocol",
@@ -52,10 +52,10 @@ nexus-3d = "nexus_3d_scene_studio.cli:main"
 scene-studio = "nexus_3d_scene_studio.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/nexus-3d/nexus-3d-scene-studio"
-Documentation = "https://github.com/nexus-3d/nexus-3d-scene-studio#readme"
-Repository = "https://github.com/nexus-3d/nexus-3d-scene-studio"
-Issues = "https://github.com/nexus-3d/nexus-3d-scene-studio/issues"
+Homepage = "https://github.com/1nc0gn30/nexus-3d-scene-studio"
+Documentation = "https://github.com/1nc0gn30/nexus-3d-scene-studio#readme"
+Repository = "https://github.com/1nc0gn30/nexus-3d-scene-studio"
+Issues = "https://github.com/1nc0gn30/nexus-3d-scene-studio/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
