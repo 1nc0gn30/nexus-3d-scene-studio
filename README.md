@@ -54,8 +54,9 @@ python3 -m pip install -e ".[dev]"
 Start the local WebGL workstation and REST API on `127.0.0.1:8082`:
 
 ```bash
+python3 server.py --port 8082
+# or via the CLI / Node wrapper:
 nexus-3d serve --host 127.0.0.1 --port 8082
-# or via the Node wrapper:
 node bin/nexus-3d.js web
 ```
 

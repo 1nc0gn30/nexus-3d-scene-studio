@@ -916,8 +916,9 @@
 
           <div class="grid-2">
             <button id="btn-export-obj" class="btn primary" onclick="exportOBJ()">Wavefront .OBJ</button>
-            <button id="btn-export-mtl" class="btn" onclick="exportMTL()">Material .MTL</button>
+            <button id="btn-export-gltf" class="btn" onclick="exportGLTF()" style="border-color: rgba(56,189,248,0.4); color: #38BDF8;">GLTF 2.0 (.gltf)</button>
             <button id="btn-export-stl" class="btn" onclick="exportSTL()">ASCII .STL</button>
+            <button id="btn-export-mtl" class="btn" onclick="exportMTL()">Material .MTL</button>
             <button id="btn-export-three" class="btn" onclick="exportThreeJSON()">Three.js JSON</button>
           </div>
           <button id="btn-export-html" class="btn tonal" style="margin-top: 4px;" onclick="exportStandaloneHTML()">
@@ -1581,6 +1582,81 @@ nexus3d serve --port 8080</pre>
       const mtl = `# Nexus 3D Material\nnewmtl Material_GoogleStudio\nKa 0.2 0.2 0.2\nKd 0.102 0.451 0.910\nKs 0.5 0.5 0.5\nNs 64.0\nillum 2\n`;
       downloadFile(`${currentShape}.mtl`, mtl, 'text/plain');
       showToast(`Exported ${currentShape}.mtl!`);
+    }
+
+    function exportGLTF() {
+      if (activeMeshGroup.children.length === 0) return;
+      const mesh = activeMeshGroup.children[0];
+      const geo = mesh.geometry;
+      const pos = geo.attributes.position;
+      const index = geo.index;
+
+      let min = [Infinity, Infinity, Infinity];
+      let max = [-Infinity, -Infinity, -Infinity];
+      for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+        min[0] = Math.min(min[0], x); min[1] = Math.min(min[1], y); min[2] = Math.min(min[2], z);
+        max[0] = Math.max(max[0], x); max[1] = Math.max(max[1], y); max[2] = Math.max(max[2], z);
+      }
+
+      const posBytes = new Uint8Array(pos.array.buffer, pos.array.byteOffset, pos.array.byteLength);
+      let indexBytes = null;
+      let indexCount = 0;
+      let indexComponentType = 5123;
+      if (index) {
+        indexCount = index.count;
+        const idxArray = index.array instanceof Uint32Array ? index.array : new Uint16Array(index.array);
+        indexBytes = new Uint8Array(idxArray.buffer, idxArray.byteOffset, idxArray.byteLength);
+        indexComponentType = idxArray instanceof Uint32Array ? 5125 : 5123;
+      }
+
+      const totalLength = posBytes.byteLength + (indexBytes ? indexBytes.byteLength : 0);
+      const combined = new Uint8Array(totalLength);
+      combined.set(posBytes, 0);
+      if (indexBytes) combined.set(indexBytes, posBytes.byteLength);
+
+      let binary = '';
+      const chunkSize = 8192;
+      for (let i = 0; i < combined.byteLength; i += chunkSize) {
+        const chunk = combined.subarray(i, Math.min(i + chunkSize, combined.byteLength));
+        binary += String.fromCharCode.apply(null, chunk);
+      }
+      const base64Uri = 'data:application/octet-stream;base64,' + btoa(binary);
+
+      const gltf = {
+        asset: { version: "2.0", generator: "Nexus 3D Scene Studio" },
+        scene: 0,
+        scenes: [{ nodes: [0] }],
+        nodes: [{ mesh: 0, name: currentShape }],
+        meshes: [{
+          name: currentShape,
+          primitives: [{
+            attributes: { POSITION: 0 },
+            ...(index ? { indices: 1 } : {}),
+            mode: 4
+          }]
+        }],
+        buffers: [{ byteLength: totalLength, uri: base64Uri }],
+        bufferViews: [
+          { buffer: 0, byteOffset: 0, byteLength: posBytes.byteLength, target: 34962 },
+          ...(indexBytes ? [{ buffer: 0, byteOffset: posBytes.byteLength, byteLength: indexBytes.byteLength, target: 34963 }] : [])
+        ],
+        accessors: [
+          {
+            bufferView: 0, byteOffset: 0,
+            componentType: 5126, count: pos.count,
+            type: "VEC3", max: max, min: min
+          },
+          ...(indexBytes ? [{
+            bufferView: 1, byteOffset: 0,
+            componentType: indexComponentType, count: indexCount,
+            type: "SCALAR"
+          }] : [])
+        ]
+      };
+
+      downloadFile(`${currentShape}.gltf`, JSON.stringify(gltf, null, 2), 'model/gltf+json');
+      showToast(`Exported ${currentShape}.gltf successfully!`);
     }
 
     function exportSTL() {
