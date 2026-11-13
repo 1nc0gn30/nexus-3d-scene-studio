@@ -471,7 +471,7 @@
     .param-row {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 10px;
     }
     .param-label {
       display: flex;
@@ -683,13 +683,22 @@
       .shape-carousel-sidebar {
         width: 100% !important;
         max-height: 220px !important;
+        overflow-y: auto !important;
+        flex-shrink: 0 !important;
       }
+      .control-sidebar,
       .studio-controls-sidebar {
         width: 100% !important;
         height: auto !important;
+        border-left: none !important;
+        border-top: 1px solid var(--md-sys-color-outline) !important;
+        flex-shrink: 0 !important;
       }
+      .viewport-stage,
       .canvas-viewport-container {
+        width: 100% !important;
         min-height: 380px !important;
+        flex-shrink: 0 !important;
       }
     }
   </style>
@@ -799,7 +808,7 @@
     <main class="viewport-stage" id="canvas-container">
       <div class="viewport-hud">
         <div class="hud-title" id="hud-shape-title">🔮 4D Hypercube Tesseract</div>
-        <div class="hud-subtitle" id="hud-shape-desc">$\mathbb{R}^4 \to \mathbb{R}^3$ Stereographic Rotation Projection</div>
+        <div class="hud-subtitle" id="hud-shape-desc">ℝ⁴ → ℝ³ Stereographic Rotation Projection</div>
       </div>
 
       <canvas id="studio-canvas"></canvas>
@@ -1488,7 +1497,7 @@ nexus3d serve --port 8080</pre>
       if (activeCard) activeCard.classList.add('active');
 
       const titles = {
-        tesseract: ['🔮 4D Hypercube Tesseract', '$\\\\mathbb{R}^4 \\\\to \\\\mathbb{R}^3$ Stereographic Rotation Projection'],
+        tesseract: ['🔮 4D Hypercube Tesseract', 'ℝ⁴ → ℝ³ Stereographic Rotation Projection'],
         torus_knot: ['🌀 Parametric Torus Knot', '(p, q) Space Curve Winding & Frenet Extrusion'],
         superquadric: ['💎 Superquadric Ellipsoid', 'Signed Trigonometric Powers & Non-linear Deforms'],
         fibonacci: ['🌻 Fibonacci Golden Spiral Sphere', 'Golden Angle $\\\\theta_g \\\\approx 137.5^\\\\circ$ Optimal Sampling'],
