@@ -46,7 +46,13 @@
         },
         "creator": {
           "@type": "Person",
-          "name": "1nc0gn30",
+          "name": "Neal Frazier",
+          "alternateName": "@1nc0gn30",
+          "url": "https://github.com/1nc0gn30"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Neal Frazier Tech",
           "url": "https://nullai.tech"
         }
       },
@@ -74,7 +80,7 @@
             "name": "How can I support Nexus 3D Scene Studio?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Nexus 3D Scene Studio is 100% free and open-source with zero paywalls. Optional community support is available via Buy Us a Coffee on Stripe."
+              "text": "Nexus 3D Scene Studio is 100% free and open-source with zero paywalls. Optional community support is available via Buy Us a Coffee on Stripe or Solana tip address GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK."
             }
           }
         ]
@@ -668,11 +674,21 @@
       max-width: 100vw !important;
       box-sizing: border-box !important;
     }
-    @media (max-width: 768px) {
+    .viewport-quick-tools {
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: calc(100% - 24px);
+    }
+    @media (max-width: 1024px) {
+      body {
+        height: auto !important;
+        min-height: 100vh !important;
+        overflow-y: auto !important;
+      }
       .app-body {
         flex-direction: column !important;
         height: auto !important;
-        overflow-y: auto !important;
+        overflow: visible !important;
       }
       .app-bar {
         flex-direction: column !important;
@@ -682,8 +698,10 @@
       }
       .shape-carousel-sidebar {
         width: 100% !important;
-        max-height: 220px !important;
+        max-height: 240px !important;
         overflow-y: auto !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--md-sys-color-outline) !important;
         flex-shrink: 0 !important;
       }
       .control-sidebar,
@@ -697,8 +715,16 @@
       .viewport-stage,
       .canvas-viewport-container {
         width: 100% !important;
-        min-height: 380px !important;
+        height: 440px !important;
+        min-height: 440px !important;
+        flex: none !important;
         flex-shrink: 0 !important;
+      }
+      .viewport-quick-tools {
+        bottom: 12px !important;
+        border-radius: 16px !important;
+        padding: 6px 10px !important;
+        gap: 4px !important;
       }
     }
   </style>
@@ -710,8 +736,9 @@
 <body>
 
 <div id="zoth-coffee-support-bar" style="background: linear-gradient(90deg, rgba(16,185,129,0.12), rgba(212,175,55,0.14)); border-bottom: 1px solid rgba(212,175,55,0.35); padding: 8px 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12px; z-index: 9999;">
-  <span style="color: #10B981; font-weight: 800;">100% FREE &amp; OPEN-SOURCE</span>
+  <span style="color: #10B981; font-weight: 800;">✦ 100% FREE &amp; OPEN-SOURCE</span>
   <a href="https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X" target="_blank" rel="noopener noreferrer" style="background: #D4AF37; color: #08080B; padding: 4px 12px; border-radius: 6px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">☕ Buy Us a Coffee (Stripe)</a>
+  <a href="solana:GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK" style="background: #047857; color: #FFFFFF; padding: 4px 12px; border-radius: 6px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">◎ Solana Tip</a>
 </div>
 
 <div class="zoth-brand-bar"><span class="zoth-z">Z</span><span class="zoth-name">Zoth Studio</span><span class="zoth-tool">Nexus 3D Scene Studio</span><span class="zoth-spacer"></span><span class="zoth-badge">NULLAI · SOVEREIGN</span></div>
@@ -1883,7 +1910,7 @@ nexus3d serve --port 8080</pre>
   <!-- Footer -->
 
   <footer class="zoth-brand-footer" style="padding:16px 20px; text-align:center; font-size:0.8rem; color:#a1a1aa; border-top:1px solid rgba(255,255,255,0.08); background:#08080b;">
-    <div>Engineered by 1nc0gn30 • NullAI (<a href="https://github.com/1nc0gn30" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">@1nc0gn30</a>) &bull; <a href="https://nullai.tech" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">NullAI Platform</a></div>
+    <div>Engineered by Neal Frazier Tech (<a href="https://github.com/1nc0gn30/nexus-3d-scene-studio" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">@1nc0gn30</a>) &bull; <a href="https://nullai.tech" target="_blank" rel="noopener" style="color:#D4AF37; text-decoration:none;">NullAI Platform</a> &bull; <a href="https://buy.stripe.com/3cIfZg27PdKo2D64Ocfw40X" target="_blank" rel="noopener noreferrer" style="color:#D4AF37; text-decoration:none;">☕ Buy Us a Coffee</a> &bull; Solana: <code style="color:#14F195; word-break:break-all;">GG2eQbVh8ut1BK6j1A2tz7pSySdLpD38BgyEhGcxdXoK</code></div>
     <div style="margin-top:4px; font-size:0.75rem; color:#71717a;">Sovereign Local-First Architecture &bull; 100% In-Browser 3D Engine &bull; Zero Cloud Telemetry</div>
   </footer>
 
